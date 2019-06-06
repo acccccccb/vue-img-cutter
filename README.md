@@ -11,7 +11,11 @@
 > 1. 将ImgCutter.vue文件以组件的形式引入项目：
 
 ```
-import ImgCutter from '../../../base/plugin/ImgCutter'
+npm install vue-img-cutter --save-dev
+```
+
+```
+import ImgCutter from 'vue-img-cutter'
 export default {
         components:{
             ImgCutter
