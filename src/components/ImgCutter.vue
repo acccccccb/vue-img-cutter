@@ -1,6 +1,3 @@
-<!--
-  Github:https://acccccccb.github.io/vue-element-Ui-copper/
--->
 <template>
   <div>
     <button class="btn btn-primary" @click="visible=true">{{label}}</button>
@@ -68,7 +65,7 @@
 </template>
 <script>
   export default {
-    name:'CropTool',
+    name:'ImgCutter',
     props:{
       label:{
         type:String,

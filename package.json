@@ -2,7 +2,7 @@
   "name": "vue-img-cutter",
   "version": "1.0.0",
   "description": "Image cutter",
-  "author": "张杨 <443635978@qq.com>",
+  "author": "acccccccc <tabzhang@foxmail.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -57,5 +57,20 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "main": ".postcssrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acccccccb/vue-img-cutter.git"
+  },
+  "keywords": [
+    "image",
+    "crop",
+    "cutter"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/acccccccb/vue-img-cutter/issues"
+  },
+  "homepage": "https://github.com/acccccccb/vue-img-cutter#readme"
 }

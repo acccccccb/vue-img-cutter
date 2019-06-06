@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <CropTool
+    <ImgCutter
 			:label="'选择图片'"
 			:boxWidth="800"
 			:boxHeight="600"
 			v-on:cutDown="cutDown"
-		></CropTool>
+		></ImgCutter>
 		<div style="margin-top:20px;">
 			<img :src="imgSrc" v-if="!!imgSrc" alt="">
 		</div>
@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import CropTool from './components/CropTool.vue'
+import ImgCutter from './components/ImgCutter.vue'
 
 export default {
   name: 'App',
   components: {
-    CropTool
+    ImgCutter
   },
 	data(){
 		return {
