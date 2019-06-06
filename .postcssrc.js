@@ -1,4 +1,3 @@
 // https://github.com/michael-ciniawsky/postcss-load-config
-import CropTool from './src/components/CropTool.vue'
-export default CropTool
-export { CropTool }
+import ImgCutter from './src/components/ImgCutter.vue'
+export default ImgCutter
