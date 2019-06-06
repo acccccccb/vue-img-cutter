@@ -8,13 +8,13 @@
 
 ### 使用方法
 
-> 1. 此插件需要在vue + element-Ui中使用，将CropTool.vue文件以组件的形式引入项目，如果你没有用到element-Ui需要将插件中的el标签替换成普通的html标签：
+> 1. 将ImgCutter.vue文件以组件的形式引入项目：
 
 ```
-import CropTool from '../../../base/plugin/CropTool'
+import ImgCutter from '../../../base/plugin/ImgCutter'
 export default {
         components:{
-            CropTool
+            ImgCutter
         },
 ...
 }
@@ -22,13 +22,13 @@ export default {
 > 2. 在项目中使用组件：
 
 ```
-<CropTool
+<ImgCutter
     v-bind:label="'选择图片'"
     v-bind:boxWidth="800"
     v-bind:boxHeight="400"
     v-bind:rate="16:9"
     v-on:cutDown="cudDown"
-></CropTool>
+></ImgCutter>
 ```
 
 ### 参数说明：
