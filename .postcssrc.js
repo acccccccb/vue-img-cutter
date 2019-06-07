@@ -1,3 +1,10 @@
 // https://github.com/michael-ciniawsky/postcss-load-config
-import ImgCutter from '../src/components/ImgCutter.vue'
-export default ImgCutter
+
+module.exports = {
+  "plugins": {
+    "postcss-import": {},
+    "postcss-url": {},
+    // to edit target browsers: use "browserslist" field in package.json
+    "autoprefixer": {}
+  }
+}
