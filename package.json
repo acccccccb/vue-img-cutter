@@ -1,8 +1,8 @@
 {
   "name": "vue-img-cutter",
-  "version": "1.1.2",
+  "version": "1.0.0",
   "description": "Image cutter",
-  "author": "acccccccc <tabzhang@foxmail.com>",
+  "author": "acccccccb <tabzhang@foxmail.com>",
   "private": false,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -66,7 +66,9 @@
   "keywords": [
     "image",
     "crop",
-    "cutter"
+    "cutter",
+    "vue",
+    "裁剪"
   ],
   "license": "ISC",
   "bugs": {

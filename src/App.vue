@@ -2,10 +2,12 @@
   <div id="app">
     <ImgCutter
 			:label="'选择图片'"
-			:boxWidth="800"
-			:boxHeight="600"
-			v-on:cutDown="cutDown"
-		></ImgCutter>
+			:boxWidth="700"
+			:boxHeight="400"
+            :rate="'1:1'"
+			v-on:cutDown="cutDown">
+        <button slot="openImgCutter">选择图片</button>
+	</ImgCutter>
 		<div style="margin-top:20px;">
 			<img :src="imgSrc" v-if="!!imgSrc" alt="">
 		</div>
