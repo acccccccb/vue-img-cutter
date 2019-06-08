@@ -35,6 +35,15 @@ export default {
 ```
 
 ### 参数说明：
+
+| 属性名 | 作用 | 类型  | 必填 | 默认值 |
+|:----:|----|:----:|:----:|:----:|
+|label|默认打开裁剪工具按钮的显示文字|String|否|选择图片|
+|boxWidth|裁剪工具宽度|Number|否|800|
+|boxHeight|裁剪工具高度|Number|否|400|
+|rate|图片比例|String|否|-|
+|cutDown|完成截图后要执行的方法|Function|是|-|
+
 - label:默认打开裁剪工具按钮的显示文字（字符串，选填）
 - boxWidth:裁剪工具宽度（数字，选填）
 - boxHeight:裁剪工具高度（数字，选填）
