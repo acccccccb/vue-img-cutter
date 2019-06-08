@@ -5,9 +5,15 @@
         </div>
         <button v-if="!$slots.openImgCutter" class="btn btn-primary" @click="handleOpen">{{label}}</button>
         <transition name="fade">
-            <div v-show="visible" @click="handleClose" class="mask"></div>
+            <div v-if="visible" @click="handleClose" class="mask"></div>
         </transition>
-        <transition name="fade">
+        <transition
+                name="fade"
+                enter-class="fade-in-enter"
+                enter-active-class="fade-in-active"
+                leave-class="fade-out-enter"
+                leave-active-class="fade-out-active"
+        >
             <div class="dialogMain"
                  title="裁剪图片"
                  v-show="visible"
@@ -75,7 +81,6 @@
                         <canvas class="canvasSelectBox" ref="canvasSelectBox" :width="boxWidth"
                                 @mousedown="dropImgOn"
                                 @mouseup="dropImgOff"
-                                @mouseenter="scaleImgOn"
                                 @mouseleave="dropImgLeave"
                                 @mousemove="dropImgMove"
                                 :height="boxHeight"></canvas>
@@ -177,7 +182,6 @@
                 },
                 // 缩放
                 scaleImg:{
-                    active:false,
                     rate:0,
                     params:{}
                 },
@@ -199,20 +203,19 @@
             handleOpen:function(){
                 this.visible = true;
                 if(document.addEventListener){
-                    document.addEventListener('DOMMouseScroll',this.scaleImgWheel);
+                    this.$refs['toolBox'].addEventListener('DOMMouseScroll',this.scaleImgWheel);
                 }
                 if(document.attachEvent){
-                    document.attachEvent('onmousewheel',this.scaleImgWheel);
+                    this.$refs['toolBox'].attachEvent('onmousewheel',this.scaleImgWheel);
                 }
-
             },
             handleClose: function () {
                 this.visible = false;
                 if(document.addEventListener){
-                    document.removeEventListener('DOMMouseScroll',this.scaleImgWheel);
+                    this.$refs['toolBox'].removeEventListener('DOMMouseScroll',this.scaleImgWheel);
                 }
                 if(document.attachEvent){
-                    document.detachEvent('onmousewheel',this.scaleImgWheel);
+                    this.$refs['toolBox'].detachEvent('onmousewheel',this.scaleImgWheel);
                 }
                 this.$nextTick(() => {
                     this.clearAll();
@@ -376,7 +379,6 @@
             },
             dropImgLeave:function(){
                 this.dropImg.active = false;
-                this.scaleImgOff();
             },
             dropImgMove:function(e){
                 let _this = this;
@@ -393,12 +395,9 @@
                 }
             },
             // 缩放
-            scaleImgOn:function(){
-                this.scaleImg.active=true;
-            },
             scaleImgWheel:function(e){
                 let _this = this;
-                if(_this.drawImg.img && _this.scaleImg.active==true) {
+                if(_this.drawImg.img) {
                     let canv = _this.$refs['canvas'];
                     let ctx = canv.getContext("2d");
                     ctx.clearRect(0,0,canv.width,canv.height);
@@ -411,15 +410,13 @@
                     } else if(ee.detail) { //Firefox
                         scale = ee.detail;
                     }
-                    _this.drawImg.x = _this.drawImg.x+scale*3;
-                    _this.drawImg.y = _this.drawImg.y+scale*3;
-                    _this.drawImg.width = _this.drawImg.width-scale*9;
+                    let widthLimit = 50;
+                    _this.drawImg.x = (_this.drawImg.width-scale*9)>widthLimit?_this.drawImg.x+scale*3:_this.drawImg.x;
+                    _this.drawImg.y = (_this.drawImg.width-scale*9)>widthLimit?_this.drawImg.y+scale*3:_this.drawImg.y;
+                    _this.drawImg.width = (_this.drawImg.width-scale*9)>widthLimit?_this.drawImg.width-scale*9:widthLimit;
                     _this.drawImg.height = _this.drawImg.width/_this.scaleImg.rate;
                     ctx.drawImage(_this.drawImg.img, _this.drawImg.sx, _this.drawImg.sy, _this.drawImg.swidth, _this.drawImg.sheight, _this.drawImg.x, _this.drawImg.y, _this.drawImg.width, _this.drawImg.height);
                 }
-            },
-            scaleImgOff:function(){
-                this.scaleImg.active=false;
             },
             // control box
             controlBtnMouseDown: function (e) {
@@ -753,6 +750,7 @@
         border-radius: 4px;
         cursor: pointer;
         border: 1px solid;
+        transition: background .3s,color .3s;
     }
 
     .btn[disabled] {
@@ -773,19 +771,21 @@
     .btn-default {
         color: #333;
         border-color: #DCDFE6;
-        background-color: #fff
+        background-color: #fff;
+        transition: background .3s,color .3s;
     }
 
     .btn-default:hover {
         color: #409EFF;
         border-color: #c6e2ff;
-        background-color: #ecf5ff
+        background-color: #ecf5ff;
     }
 
     .btn-primary {
         color: #fff;
         background-color: #409EFF;
         border-color: #409EFF;
+        transition: background .3s,color .3s;
     }
 
     .btn-primary:hover {
@@ -804,12 +804,14 @@
         color: #fff;
         background-color: #eeba6c;
         border-color: #e6a23c;
+        transition: background .3s,color .3s;
     }
 
     .btn-primary-plain {
         color: #409EFF;
         border-color: #c6e2ff;
-        background-color: #ecf5ff
+        background-color: #ecf5ff;
+        transition: background .3s,color .3s;
     }
 
     .btn-primary-plain:hover {
@@ -828,14 +830,18 @@
     }
 
     .fade-enter-active, .fade-leave-active {
-        transition: opacity .3s;
+        transition: opacity 0.3s;
     }
-
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
-    {
+    .fade-enter, .fade-leave-to {
         opacity: 0;
     }
-
+    .fade-in-enter,.fade-out-enter {
+        top:300px;
+        opacity:0;
+    }
+    .fade-in-active,.fade-out-active {
+        transition: top 0.3s,opacity 0.3s;
+    }
     .file-input {
         height: 40px;
         line-height: 40px;
