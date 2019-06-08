@@ -58,7 +58,7 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "main": ".postcssrc.js",
+  "main": "./src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/acccccccb/vue-img-cutter.git"
