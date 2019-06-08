@@ -1,6 +1,6 @@
 /*
 /**/*
 !/src/index.js
-!/src/components
+!/src/components/*.vue
 !/src/index.js
 !/package.json
