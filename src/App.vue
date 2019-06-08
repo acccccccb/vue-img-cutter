@@ -4,7 +4,6 @@
 			:label="'选择图片'"
 			:boxWidth="700"
 			:boxHeight="400"
-            :rate="'1:1'"
 			v-on:cutDown="cutDown">
         <button slot="openImgCutter">选择图片</button>
 	</ImgCutter>

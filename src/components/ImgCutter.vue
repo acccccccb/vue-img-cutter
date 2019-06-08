@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div @click="visible=true">
+        <div @click="handleOpen">
             <slot name="openImgCutter"></slot>
         </div>
-        <button v-if="!$slots.openImgCutter" class="btn btn-primary" @click="visible=true">{{label}}</button>
+        <button v-if="!$slots.openImgCutter" class="btn btn-primary" @click="handleOpen">{{label}}</button>
         <transition name="fade">
             <div v-show="visible" @click="handleClose" class="mask"></div>
         </transition>
@@ -23,7 +23,7 @@
                          :style="'height:'+boxHeight+'px;width:'+boxWidth+'px'"
                          v-on:mousemove="controlBtnMouseMove"
                          v-on:mouseup="controlBtnMouseUp"
-                         v-on:mouseleave="controlBtnMouseLeave"
+                         v-on:mouseleave="controlBtnMouseUp"
                          class="toolBox">
                         <div class="tips" v-show="!drawImg.img">
                             <button class="btn btn-warning btn-xs" @click="chooseImg">请选择要裁剪的图片</button>
@@ -73,6 +73,11 @@
                             </div>
                         </div>
                         <canvas class="canvasSelectBox" ref="canvasSelectBox" :width="boxWidth"
+                                @mousedown="dropImgOn"
+                                @mouseup="dropImgOff"
+                                @mouseenter="scaleImgOn"
+                                @mouseleave="dropImgLeave"
+                                @mousemove="dropImgMove"
                                 :height="boxHeight"></canvas>
                         <canvas class="canvas" ref="canvas" :width="boxWidth" :height="boxHeight"></canvas>
                     </div>
@@ -164,6 +169,18 @@
                         }
                     },
                 },
+                dropImg:{
+                    active:false,
+                    pageX:0,
+                    pageY:0,
+                    params:{}
+                },
+                // 缩放
+                scaleImg:{
+                    active:false,
+                    rate:0,
+                    params:{}
+                },
                 controlBox: {
                     disable: true,
                     btnName: '',
@@ -179,8 +196,24 @@
             }
         },
         methods: {
+            handleOpen:function(){
+                this.visible = true;
+                if(document.addEventListener){
+                    document.addEventListener('DOMMouseScroll',this.scaleImgWheel);
+                }
+                if(document.attachEvent){
+                    document.attachEvent('onmousewheel',this.scaleImgWheel);
+                }
+
+            },
             handleClose: function () {
                 this.visible = false;
+                if(document.addEventListener){
+                    document.removeEventListener('DOMMouseScroll',this.scaleImgWheel);
+                }
+                if(document.attachEvent){
+                    document.detachEvent('onmousewheel',this.scaleImgWheel);
+                }
                 this.$nextTick(() => {
                     this.clearAll();
                 });
@@ -219,6 +252,7 @@
                                 let rate;
                                 let drawImg = _this.drawImg;
                                 drawImg.img = img;
+                                _this.scaleImg.rate = imgWidth/imgHeight; // 缩放时用到此参数
                                 if (imgHeight < boxHeight && imgWidth < boxWidth) {
                                     rate = 1;
                                     drawImg.x = (boxWidth - imgWidth) / 2;
@@ -335,6 +369,63 @@
                 this.toolBox.y = parseInt($toolBox.style.top.split('px')[0]);
                 this.toolBox.disable = true;
             },
+            // 拖动图片
+            dropImgOn:function(e){
+                this.dropImg.active = true;
+                this.dropImg.params = {...this.drawImg};
+                this.dropImg.pageX = e.pageX;
+                this.dropImg.pageY = e.pageY;
+            },
+            dropImgOff:function(){
+                this.dropImg.active = false;
+            },
+            dropImgLeave:function(){
+                this.dropImg.active = false;
+                this.scaleImgOff();
+            },
+            dropImgMove:function(e){
+                let _this = this;
+                if(this.dropImg.active && this.drawImg.img) {
+                    let canv = _this.$refs['canvas'];
+                    let ctx = canv.getContext("2d");
+                    let drawImg = {..._this.drawImg};
+                    drawImg.x  = _this.dropImg.params.x - (_this.dropImg.pageX - e.pageX);
+                    drawImg.y  = _this.dropImg.params.y - (_this.dropImg.pageY - e.pageY);
+                    _this.$set(_this,'drawImg',drawImg);
+                    ctx.clearRect(0,0,canv.width,canv.height);
+                    ctx.drawImage(drawImg.img, drawImg.sx, drawImg.sy, drawImg.swidth, drawImg.sheight, drawImg.x, drawImg.y, drawImg.width, drawImg.height);
+                    e.stopPropagation();
+                }
+            },
+            // 缩放
+            scaleImgOn:function(){
+                this.scaleImg.active=true;
+            },
+            scaleImgWheel:function(e){
+                let _this = this;
+                if(_this.drawImg.img && _this.scaleImg.active==true) {
+                    let canv = _this.$refs['canvas'];
+                    let ctx = canv.getContext("2d");
+                    ctx.clearRect(0,0,canv.width,canv.height);
+                    let scale;
+                    // e是FF的事件。window.event是chrome/ie/opera的事件
+                    let ee = e || window.event;
+                    // console.log(ee); //可以看看ee.wheelDelta和e.detail在浏览器中的值；
+                    if(ee.wheelDelta) { //IE/Opera/Chrome
+                        scale = ee.wheelDelta;
+                    } else if(ee.detail) { //Firefox
+                        scale = ee.detail;
+                    }
+                    _this.drawImg.x = _this.drawImg.x+scale*3;
+                    _this.drawImg.y = _this.drawImg.y+scale*3;
+                    _this.drawImg.width = _this.drawImg.width-scale*9;
+                    _this.drawImg.height = _this.drawImg.width/_this.scaleImg.rate;
+                    ctx.drawImage(_this.drawImg.img, _this.drawImg.sx, _this.drawImg.sy, _this.drawImg.swidth, _this.drawImg.sheight, _this.drawImg.x, _this.drawImg.y, _this.drawImg.width, _this.drawImg.height);
+                }
+            },
+            scaleImgOff:function(){
+                this.scaleImg.active=false;
+            },
             // control box
             controlBtnMouseDown: function (e) {
                 this.controlBox.disable = false;
@@ -349,10 +440,7 @@
                 this.controlBox.disable = true;
                 e.stopPropagation();
             },
-            controlBtnMouseLeave: function (e) {
-                this.controlBox.disable = true;
-                e.stopPropagation();
-            },
+
             controlBtnMouseMove: function (e) {
                 if (this.controlBox.disable === false) {
                     let offsetX = e.clientX - this.controlBox.start.x;
