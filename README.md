@@ -41,7 +41,7 @@ export default {
 |label|默认打开裁剪工具按钮的显示文字|String|否|选择图片|
 |boxWidth|裁剪工具宽度|Number|否|800|
 |boxHeight|裁剪工具高度|Number|否|400|
-|rate|图片比例|String|否|-|
+|rate|图片比例|String(例: "4:3")|否|-|
 |cutDown|完成截图后要执行的方法|Function|是|-|
 > 支持slot，在组件内部使用带有slot="openImgCutter"属性的元素即可自定义打开组件的按钮
 
