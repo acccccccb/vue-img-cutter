@@ -1,5 +1,5 @@
 # vue-img-cutter
-> vue图片裁剪插件，支持任意尺寸裁剪和等比例裁剪
+> vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放
 
 ![插件截图](http://www.ihtmlcss.com/wp-content/uploads/2019/06/vue-img-cutter-679x550.png)
 
@@ -29,7 +29,7 @@ export default {
     :boxWidth="800"
     :boxHeight="400"
     :rate="16:9"
-    v-on:cutDown="cudDown">
+    v-on:cutDown="cutDown">
     <button slot="openImgCutter">选择图片</button>
 </ImgCutter>
 ```
