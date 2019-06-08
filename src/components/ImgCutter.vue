@@ -220,12 +220,7 @@
             },
             // 选择图片 e.stopPropagation();
             chooseImg: function () {
-                this.$refs['inputFile'].value = "";
-                this.drawImg.img = null;
                 this.$refs['inputFile'].click();
-                let c = this.$refs['canvas'];
-                let ctx = c.getContext("2d");
-                ctx.clearRect(0, 0, c.width, c.height);
             },
             // 将选择的图片绘制到画布
             putImgToCanv: function (e) {
@@ -275,8 +270,6 @@
                             }
                         }, 200);
                     };
-                    this.toolBox.x = this.boxWidth / 2 - this.toolBox.width;
-                    this.toolBox.y = this.boxHeight / 2 - this.toolBox.height;
                     this.drawControlBox(this.toolBox.width, this.toolBox.height, this.toolBox.x, this.toolBox.y);
                 }
             },
@@ -300,6 +293,8 @@
                     width: 0,//要使用的图像的宽度
                     height: 0//要使用的图像的高度
                 };
+                this.$refs['inputFile'].value = "";
+                this.drawImg.img = null;
             },
             // draw control
             drawControlBox: function (width, height, x, y) {
