@@ -538,7 +538,7 @@
                                         file: blob,
                                         dataURL: newCanv.toDataURL()
                                     })
-                                }, 0.95);
+                                }, 'image/jpeg',0.95);
                             }
                         }, 200);
                     };
