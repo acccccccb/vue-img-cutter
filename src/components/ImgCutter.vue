@@ -16,7 +16,7 @@
         >
             <div class="dialogMain"
                  title="裁剪图片"
-                 v-show="visible"
+                 v-if="visible"
                  :width="boxWidth+40+'px'"
                  appendToBody
                  :before-close="handleClose">
@@ -35,7 +35,7 @@
                             <button class="btn btn-warning btn-xs" @click="chooseImg">请选择要裁剪的图片</button>
                         </div>
                         <div
-                                v-show="drawImg.img"
+                                v-show="drawImg.img!=null"
                                 v-on:mousedown="toolBoxMouseDown"
                                 v-on:mouseup="toolBoxMouseUp"
                                 v-on:mousemove="toolBoxMouseMove"
@@ -202,23 +202,19 @@
         methods: {
             handleOpen:function(){
                 this.visible = true;
-                if(document.addEventListener){
-                    this.$refs['toolBox'].addEventListener('DOMMouseScroll',this.scaleImgWheel);
-                }
-                if(document.attachEvent){
-                    this.$refs['toolBox'].attachEvent('onmousewheel',this.scaleImgWheel);
-                }
+                this.$nextTick(()=>{
+                    let mousewheelevt=(/Firefox/i.test(navigator.userAgent))?"DOMMouseScroll": "mousewheel";
+                    if(mousewheelevt=='mousewheel') {
+                        this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
+                    } else {
+                        this.$refs['toolBox'].addEventListener('DOMMouseScroll',this.scaleImgWheel);
+                    }
+                })
             },
             handleClose: function () {
-                this.visible = false;
-                if(document.addEventListener){
-                    this.$refs['toolBox'].removeEventListener('DOMMouseScroll',this.scaleImgWheel);
-                }
-                if(document.attachEvent){
-                    this.$refs['toolBox'].detachEvent('onmousewheel',this.scaleImgWheel);
-                }
+                this.clearAll();
                 this.$nextTick(() => {
-                    this.clearAll();
+                    this.visible = false;
                 });
             },
             // 选择图片 e.stopPropagation();
@@ -404,9 +400,8 @@
                     let scale;
                     // e是FF的事件。window.event是chrome/ie/opera的事件
                     let ee = e || window.event;
-                    // console.log(ee); //可以看看ee.wheelDelta和e.detail在浏览器中的值；
                     if(ee.wheelDelta) { //IE/Opera/Chrome
-                        scale = ee.wheelDelta;
+                        scale = -(ee.wheelDelta/40);
                     } else if(ee.detail) { //Firefox
                         scale = ee.detail;
                     }
