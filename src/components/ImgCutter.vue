@@ -15,11 +15,8 @@
                 leave-active-class="fade-out-active"
         >
             <div class="dialogMain"
-                 title="裁剪图片"
                  v-if="visible"
-                 :width="boxWidth+40+'px'"
-                 appendToBody
-                 :before-close="handleClose">
+                 :width="boxWidth+40+'px'">
                 <div class="toolMain">
                     <div class="tool-title">
                         图片裁剪
@@ -31,9 +28,16 @@
                          v-on:mouseup="controlBtnMouseUp"
                          v-on:mouseleave="controlBtnMouseUp"
                          class="toolBox">
+                        <!--选取图片-->
                         <div class="tips" v-show="!drawImg.img">
                             <button class="btn btn-warning btn-xs" @click="chooseImg">请选择要裁剪的图片</button>
                         </div>
+                        <!--工具栏-->
+                        <div class="dockMain">
+                            <div @click="turnImg('left')" class="dockBtn">向左旋转</div>
+                            <div @click="turnImg('right')" class="dockBtn">向右旋转</div>
+                        </div>
+                        <!--裁剪区域-->
                         <div
                                 v-show="drawImg.img!=null"
                                 v-on:mousedown="toolBoxMouseDown"
@@ -78,6 +82,7 @@
                                 <div class="toolBoxControlLine toolBoxControlLineItem-4"></div>
                             </div>
                         </div>
+                        <!--画布-->
                         <canvas class="canvasSelectBox" ref="canvasSelectBox" :width="boxWidth"
                                 @mousedown="dropImgOn"
                                 @mouseup="dropImgOff"
@@ -243,6 +248,7 @@
                                 let boxHeight = _this.boxHeight;
                                 let c = _this.$refs['canvas'];
                                 let ctx = c.getContext("2d");
+                                ctx.restore();
                                 let rate;
                                 let drawImg = _this.drawImg;
                                 drawImg.img = img;
@@ -266,6 +272,7 @@
                                 drawImg.width = imgWidth * rate;
                                 drawImg.height = imgHeight * rate;
                                 ctx.drawImage(drawImg.img, drawImg.sx, drawImg.sy, drawImg.swidth, drawImg.sheight, drawImg.x, drawImg.y, drawImg.width, drawImg.height);
+                                ctx.save();
                             }
                         }, 200);
                     };
@@ -381,12 +388,14 @@
                 if(this.dropImg.active && this.drawImg.img) {
                     let canv = _this.$refs['canvas'];
                     let ctx = canv.getContext("2d");
+                    ctx.restore();
                     let drawImg = {..._this.drawImg};
                     drawImg.x  = _this.dropImg.params.x - (_this.dropImg.pageX - e.pageX);
                     drawImg.y  = _this.dropImg.params.y - (_this.dropImg.pageY - e.pageY);
                     _this.$set(_this,'drawImg',drawImg);
                     ctx.clearRect(0,0,canv.width,canv.height);
                     ctx.drawImage(drawImg.img, drawImg.sx, drawImg.sy, drawImg.swidth, drawImg.sheight, drawImg.x, drawImg.y, drawImg.width, drawImg.height);
+                    ctx.save();
                     e.stopPropagation();
                 }
             },
@@ -412,6 +421,23 @@
                     _this.drawImg.height = _this.drawImg.width/_this.scaleImg.rate;
                     ctx.drawImage(_this.drawImg.img, _this.drawImg.sx, _this.drawImg.sy, _this.drawImg.swidth, _this.drawImg.sheight, _this.drawImg.x, _this.drawImg.y, _this.drawImg.width, _this.drawImg.height);
                 }
+            },
+            // 旋转
+            turnImg:function(val){
+                let canv = this.$refs['canvas'];
+                let ctx = canv.getContext("2d");
+                let drawImg = this.drawImg;
+                ctx.clearRect(0,0,canv.width,canv.height);
+                ctx.drawImage(drawImg.img, drawImg.sx, drawImg.sy, drawImg.swidth, drawImg.sheight, drawImg.x, drawImg.y, drawImg.width, drawImg.height);
+                ctx.save();
+                ctx.translate(canv.width / 2, canv.height / 2);
+                if(val=='left') {
+                    ctx.rotate(-30*Math.PI/180);
+                }
+                if(val=='right') {
+                    ctx.rotate(30*Math.PI/180);
+                }
+                ctx.translate( -canv.width / 2, -canv.height / 2);
             },
             // control box
             controlBtnMouseDown: function (e) {
@@ -893,4 +919,41 @@
         position: relative!important;
         opacity: 1!important;
     }
+    /*工具栏*/
+    .dockMain {
+        position:absolute;
+        z-index:1002;
+        bottom:5px;
+        left:5px;
+        opacity:0.3;
+        transition: opacity 0.5s;
+        width:100%;
+    }
+    .dockMain:hover {
+        opacity:1;
+    }
+    .dockBtn{
+        font-size:10px;
+        cursor:pointer;
+        display:inline-block;
+        margin-right:4px;
+        color:#333;
+        background:#dedede;
+        padding:1px 2px;
+        border-radius: 3px;
+        border:1px solid #cecece;
+        transition: background 0.2s,color 0.2s;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Chrome/Safari/Opera */
+        -khtml-user-select: none; /* Konqueror */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently*/
+    }
+    .dockBtn:hover {
+        color:#fff;
+        background-color: #409EFF;
+        border-color: #409EFF;
+    }
+
 </style>
