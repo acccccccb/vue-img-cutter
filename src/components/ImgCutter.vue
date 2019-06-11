@@ -36,6 +36,14 @@
                         <div class="dockMain" @mouseenter="dropImgOff">
                             <div @click="turnImg('left')" class="dockBtn">向左旋转</div>
                             <div @click="turnImg('right')" class="dockBtn">向右旋转</div>
+                            <div class="dockBtnScrollBar">
+                              <div
+                                @mousemove="scrollBarControlMove"
+                                @mousedown="scrollBarControlMove"
+                                @mouseup="scrollBarControlMove"
+                                class="scrollBarControl"></div>
+                              <div class="scrollBarText"></div>
+                            </div>
                         </div>
                         <!--裁剪区域-->
                         <div
@@ -104,6 +112,7 @@
                     <div class="btn-group fr">
                         <button class="btn btn-default" @click="handleClose">取消</button>
                         <button class="btn btn-primary" :disabled="!drawImg.img" type="primary" @click="cropPicture">确定</button>
+
                     </div>
                 </span>
                 <div class="copyright">
@@ -574,6 +583,9 @@
                     };
                 });
             },
+            scrollBarControlMove:function(e){
+
+            },
         }
     }
 </script>
@@ -960,4 +972,30 @@
         border-color: #409EFF;
     }
     /* 旋转进度条 */
+    .dockBtnScrollBar {
+      display:inline-block;
+      margin-left:30px;
+      margin-right:4px;
+      background:#dedede;
+      width:200px;
+      height:20px;
+      position: relative;
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Chrome/Safari/Opera */
+      -khtml-user-select: none; /* Konqueror */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+      user-select: none; /* Non-prefixed version, currently*/
+    }
+  .scrollBarControl {
+    position: absolute;
+    cursor:pointer;
+    background:red;
+    width:10px;
+    height:30px;
+    border-radius: 5px;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+  }
 </style>
