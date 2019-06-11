@@ -33,7 +33,7 @@
                             <button class="btn btn-warning btn-xs" @click="chooseImg">请选择要裁剪的图片</button>
                         </div>
                         <!--工具栏-->
-                        <div class="dockMain">
+                        <div class="dockMain" @mouseenter="dropImgOff">
                             <div @click="turnImg('left')" class="dockBtn">向左旋转</div>
                             <div @click="turnImg('right')" class="dockBtn">向右旋转</div>
                         </div>
@@ -86,7 +86,6 @@
                         <canvas class="canvasSelectBox" ref="canvasSelectBox" :width="boxWidth"
                                 @mousedown="dropImgOn"
                                 @mouseup="dropImgOff"
-                                @mouseleave="dropImgLeave"
                                 @mousemove="dropImgMove"
                                 :height="boxHeight"></canvas>
                         <canvas class="canvas" ref="canvas" :width="boxWidth" :height="boxHeight"></canvas>
@@ -185,6 +184,10 @@
                     pageY:0,
                     params:{}
                 },
+                // 旋转
+                rotateImg:{
+                  angle:0
+                },
                 // 缩放
                 scaleImg:{
                     rate:0,
@@ -246,11 +249,8 @@
                                 let imgWidth = img.width;
                                 let boxWidth = _this.boxWidth;
                                 let boxHeight = _this.boxHeight;
-                                let c = _this.$refs['canvas'];
-                                let ctx = c.getContext("2d");
-                                ctx.restore();
                                 let rate;
-                                let drawImg = _this.drawImg;
+                                let drawImg = {..._this.drawImg};
                                 drawImg.img = img;
                                 _this.scaleImg.rate = imgWidth/imgHeight; // 缩放时用到此参数
                                 if (imgHeight < boxHeight && imgWidth < boxWidth) {
@@ -266,13 +266,14 @@
                                         drawImg.y = (boxHeight - imgHeight * rate) / 2;
                                     }
                                 }
-                                ctx.clearRect(0, 0, c.width, c.height);
                                 drawImg.swidth = imgWidth;
                                 drawImg.sheight = imgHeight;
                                 drawImg.width = imgWidth * rate;
                                 drawImg.height = imgHeight * rate;
-                                ctx.drawImage(drawImg.img, drawImg.sx, drawImg.sy, drawImg.swidth, drawImg.sheight, drawImg.x, drawImg.y, drawImg.width, drawImg.height);
-                                ctx.save();
+                                drawImg.x = (boxWidth - drawImg.width)/2;
+                                drawImg.y = (boxHeight - drawImg.height)/2;
+                                _this.$set(_this,'drawImg',drawImg);
+                                _this.printImg();
                             }
                         }, 200);
                     };
@@ -300,6 +301,7 @@
                     height: 0//要使用的图像的高度
                 };
                 this.$refs['inputFile'].value = "";
+                this.rotateImg.angle = 0;
                 this.drawImg.img = null;
             },
             // draw control
@@ -347,12 +349,16 @@
                 this.toolBox.x = parseInt($toolBox.style.left.split('px')[0]);
                 this.toolBox.y = parseInt($toolBox.style.top.split('px')[0]);
                 this.toolBox.disable = false;
+                this.dropImg.active = false;
                 this.toolBox.boxMove.start = {
                     x: e.pageX,
                     y: e.pageY,
                 };
             },
             toolBoxMouseMove: function (e) {
+              if(this.dropImg.active){
+                this.dropImgMove(e);
+              }
                 if (this.toolBox.disable === false) {
                     let offsetX = e.pageX - this.toolBox.boxMove.start.x;
                     let offsetY = e.pageY - this.toolBox.boxMove.start.y;
@@ -369,6 +375,21 @@
                 this.toolBox.x = parseInt($toolBox.style.left.split('px')[0]);
                 this.toolBox.y = parseInt($toolBox.style.top.split('px')[0]);
                 this.toolBox.disable = true;
+                this.dropImg.active = false;
+            },
+            // 绘制图片
+            printImg:function(){
+              let canv = this.$refs['canvas'];
+              let ctx = canv.getContext("2d");
+              ctx.save();
+              ctx.clearRect(0, 0, canv.width, canv.height);
+              ctx.translate(this.drawImg.x + this.drawImg.width/2, this.drawImg.y + this.drawImg.height/2);
+              ctx.rotate((this.rotateImg.angle)*Math.PI/180);
+              ctx.translate(-(this.drawImg.x + this.drawImg.width/2), -(this.drawImg.y + this.drawImg.height/2));
+              ctx.translate(this.drawImg.x, this.drawImg.y);
+              ctx.drawImage(this.drawImg.img, this.drawImg.sx, this.drawImg.sy, this.drawImg.swidth, this.drawImg.sheight, 0,0, this.drawImg.width, this.drawImg.height);
+              ctx.translate(-this.drawImg.x, -this.drawImg.y);
+              ctx.restore();
             },
             // 拖动图片
             dropImgOn:function(e){
@@ -380,22 +401,14 @@
             dropImgOff:function(){
                 this.dropImg.active = false;
             },
-            dropImgLeave:function(){
-                this.dropImg.active = false;
-            },
             dropImgMove:function(e){
-                let _this = this;
+              let _this = this;
                 if(this.dropImg.active && this.drawImg.img) {
-                    let canv = _this.$refs['canvas'];
-                    let ctx = canv.getContext("2d");
-                    ctx.restore();
                     let drawImg = {..._this.drawImg};
                     drawImg.x  = _this.dropImg.params.x - (_this.dropImg.pageX - e.pageX);
                     drawImg.y  = _this.dropImg.params.y - (_this.dropImg.pageY - e.pageY);
                     _this.$set(_this,'drawImg',drawImg);
-                    ctx.clearRect(0,0,canv.width,canv.height);
-                    ctx.drawImage(drawImg.img, drawImg.sx, drawImg.sy, drawImg.swidth, drawImg.sheight, drawImg.x, drawImg.y, drawImg.width, drawImg.height);
-                    ctx.save();
+                    _this.printImg();
                     e.stopPropagation();
                 }
             },
@@ -403,9 +416,6 @@
             scaleImgWheel:function(e){
                 let _this = this;
                 if(_this.drawImg.img) {
-                    let canv = _this.$refs['canvas'];
-                    let ctx = canv.getContext("2d");
-                    ctx.clearRect(0,0,canv.width,canv.height);
                     let scale;
                     // e是FF的事件。window.event是chrome/ie/opera的事件
                     let ee = e || window.event;
@@ -419,25 +429,18 @@
                     _this.drawImg.y = (_this.drawImg.width-scale*9)>widthLimit?_this.drawImg.y+scale*3:_this.drawImg.y;
                     _this.drawImg.width = (_this.drawImg.width-scale*9)>widthLimit?_this.drawImg.width-scale*9:widthLimit;
                     _this.drawImg.height = _this.drawImg.width/_this.scaleImg.rate;
-                    ctx.drawImage(_this.drawImg.img, _this.drawImg.sx, _this.drawImg.sy, _this.drawImg.swidth, _this.drawImg.sheight, _this.drawImg.x, _this.drawImg.y, _this.drawImg.width, _this.drawImg.height);
+                    _this.printImg();
                 }
             },
             // 旋转
             turnImg:function(val){
-                let canv = this.$refs['canvas'];
-                let ctx = canv.getContext("2d");
-                let drawImg = this.drawImg;
-                ctx.clearRect(0,0,canv.width,canv.height);
-                ctx.drawImage(drawImg.img, drawImg.sx, drawImg.sy, drawImg.swidth, drawImg.sheight, drawImg.x, drawImg.y, drawImg.width, drawImg.height);
-                ctx.save();
-                ctx.translate(canv.width / 2, canv.height / 2);
                 if(val=='left') {
-                    ctx.rotate(-30*Math.PI/180);
+                  this.rotateImg.angle = this.rotateImg.angle - 5;
                 }
                 if(val=='right') {
-                    ctx.rotate(30*Math.PI/180);
+                  this.rotateImg.angle = this.rotateImg.angle + 5;
                 }
-                ctx.translate( -canv.width / 2, -canv.height / 2);
+                this.printImg('rotate');
             },
             // control box
             controlBtnMouseDown: function (e) {
@@ -451,7 +454,8 @@
             },
             controlBtnMouseUp: function (e) {
                 this.controlBox.disable = true;
-                e.stopPropagation();
+                this.dropImgOff();
+              e.stopPropagation();
             },
 
             controlBtnMouseMove: function (e) {
@@ -925,7 +929,7 @@
         z-index:1002;
         bottom:5px;
         left:5px;
-        opacity:0.3;
+        opacity:0.8;
         transition: opacity 0.5s;
         width:100%;
     }
@@ -955,5 +959,5 @@
         background-color: #409EFF;
         border-color: #409EFF;
     }
-
+    /* 旋转进度条 */
 </style>
