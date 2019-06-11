@@ -39,8 +39,8 @@
                             <div class="dockBtnScrollBar">
                               <div
                                 @mousemove="scrollBarControlMove"
-                                @mousedown="scrollBarControlMove"
-                                @mouseup="scrollBarControlMove"
+                                @mousedown="scrollBarControlOn"
+                                @mouseup="scrollBarControlOff"
                                 class="scrollBarControl"></div>
                               <div class="scrollBarText"></div>
                             </div>
@@ -196,6 +196,9 @@
                 // 旋转
                 rotateImg:{
                   angle:0
+                },
+                rotateControl:{
+                  active:false,
                 },
                 // 缩放
                 scaleImg:{
@@ -584,7 +587,15 @@
                 });
             },
             scrollBarControlMove:function(e){
-
+              if(this.rotateControl.active) {
+                console.log(e.pageX,e.pageY);
+              }
+            },
+            scrollBarControlOn:function(){
+              this.rotateControl.active = true;
+            },
+            scrollBarControlOff:function(){
+              this.rotateControl.active = false;
             },
         }
     }
