@@ -20,7 +20,7 @@
         <div class="toolMain">
           <div class="tool-title">
             图片裁剪
-            <span class="closeIcon" @click="handleClose">x</span>
+            <span class="closeIcon" @click="handleClose">×</span>
           </div>
           <div ref="toolBox"
                :style="'height:'+boxHeight+'px;width:'+boxWidth+'px'"
@@ -466,9 +466,9 @@
       turnImg: function (angle) {
         let startAngle = this.rotateImg.angle;
         let turnAngle = startAngle + angle;
-        if (turnAngle >= -360 && turnAngle <= 360) {
+        if (turnAngle >= -180 && turnAngle <= 180) {
           this.rotateImg.angle = turnAngle;
-          this.rotateControl.position = turnAngle / 360 * 100 + 100;
+          this.rotateControl.position = turnAngle / 180 * 100 + 100;
           this.printImg('rotate');
         }
       },
@@ -1007,7 +1007,22 @@
   .closeIcon {
     float: right;
     cursor: pointer;
-    color: #dedede;
+    display:inline-block;
+    background:#c6e2ff;
+    color: #fff;
+    width:18px;
+    height:18px;
+    line-height:18px;
+    text-align:center;
+    border-radius: 50%;
+    margin:0;
+    padding:0;
+    transition: transform 0.3s,background 0.3s;
+    /*transform: rotate(90deg);*/
+  }
+  .closeIcon:hover {
+    background:#409eff;
+    transform: rotate(180deg);
   }
 
   .copyright {
