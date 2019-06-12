@@ -1,7 +1,7 @@
 # vue-img-cutter
 > vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放
 
-![插件截图](http://www.ihtmlcss.com/wp-content/uploads/2019/06/vue-img-cutter-679x550.png)
+![插件截图](http://www.ihtmlcss.com/wp-content/uploads/2019/06/img-cutter.png)
 
 ##### 演示地址：[http://ihtmlcss.com/demo/dist/#/croptool](http://ihtmlcss.com/demo/dist/#/croptool)
 ##### 项目地址：[https://github.com/acccccccb/vue-img-cutter](https://github.com/acccccccb/vue-img-cutter)
@@ -45,3 +45,8 @@ export default {
 |cutDown|完成截图后要执行的方法|Function|是|-|
 > 支持slot，在组件内部使用带有slot="openImgCutter"属性的元素即可自定义打开组件的按钮
 
+#### 更新日志
+##### 2.0.15
+
+- 增加工具栏 可对图片进行旋转/缩放操作
+- 优化了动画效果
