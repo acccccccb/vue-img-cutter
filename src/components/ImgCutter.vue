@@ -2,115 +2,114 @@
   <div>
     <div @click="handleOpen">
       <slot name="openImgCutter"></slot>
+      <slot name="open"></slot>
     </div>
-    <button v-if="!$slots.openImgCutter" class="btn btn-primary" @click="handleOpen">{{label}}</button>
+    <button v-if="!$slots.openImgCutter && !$slots.open" class="btn btn-primary" @click="handleOpen">{{label}}</button>
     <transition name="fade">
-      <div v-if="visible" @click="handleClose" class="mask"></div>
-    </transition>
-    <transition
-      name="fade"
-      enter-class="fade-in-enter"
-      enter-active-class="fade-in-active"
-      leave-class="fade-out-enter"
-      leave-active-class="fade-out-active"
-    >
-      <div class="dialogMain"
-           v-if="visible"
-           :width="boxWidth+40+'px'">
-        <div class="toolMain">
-          <div class="tool-title">
-            图片裁剪
-            <span class="closeIcon" @click="handleClose">×</span>
-          </div>
-          <div ref="toolBox"
-               :style="'height:'+boxHeight+'px;width:'+boxWidth+'px'"
-               v-on:mousemove="controlBtnMouseMove"
-               v-on:mouseup="controlBtnMouseUp"
-               v-on:mouseleave="controlBtnMouseUp"
-               class="toolBox">
-            <!--选取图片-->
-            <div class="tips" v-show="!drawImg.img">
-              <button class="btn btn-warning btn-xs" @click="chooseImg">选择图片</button>
-            </div>
-            <!--工具栏-->
-            <div class="dockMain" @mouseenter="dropImgOff">
-              <div class="dockBtn" v-if="rate">比例：{{rate}}</div>
-              <div class="dockBtn" @click="scaleReset">
-                缩放：{{drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-'}}
-              </div>
-              <div @click="turnImg(-90)" class="dockBtn">左转90°</div>
-              <div @click="turnImg(90)" class="dockBtn">右转90°</div>
-              <div @click="turnReset()" class="dockBtn">复位</div>
-              <div class="dockBtnScrollBar">
-                <div
-                  ref="dockBtnScrollControl"
-                  @mousemove="scrollBarControlMove"
-                  @mousedown="scrollBarControlOn"
-                  @mouseleave="scrollBarControlOff"
-                  @mouseup="scrollBarControlOff"
-                  :style="'left:'+ rotateControl.position + 'px'"
-                  class="scrollBarControl"></div>
-                <div v-if="rotateControl.active == true" class="scrollBarText"
-                     :style="'left:'+ rotateControl.position + 'px'">
-                  {{rotateImg.angle.toFixed(0) + '°'}}
+      <div v-if="visible"  class="mask" ref="mask">
+        <div class="dialogBox" v-if="visible" :style="'height:'+ parseInt(boxHeight+150)+'px'">
+          <transition
+            name="fade"
+            enter-class="fade-in-enter"
+            enter-active-class="fade-in-active"
+            leave-class="fade-out-enter"
+            leave-active-class="fade-out-active">
+            <div class="dialogMain"
+                 :width="boxWidth+40+'px'">
+              <div class="toolMain">
+                <div class="tool-title">
+                  图片裁剪
+                  <span class="closeIcon" @click="handleClose">×</span>
+                </div>
+                <div ref="toolBox"
+                     :style="'height:'+boxHeight+'px;width:'+boxWidth+'px'"
+                     v-on:mousemove="controlBtnMouseMove"
+                     v-on:mouseup="controlBtnMouseUp"
+                     v-on:mouseleave="controlBtnMouseUp"
+                     class="toolBox">
+                  <!--选取图片-->
+                  <div class="tips" v-show="!drawImg.img">
+                    <button class="btn btn-warning btn-xs" @click="chooseImg">选择图片</button>
+                  </div>
+                  <!--工具栏-->
+                  <div v-if="tool==true" class="dockMain" @mouseenter="dropImgOff">
+                    <div class="dockBtn" v-if="rate">比例：{{rate}}</div>
+                    <div class="dockBtn" @click="scaleReset">
+                      缩放：{{drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-'}}
+                    </div>
+                    <div @click="turnImg(-90)" class="dockBtn">左转90°</div>
+                    <div @click="turnImg(90)" class="dockBtn">右转90°</div>
+                    <div @click="turnReset()" class="dockBtn">复位</div>
+                    <div class="dockBtnScrollBar">
+                      <div
+                        ref="dockBtnScrollControl"
+                        @mousemove="scrollBarControlMove"
+                        @mousedown="scrollBarControlOn"
+                        @mouseleave="scrollBarControlOff"
+                        @mouseup="scrollBarControlOff"
+                        :style="'left:'+ rotateControl.position + 'px'"
+                        class="scrollBarControl"></div>
+                      <div v-if="rotateControl.active == true" class="scrollBarText"
+                           :style="'left:'+ rotateControl.position + 'px'">
+                        {{rotateImg.angle.toFixed(0) + '°'}}
+                      </div>
+                    </div>
+                  </div>
+                  <!--裁剪区域-->
+                  <div
+                    v-show="drawImg.img!=null"
+                    v-on:mousedown="toolBoxMouseDown"
+                    v-on:mouseup="toolBoxMouseUp"
+                    v-on:mousemove="toolBoxMouseMove"
+                    v-on:mouseleave="toolBoxMouseLeave"
+                    ref="toolBoxControl"
+                    class="toolBoxControl">
+                    <div class="controlBox">
+                      <div class="selectArea">宽:{{toolBox.width}} 高:{{toolBox.height}}
+                        (x:{{toolBox.boxMove.moveTo.x}},y:{{toolBox.boxMove.moveTo.y}})
+                      </div>
+                      <div data-name="leftUp"
+                           v-on:mousedown="controlBtnMouseDown"
+                           class="leftUp controlBtn"></div>
+                      <div data-name="leftDown"
+                           v-on:mousedown="controlBtnMouseDown"
+                           class="leftDown controlBtn"></div>
+                      <div data-name="rightUp"
+                           v-on:mousedown="controlBtnMouseDown"
+                           class="rightUp controlBtn"></div>
+                      <div data-name="rightDown"
+                           v-on:mousedown="controlBtnMouseDown"
+                           class="rightDown controlBtn"></div>
+
+                      <div data-name="topCenter"
+                           v-on:mousedown="controlBtnMouseDown"
+                           class="topCenter controlBtn"></div>
+                      <div data-name="downCenter"
+                           v-on:mousedown="controlBtnMouseDown"
+                           class="downCenter controlBtn"></div>
+                      <div data-name="leftCenter"
+                           v-on:mousedown="controlBtnMouseDown"
+                           class="leftCenter controlBtn"></div>
+                      <div data-name="rightCenter"
+                           v-on:mousedown="controlBtnMouseDown"
+                           class="rightCenter controlBtn"></div>
+
+                      <div class="toolBoxControlLine toolBoxControlLineItem-1"></div>
+                      <div class="toolBoxControlLine toolBoxControlLineItem-2"></div>
+                      <div class="toolBoxControlLine toolBoxControlLineItem-3"></div>
+                      <div class="toolBoxControlLine toolBoxControlLineItem-4"></div>
+                    </div>
+                  </div>
+                  <!--画布-->
+                  <canvas class="canvasSelectBox" ref="canvasSelectBox" :width="boxWidth"
+                          @mousedown="dropImgOn"
+                          @mouseup="dropImgOff"
+                          @mousemove="dropImgMove"
+                          :height="boxHeight"></canvas>
+                  <canvas class="canvas" ref="canvas" :width="boxWidth" :height="boxHeight"></canvas>
                 </div>
               </div>
-            </div>
-            <!--裁剪区域-->
-            <div
-              v-show="drawImg.img!=null"
-              v-on:mousedown="toolBoxMouseDown"
-              v-on:mouseup="toolBoxMouseUp"
-              v-on:mousemove="toolBoxMouseMove"
-              v-on:mouseleave="toolBoxMouseLeave"
-              ref="toolBoxControl"
-              class="toolBoxControl">
-              <div class="controlBox">
-                <div class="selectArea">宽:{{toolBox.width}} 高:{{toolBox.height}}
-                  (x:{{toolBox.boxMove.moveTo.x}},y:{{toolBox.boxMove.moveTo.y}})
-                </div>
-                <div data-name="leftUp"
-                     v-on:mousedown="controlBtnMouseDown"
-                     class="leftUp controlBtn"></div>
-                <div data-name="leftDown"
-                     v-on:mousedown="controlBtnMouseDown"
-                     class="leftDown controlBtn"></div>
-                <div data-name="rightUp"
-                     v-on:mousedown="controlBtnMouseDown"
-                     class="rightUp controlBtn"></div>
-                <div data-name="rightDown"
-                     v-on:mousedown="controlBtnMouseDown"
-                     class="rightDown controlBtn"></div>
-
-                <div data-name="topCenter"
-                     v-on:mousedown="controlBtnMouseDown"
-                     class="topCenter controlBtn"></div>
-                <div data-name="downCenter"
-                     v-on:mousedown="controlBtnMouseDown"
-                     class="downCenter controlBtn"></div>
-                <div data-name="leftCenter"
-                     v-on:mousedown="controlBtnMouseDown"
-                     class="leftCenter controlBtn"></div>
-                <div data-name="rightCenter"
-                     v-on:mousedown="controlBtnMouseDown"
-                     class="rightCenter controlBtn"></div>
-
-                <div class="toolBoxControlLine toolBoxControlLineItem-1"></div>
-                <div class="toolBoxControlLine toolBoxControlLineItem-2"></div>
-                <div class="toolBoxControlLine toolBoxControlLineItem-3"></div>
-                <div class="toolBoxControlLine toolBoxControlLineItem-4"></div>
-              </div>
-            </div>
-            <!--画布-->
-            <canvas class="canvasSelectBox" ref="canvasSelectBox" :width="boxWidth"
-                    @mousedown="dropImgOn"
-                    @mouseup="dropImgOff"
-                    @mousemove="dropImgMove"
-                    :height="boxHeight"></canvas>
-            <canvas class="canvas" ref="canvas" :width="boxWidth" :height="boxHeight"></canvas>
-          </div>
-        </div>
-        <span class="i-dialog-footer">
+              <span class="i-dialog-footer">
                     <input v-show="false" @change="putImgToCanv" ref="inputFile" type="file" accept="image/*">
                     <button class="btn btn-primary btn-primary-plain" @click="chooseImg">选择图片</button>
                     <div class="btn-group fr">
@@ -119,9 +118,12 @@
                                 @click="cropPicture">确定</button>
                     </div>
                 </span>
-        <div class="copyright">
-          <a v-if="!DoNotDisplayCopyright" target="_blank" href="https://github.com/acccccccb/vue-img-cutter"
-             rel="nofollow">vue-img-cutter</a>
+              <div class="copyright">
+                <a v-if="!DoNotDisplayCopyright" target="_blank" href="https://github.com/acccccccb/vue-img-cutter"
+                   rel="nofollow">vue-img-cutter</a>
+              </div>
+            </div>
+          </transition>
         </div>
       </div>
     </transition>
@@ -151,13 +153,18 @@
         default: null,
         required: false,
       },
+      tool:{
+        type:Boolean,
+        default:true,
+        required:false
+      },
       DoNotDisplayCopyright: {
         type: Boolean,
         default: false,
         required: false,
       }
     },
-    model: ['label', 'boxWidth', 'boxHeight', 'rate', 'DoNotDisplayCopyright'],
+    model: ['label', 'boxWidth', 'boxHeight', 'rate','tool', 'DoNotDisplayCopyright'],
     data() {
       let toolBoxWidth, toolBoxHeight;
       toolBoxWidth = this.boxWidth / 2;
@@ -461,6 +468,9 @@
           _this.drawImg.height = _this.drawImg.width / _this.scaleImg.rate;
           _this.printImg();
         }
+        let scrollTop = this.$refs['mask'].scrollTop;
+        this.$refs['mask'].scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
+        return false;
       },
       // 旋转
       turnImg: function (angle) {
@@ -655,18 +665,26 @@
   .mask {
     background: rgba(0, 0, 0, 0.6);
     position: fixed;
+    overflow-y:scroll;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: 999;
   }
-
+  .dialogBox {
+    position:relative;
+    padding-top:100px;
+    padding-bottom:100px;
+    clear:both;
+  }
   .dialogMain {
-    position: fixed;
-    top: 50%;
+    line-height:125%;
+    font-size:16px;
+    position: absolute;
+    top: 100px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     border: 1px solid rgba(0, 0, 0, 0.8);
     border-radius: 3px;
     box-sizing: border-box;
@@ -679,8 +697,18 @@
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently*/
+    animation: dialogShow .3s;
   }
-
+  @keyframes dialogShow {
+    from {
+      margin-top:-50px;
+      opacity: 0;
+    }
+    to {
+      margin-top:0;
+      opacity: 1;
+    }
+  }
   .toolMain {
     box-sizing: border-box;
   }
@@ -1055,7 +1083,7 @@
     transition: opacity 0.5s;
     width: 98%;
     box-sizing: border-box;
-    padding: 3px 10px;
+    padding: 10px 10px;
     border-radius: 5px;
     background: #fff;
   }
@@ -1074,6 +1102,8 @@
     background-color: #ecf5ff;
     padding: 1px 4px;
     border-radius: 3px;
+    height:20px;
+    line-height:20px;
     transition: background 0.2s, color 0.2s;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Chrome/Safari/Opera */
