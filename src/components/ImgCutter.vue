@@ -6,7 +6,7 @@
     </div>
     <button v-if="!$slots.openImgCutter && !$slots.open" class="btn btn-primary" @click="handleOpen">{{label}}</button>
     <transition name="fade">
-      <div v-if="visible"  class="mask" ref="mask">
+      <div v-if="visible"  class="mask vue-img-cutter" ref="mask">
         <div class="dialogBox" v-if="visible" :style="'height:'+ parseInt(boxHeight+150)+'px'">
           <transition
             name="fade"
@@ -29,7 +29,7 @@
                      class="toolBox">
                   <!--选取图片-->
                   <div class="tips" v-show="!drawImg.img">
-                    <button class="btn btn-warning btn-xs" @click="chooseImg">选择图片</button>
+                    <div class="btn btn-warning btn-xs" @click="chooseImg">选择图片</div>
                   </div>
                   <!--工具栏-->
                   <div v-if="tool==true" class="dockMain" @mouseenter="dropImgOff">
@@ -111,11 +111,11 @@
               </div>
               <span class="i-dialog-footer">
                     <input v-show="false" @change="putImgToCanv" ref="inputFile" type="file" accept="image/*">
-                    <button class="btn btn-primary btn-primary-plain" @click="chooseImg">选择图片</button>
+                    <div class="btn btn-primary btn-primary-plain" @click="chooseImg">选择图片</div>
                     <div class="btn-group fr">
-                        <button class="btn btn-default" @click="handleClose">取消</button>
-                        <button class="btn btn-primary" :disabled="!drawImg.img" type="primary"
-                                @click="cropPicture">确定</button>
+                        <div class="btn btn-default" @click="handleClose">取消</div>
+                        <div class="btn btn-primary" :disabled="!drawImg.img" type="primary"
+                                @click="cropPicture">确定</div>
                     </div>
                 </span>
               <div class="copyright">
@@ -648,6 +648,10 @@
   }
 </script>
 <style scoped>
+  .vue-img-cutter {
+    font-size:12px;
+    line-height:130%;
+  }
   .fl {
     float: left;
   }
@@ -892,6 +896,7 @@
   }
 
   .btn {
+    display:inline-block;
     text-align: center;
     background: #dedede;
     height: 40px;
@@ -901,6 +906,7 @@
     border-radius: 4px;
     cursor: pointer;
     border: 1px solid;
+    font-size:14px;
     transition: background .3s, color .3s;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Chrome/Safari/Opera */
@@ -981,6 +987,7 @@
     height: 26px;
     line-height: 26px;
     padding: 0 10px;
+    font-size:12px;
   }
 
   .dialog-footer {
