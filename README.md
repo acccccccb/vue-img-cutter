@@ -28,7 +28,7 @@ export default {
     :label="'选择图片'"
     :boxWidth="800"
     :boxHeight="400"
-    :rate="16:9"
+    :rate="'16:9'"
     v-on:cutDown="cutDown">
     <button slot="openImgCutter">选择图片</button>
 </ImgCutter>
@@ -45,7 +45,17 @@ export default {
 |cutDown|完成截图后要执行的方法|Function|是|-|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
+### 返回值：
+| 属性名 | 类型  |
+|:----:|:----:|
+|fileName|文件名|
+|file|file类型的文件对象|
+|blob|blob类型的文件对象|
+|dataURL|dataURL|
+
 ### 更新日志 
+#### 2.0.19
+- 修改了返回值，现在将追加返回文件名和file类型的文件对象
 
 #### 2.0.18
 

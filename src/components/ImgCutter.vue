@@ -171,6 +171,7 @@
       toolBoxHeight = this.boxHeight / 2;
       return {
         visible: false,
+          fileName:'',
         drawImg: {
           img: null,//规定要使用的图像、画布或视频
           sx: 0,//开始剪切的 x 坐标位置
@@ -263,6 +264,7 @@
         let _this = this;
         let file = e.target.files[0] || null;
         if (file) {
+          this.fileName = file.name;
           let reader = new FileReader();
           new Image();
           reader.readAsDataURL(file);
@@ -309,6 +311,14 @@
           this.drawControlBox(this.toolBox.width, this.toolBox.height, this.toolBox.x, this.toolBox.y);
         }
       },
+      dataURLtoFile:function(dataurl, filename){//将图片转换为Base64
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, {type:mime});
+        },
       // clear both
       clearAll: function () {
         let _this = this;
@@ -569,13 +579,12 @@
       cropPicture: function () {
         let _this = this;
         // get img
-        let c = this.$refs['canvas'];
+        let canvas = this.$refs['canvas'];
         let tempImg = new Image();
-        tempImg.src = c.toDataURL();
+        tempImg.src = canvas.toDataURL();
         if (!HTMLCanvasElement.prototype.toBlob) {
           Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
             value: function (callback, type, quality) {
-              var canvas = c;
               setTimeout(function () {
                 var binStr = atob(canvas.toDataURL(type, quality).split(',')[1]);
                 var len = binStr.length, arr = new Uint8Array(len);
@@ -583,13 +592,12 @@
                 for (var i = 0; i < len; i++) {
                   arr[i] = binStr.charCodeAt(i);
                 }
-
                 callback(new Blob([arr], {type: type || 'image/png'}));
               });
             }
           });
         }
-        c.toBlob((blob) => {
+          canvas.toBlob((blob) => {
           let reader = new FileReader();
           reader.readAsDataURL(blob);
           reader.onload = function () {
@@ -610,8 +618,10 @@
                 newCanv.toBlob(function (blob) {
                   _this.handleClose();
                   _this.$emit('cutDown', {
-                    file: blob,
-                    dataURL: newCanv.toDataURL()
+                      fileName:_this.fileName,
+                      blob: blob,
+                      file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
+                      dataURL: newCanv.toDataURL()
                   })
                 }, 'image/jpeg', 0.95);
               }
