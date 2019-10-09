@@ -54,6 +54,9 @@ export default {
 |dataURL|dataURL|
 
 ### 更新日志 
+#### 2.0.20
+- 兼容IE11+,MSEdge。IE11以下版本未测试
+
 #### 2.0.19
 - 修改了返回值，现在将追加返回文件名和file类型的文件对象
 
