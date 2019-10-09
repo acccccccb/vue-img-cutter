@@ -237,7 +237,17 @@
         selectBoxColor: 'rgba(0,0,0,0.6)',
       }
     },
+      mounted(){
+        console.log('isSupportFileApi:'+this.isSupportFileApi());
+      },
     methods: {
+      isIE:function() {
+          if (!!window.ActiveXObject || "ActiveXObject" in window){
+            return true;
+          }else{
+            return false;
+          }
+       },
       handleOpen: function () {
         this.visible = true;
         this.$nextTick(() => {
@@ -311,13 +321,31 @@
           this.drawControlBox(this.toolBox.width, this.toolBox.height, this.toolBox.x, this.toolBox.y);
         }
       },
+
+      isSupportFileApi:function() {
+          if(window.File && window.FileList && window.FileReader && window.Blob) {
+              return true;
+          } else {
+              return false;
+          }
+      },
       dataURLtoFile:function(dataurl, filename){//将图片转换为Base64
-            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-            while(n--){
-                u8arr[n] = bstr.charCodeAt(n);
-            }
-            return new File([u8arr], filename, {type:mime});
+          if(this.isIE) {
+              return 'Not Supported';
+          } else {
+              let arr = dataurl.split(','),
+                  mime = arr[0].match(/:(.*?);/)[1],
+                  bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+              while(n--){
+                  u8arr[n] = bstr.charCodeAt(n);
+              }
+              if(this.isSupportFileApi()) {
+                  let file = new File([u8arr], filename, {type:mime});
+                  return file;
+              } else {
+                  return '不支持File对象';
+              }
+          }
         },
       // clear both
       clearAll: function () {
@@ -479,7 +507,8 @@
           _this.printImg();
         }
         let scrollTop = this.$refs['mask'].scrollTop;
-        this.$refs['mask'].scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
+        // this.$refs['mask'].scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
+        window.scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
         return false;
       },
       // 旋转
