@@ -69,28 +69,36 @@
                         (x:{{toolBox.boxMove.moveTo.x}},y:{{toolBox.boxMove.moveTo.y}})
                       </div>
                       <div data-name="leftUp"
+                           v-if="sizeChange===true"
                            v-on:mousedown="controlBtnMouseDown"
                            class="leftUp controlBtn"></div>
                       <div data-name="leftDown"
+                           v-if="sizeChange===true"
                            v-on:mousedown="controlBtnMouseDown"
                            class="leftDown controlBtn"></div>
                       <div data-name="rightUp"
+                           v-if="sizeChange===true"
                            v-on:mousedown="controlBtnMouseDown"
                            class="rightUp controlBtn"></div>
                       <div data-name="rightDown"
+                           v-if="sizeChange===true"
                            v-on:mousedown="controlBtnMouseDown"
                            class="rightDown controlBtn"></div>
 
                       <div data-name="topCenter"
+                           v-if="sizeChange===true"
                            v-on:mousedown="controlBtnMouseDown"
                            class="topCenter controlBtn"></div>
                       <div data-name="downCenter"
+                           v-if="sizeChange===true"
                            v-on:mousedown="controlBtnMouseDown"
                            class="downCenter controlBtn"></div>
                       <div data-name="leftCenter"
+                           v-if="sizeChange===true"
                            v-on:mousedown="controlBtnMouseDown"
                            class="leftCenter controlBtn"></div>
                       <div data-name="rightCenter"
+                           v-if="sizeChange===true"
                            v-on:mousedown="controlBtnMouseDown"
                            class="rightCenter controlBtn"></div>
 
@@ -110,7 +118,7 @@
                 </div>
               </div>
               <span class="i-dialog-footer">
-                    <input v-show="false" @change="putImgToCanv" ref="inputFile" type="file" accept="image/*">
+                    <input v-show="false" @change="putImgToCanv" ref="inputFile" type="file" accept="image/gif, image/jpeg ,image/png">
                     <div class="btn btn-primary btn-primary-plain" @click="chooseImg">选择图片</div>
                     <div class="btn-group fr">
                         <div class="btn btn-default" @click="handleClose">取消</div>
@@ -120,7 +128,7 @@
                 </span>
               <div class="copyright">
                 <a v-if="!DoNotDisplayCopyright" target="_blank" href="https://github.com/acccccccb/vue-img-cutter"
-                   rel="nofollow">vue-img-cutter</a>
+                   rel="nofollow">vue-img-cutter {{version}}</a>
               </div>
             </div>
           </transition>
@@ -130,30 +138,51 @@
   </div>
 </template>
 <script>
+  import config from '../../package.json'
   export default {
     name: 'ImgCutter',
     props: {
-      label: {
+      label: { // 按钮文字
         type: String,
         default: "选择图片",
         required: false
       },
-      boxWidth: {
+      boxWidth: { // 裁剪窗口高度
         type: Number,
         default: 800,
         required: false
       },
-      boxHeight: {
+      boxHeight: { // 裁剪窗口高度
         type: Number,
         default: 400,
         required: false
       },
-      rate: {
+      cutWidth: { // 默认裁剪宽度
+          type: Number,
+          default: 200,
+          required: false
+      },
+      cutHeight: { // 默认裁剪高度
+          type: Number,
+          default: 200,
+          required: false
+      },
+      rate: { // 按比例裁剪
         type: String,
         default: null,
         required: false,
       },
-      tool:{
+      tool:{ // 是否显示工具栏
+        type:Boolean,
+        default:true,
+        required:false
+      },
+      sizeChange:{ // 能否调整裁剪尺寸
+        type:Boolean,
+        default:true,
+        required:false
+      },
+      moveAble:{ // 能否调整裁剪区域位置
         type:Boolean,
         default:true,
         required:false
@@ -170,6 +199,7 @@
       toolBoxWidth = this.boxWidth / 2;
       toolBoxHeight = this.boxHeight / 2;
       return {
+          version:'',
         visible: false,
           fileName:'',
         drawImg: {
@@ -238,16 +268,10 @@
       }
     },
       mounted(){
-        console.log('isSupportFileApi:'+this.isSupportFileApi());
+          this.version = config.version;
+          console.log('isSupportFileApi:'+this.isSupportFileApi());
       },
     methods: {
-      isIE:function() {
-          if (!!window.ActiveXObject || "ActiveXObject" in window){
-            return true;
-          }else{
-            return false;
-          }
-       },
       handleOpen: function () {
         this.visible = true;
         this.$nextTick(() => {
@@ -318,33 +342,34 @@
               }
             }, 200);
           };
+
+          this.toolBox.width = this.cutWidth;
+          this.toolBox.height = this.cutHeight;
+          this.toolBox.x = this.boxWidth/2 - this.toolBox.width/2;
+          this.toolBox.y = this.boxHeight/2 - this.toolBox.height/2;
           this.drawControlBox(this.toolBox.width, this.toolBox.height, this.toolBox.x, this.toolBox.y);
         }
       },
 
       isSupportFileApi:function() {
-          if(window.File && window.FileList && window.FileReader && window.Blob) {
+          if(window.File && window.FileList && window.FileReader && window.Blob && navigator.userAgent.indexOf("Edge") === -1 && navigator.userAgent.indexOf("MSIE") === -1 && navigator.userAgent.indexOf("Trident") === -1) {
               return true;
           } else {
               return false;
           }
       },
       dataURLtoFile:function(dataurl, filename){//将图片转换为Base64
-          if(this.isIE) {
-              return 'Not Supported';
+          let arr = dataurl.split(','),
+              mime = arr[0].match(/:(.*?);/)[1],
+              bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+          while(n--){
+              u8arr[n] = bstr.charCodeAt(n);
+          }
+          if(this.isSupportFileApi()) {
+              let file = new File([u8arr], filename, {type:mime});
+              return file;
           } else {
-              let arr = dataurl.split(','),
-                  mime = arr[0].match(/:(.*?);/)[1],
-                  bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-              while(n--){
-                  u8arr[n] = bstr.charCodeAt(n);
-              }
-              if(this.isSupportFileApi()) {
-                  let file = new File([u8arr], filename, {type:mime});
-                  return file;
-              } else {
-                  return '不支持File对象';
-              }
+              return '不支持File对象';
           }
         },
       // clear both
@@ -427,7 +452,7 @@
         if (this.dropImg.active) {
           this.dropImgMove(e);
         }
-        if (this.toolBox.disable === false) {
+        if (this.toolBox.disable === false && this.moveAble===true) {
           let offsetX = e.pageX - this.toolBox.boxMove.start.x;
           let offsetY = e.pageY - this.toolBox.boxMove.start.y;
           let x = this.toolBox.x + offsetX;
