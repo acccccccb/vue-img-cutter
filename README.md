@@ -1,3 +1,4 @@
+
 # vue-img-cutter
 > vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放
 > 兼容IE8+,MSEdge,Chrome,Firefox
@@ -12,7 +13,7 @@
 ```
 npm install vue-img-cutter --save-dev
 ```
-> 1. 将ImgCutter.vue文件引入项目：
+> 将ImgCutter.vue文件引入项目：
 ```
 import ImgCutter from 'vue-img-cutter'
 export default {
@@ -22,10 +23,11 @@ export default {
 ...
 }
 ```
-> 2. 在template中使用：
+> 在template中使用：
 
 ```
 <ImgCutter
+	ref="imgCutter"
     :label="'选择图片'"
     :boxWidth="700"
     :boxHeight="400"
@@ -38,6 +40,26 @@ export default {
     <button slot="open">选择图片</button>
 </ImgCutter>
 ```
+> 如果要兼容IE9浏览器，原来的按钮就不能用了，需要自己写一个方法来触发裁剪工具弹出
+> 在方法中先将图片上传至服务器，拿到返回的url后创建image对象，然后将对象传入裁剪工具
+> <button type="button" @click="forIe9">选择图片</button>
+```javascript
+forIe9:function(){
+	// 此处需要先提交待裁剪的图片到服务器上，然后拿到图片的url；
+	// 创建image对象，填上url
+	// 将创建好的image对象传入裁剪工具
+	uploadMethod(file).then((res)=>{
+		let $image = document.getElementById('image');
+        $image.name = 'eg.png';
+        this.$refs.imgCutter.handleOpen(()=>{
+            let $image = document.getElementById('image');
+            $image.name = 'eg.png';
+            this.$refs.imgCutter.importImgToCanv($image);
+        });
+	});
+}
+```
+
 
 ### 参数说明：
 
@@ -59,11 +81,18 @@ export default {
 | 属性名 | 类型  |
 |:----:|:----:|
 |fileName|文件名|
-|file|file类型的文件对象|
-|blob|blob类型的文件对象|
+|file|file类型的文件对象（IE部分版本可能不会返回）|
+|blob|blob类型的文件对象（IE部分版本可能不会返回）|
 |dataURL|dataURL|
 
 ### 更新日志 
+#### 2.0.22
+- 兼容IE9+,MSEdge,chrome,firefox
+- 由于没有找到IE11以下的浏览器，所以只能在仿真模式下测试，所以IE11以下可能会出现一些我没发现的问题，目前仿真模式下IE9+都测试通过了。IE8及以下不再支持。
+- 如果需要兼容IE9，需要先将图片上传到服务器上，然后执行this.$refs['yourComponent'].handleOpen(callback);
+- 添加了importImgToCanv方法来兼容IE9，必须在执行handleOpen后才能执行
+- 拖动，调整选框时会自动隐藏工具栏
+- 稍微调整了下样式，增加了动态的蚂蚁线
 #### 2.0.21
 - 兼容IE8+,MSEdge,chrome,firefox
 - 新增了设置参数，可固定裁剪框位置，固定裁剪尺寸，具体请看参数说明
