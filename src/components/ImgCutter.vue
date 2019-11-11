@@ -1,23 +1,22 @@
 <template>
   <div>
-    <div @click="handleOpen">
+    <div @click="handleOpen" v-if="showChooseBtn===true && isModal===true">
       <slot name="openImgCutter"></slot>
       <slot name="open"></slot>
     </div>
-    <button v-if="!$slots.openImgCutter && !$slots.open" class="btn btn-primary" @click="handleOpen">{{label}}</button>
+    <button v-if="!$slots.openImgCutter && !$slots.open && isModal===true" class="btn btn-primary" @click="handleOpen">{{label}}</button>
     <transition name="fade">
-      <div v-if="visible"  class="mask vue-img-cutter" ref="mask">
-        <div class="dialogBox" v-if="visible" :style="'height:'+ parseInt(boxHeight+150)+'px'">
+      <div v-if="visible"  :class="isModal===true?'mask vue-img-cutter':''" ref="mask">
+        <div :class="isModal===true?'dialogBoxModal':'dialogBox'" v-if="visible">
           <transition
                   name="fade"
                   enter-class="fade-in-enter"
                   enter-active-class="fade-in-active"
                   leave-class="fade-out-enter"
                   leave-active-class="fade-out-active">
-            <div class="dialogMain"
-                 :width="boxWidth+40+'px'">
+            <div ref="dialogMainModalRef" :class="isModal===true?'dialogMainModal':'dialogMain'" :style="'width:'+(isModal===true?boxWidth+32:boxWidth) + 'px'">
               <div class="toolMain">
-                <div class="tool-title">
+                <div class="tool-title" v-if="isModal===true">
                   图片裁剪
                   <span class="closeIcon" @click="handleClose">×</span>
                 </div>
@@ -28,7 +27,7 @@
                      v-on:mouseleave="controlBtnMouseUp"
                      class="toolBox">
                   <!--选取图片-->
-                  <div class="tips" v-show="!drawImg.img">
+                  <div class="tips" v-show="!drawImg.img && showChooseBtn===true">
                     <div class="btn btn-warning btn-xs" @click="chooseImg">选择图片</div>
                   </div>
                   <!--工具栏-->
@@ -127,7 +126,7 @@
               </div>
               <span class="i-dialog-footer">
                     <input @change="putImgToCanv" ref="inputFile" type="file" accept="image/gif, image/jpeg ,image/png" style="width:1px;height:1px;border:none;opacity: 0;">
-                    <div class="btn btn-primary btn-primary-plain" @click="chooseImg">选择图片</div>
+                    <div class="btn btn-primary btn-primary-plain" @click="chooseImg" v-if="showChooseBtn===true">选择图片</div>
                     <div class="btn-group fr">
                         <div class="btn btn-default" @click="handleClose">取消</div>
                         <div class="btn btn-primary" :disabled="!drawImg.img" type="primary"
@@ -140,6 +139,7 @@
               </div>
             </div>
           </transition>
+          <div style="clear:both;"></div>
         </div>
       </div>
     </transition>
@@ -153,6 +153,21 @@
             label: { // 按钮文字
                 type: String,
                 default: "选择图片",
+                required: false
+            },
+            isModal: { // 是否已弹窗形式展示
+                type: Boolean,
+                default: true,
+                required: false
+            },
+            lockScroll: { // 是否在弹窗出现时锁定body
+                type: Boolean,
+                default: true,
+                required: false
+            },
+            showChooseBtn: { // 是否显示选择图片按钮 如果需要兼容IE9 则将此参数改为false
+                type: Boolean,
+                default: true,
                 required: false
             },
             boxWidth: { // 裁剪窗口高度
@@ -277,7 +292,10 @@
         },
         mounted(){
             this.version = config.version;
-            console.log('isSupportFileApi:'+this.isSupportFileApi());
+            // 是否为弹窗模式
+            if(this.isModal===false) {
+                this.visible = true;
+            }
         },
         methods: {
             handleOpen: function (callback) {
@@ -289,6 +307,20 @@
                     } else {
                         this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
                     }
+                    // 判断下窗口高度
+                    if(this.isModal===true) {
+                        if(this.lockScroll===true) {
+                            document.body.style.overflowY="hidden";
+                        }
+                        let dialogBoxHeight = this.$refs['dialogMainModalRef'].offsetHeight + 200;
+                        let windowHeight = window.innerHeight;
+                        let mask = this.$refs['mask'];
+                        if(dialogBoxHeight>windowHeight) {
+                            mask.style.overflowY = 'scroll';
+                        } else {
+                            mask.style.overflowY = 'hidden';
+                        }
+                    }
                 })
                 if(callback && typeof callback == 'function') {
                     setTimeout(()=>{
@@ -298,9 +330,14 @@
             },
             handleClose: function () {
                 this.clearAll();
-                this.$nextTick(() => {
-                    this.visible = false;
-                });
+                if(this.isModal===true) {
+                    if(this.lockScroll===true) {
+                        document.body.style.overflowY="scroll";
+                    }
+                    this.$nextTick(() => {
+                        this.visible = false;
+                    });
+                }
             },
             // 选择图片 e.stopPropagation();
             chooseImg: function () {
@@ -830,17 +867,21 @@
     z-index: 999;
   }
   .dialogBox {
+    clear:both;
+  }
+  .dialogBoxModal {
     position:relative;
     padding-top:100px;
     padding-bottom:100px;
     clear:both;
   }
-  .dialogMain {
+  .dialogMainModal {
     line-height:125%;
     font-size:16px;
     position: absolute;
     top: 100px;
     left: 50%;
+    margin-bottom:100px;
     transform: translateX(-50%);
     border: 1px solid rgba(0, 0, 0, 0.8);
     border-radius: 3px;
@@ -855,6 +896,19 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently*/
     animation: dialogShow .3s;
+  }
+  .dialogMain {
+    line-height:125%;
+    font-size:16px;
+    box-sizing: border-box;
+    background: #fff;
+    z-index: 1000;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently*/
   }
   @keyframes dialogShow {
     from {

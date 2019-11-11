@@ -1,7 +1,7 @@
 
 # vue-img-cutter
 > vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放
-> 兼容IE8+,MSEdge,Chrome,Firefox
+> 兼容IE9+,MSEdge,Chrome,Firefox
 
 ![插件截图](http://www.ihtmlcss.com/wp-content/uploads/2019/06/img-cutter.png)
 
@@ -65,6 +65,9 @@ forIe9:function(){
 
 | 属性名 | 作用 | 类型  | 必填 | 默认值 |
 |:----:|----|:----:|:----:|:----:|
+|isModal|是否为弹窗模式|Boolean|否|true|
+|showChooseBtn|是否显示选择图片按钮|Boolean|否|true|
+|lockScroll|是否在Dialog出现时将body滚动锁定|Boolean|否|true|
 |label|默认打开裁剪工具按钮的显示文字|String|否|选择图片|
 |boxWidth|裁剪工具宽度|Number|否|800|
 |boxHeight|裁剪工具高度|Number|否|400|
@@ -86,6 +89,9 @@ forIe9:function(){
 |dataURL|dataURL|
 
 ### 更新日志 
+#### 2.0.23
+- 新增参数isModal/showChooseBtn/lockScroll
+- 可选择作为行内组件或者弹窗组件，可选是否显示选择图片按钮，是否在弹窗打开时锁定body滚动
 #### 2.0.22
 - 兼容IE9+,MSEdge,chrome,firefox
 - 由于没有找到IE11以下的浏览器，所以只能在仿真模式下测试，所以IE11以下可能会出现一些我没发现的问题，目前仿真模式下IE9+都测试通过了。IE8及以下不再支持。
