@@ -6,7 +6,9 @@
 ![插件截图](http://www.ihtmlcss.com/wp-content/uploads/2019/06/img-cutter.png)
 
 ##### 演示地址：[http://ihtmlcss.com/demo/dist/#/croptool](http://ihtmlcss.com/demo/dist/#/croptool)
-##### 项目地址：[https://github.com/acccccccb/vue-img-cutter](https://github.com/acccccccb/vue-img-cutter)
+##### 项目地址：
+##### Github:[https://github.com/acccccccb/vue-img-cutter](https://github.com/acccccccb/vue-img-cutter)
+##### 码云：[https://gitee.com/GLUESTICK/vue-img-cutter](https://gitee.com/GLUESTICK/vue-img-cutter)
 
 ### 使用方法
 
