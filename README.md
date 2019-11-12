@@ -47,7 +47,7 @@ export default {
 forIe9:function(){
 	// 此处需要先提交待裁剪的图片到服务器上，然后拿到图片name,src,width,height,这些参数必须传
 	uploadMethod(file).then((res)=>{
-		this.$refs.imgCutterModal.importImgToCanv({
+		this.$refs.imgCutterModal.handleOpen({
             name:res.name,
             src:res.src,
             width:res.width,

@@ -187,7 +187,7 @@
                 code2:"" +
                 "// 裁剪远程图片（兼容IE9）\n" +
                 "forIe9:function(){\n" +
-                "   this.$refs.imgCutterModal.importImgToCanv({\n" +
+                "   this.$refs.imgCutterModal.handleOpen({\n" +
                 "       name:1.png,\n" +
                 "       src:http://imgurl.com/1.png,\n" +
                 "       width:100,\n" +
