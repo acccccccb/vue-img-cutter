@@ -1,23 +1,39 @@
 
 # vue-img-cutter
-> vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放
-> 兼容IE9+,MSEdge,Chrome,Firefox
+简单易用的vue图片裁剪插件，支持移动图像，裁剪图片，放大缩小图片，上下左右移动，固定比例，固定尺寸，远程图片裁剪，只需要很少的代码就可以实现裁剪功能，也可以通过调整参数以适应你自己的业务需求。
 
-![插件截图](http://www.ihtmlcss.com/wp-content/uploads/2019/06/img-cutter.png)
+### 特色：
+---
+ - 兼容IE9+,MSEdge,Chrome,Firefox
+ - 两种展现形式，行内或弹窗
+ - 可旋转、缩放图片
+ - 任意比例、大小裁剪
+ - 固定比例、大小裁剪
+ - 支持远程图片裁剪、跨域设置
 
-##### 演示地址：[http://ihtmlcss.com/demo/dist/#/croptool](http://ihtmlcss.com/demo/dist/#/croptool)
-##### 项目地址：
-##### Github:[https://github.com/acccccccb/vue-img-cutter](https://github.com/acccccccb/vue-img-cutter)
-##### 码云：[https://gitee.com/GLUESTICK/vue-img-cutter](https://gitee.com/GLUESTICK/vue-img-cutter)
 
-> 如果此项目对你有帮助，请给我一个star :)
+<!-- ![插件截图](http://www.ihtmlcss.com/wp-content/uploads/2019/06/img-cutter.png) -->
 
-### 使用方法
+### 演示地址：
+----
+[http://ihtmlcss.com/demo/dist/#/croptool](http://ihtmlcss.com/demo/dist/#/croptool)
 
+
+### 项目地址：
+----
+Github：[https://github.com/acccccccb/vue-img-cutter](https://github.com/acccccccb/vue-img-cutter)
+
+码云：[https://gitee.com/GLUESTICK/vue-img-cutter](https://gitee.com/GLUESTICK/vue-img-cutter)
+
+**如果此项目对你有帮助，请给我一个star :)**
+
+### 使用方法：
+----
+1. 安装
 ```
 npm install vue-img-cutter --save-dev
 ```
-> 将ImgCutter.vue文件引入项目：
+2. 将ImgCutter.vue文件引入项目：
 ```
 import ImgCutter from 'vue-img-cutter'
 export default {
@@ -27,26 +43,31 @@ export default {
 ...
 }
 ```
-> 在template中使用：
+3. 在页面中使用：
 
 ```
-<ImgCutter
-	ref="imgCutter"
-    :label="'选择图片'"
-    :boxWidth="700"
-    :boxHeight="400"
-    :cutWidth="250"
-    :cutHeight="250"
-    :rate="'1:1'"
-    :sizeChange="true"
-    :moveAble="true"
-    v-on:cutDown="cutDown">
+<ImgCutter v-on:cutDown="cutDown"></ImgCutter>
+```
+4. 可使用solt
+```
+<ImgCutter v-on:cutDown="cutDown">
     <button slot="open">选择图片</button>
 </ImgCutter>
 ```
-> 如果要兼容IE9浏览器，原来的按钮就不能用了，需要自己写一个方法来触发裁剪工具弹出
+5. 远程、跨域裁剪（兼容IE9）
+
+> 需要自己写一个方法来触发裁剪工具弹出
 > 在方法中先将图片上传至服务器，拿到返回的url后创建一个obj，然后将对象传入裁剪工具
-> <button type="button" @click="forIe9">选择图片</button>
+```
+// 传入的obj必须包含这四个属性
+let obj = {
+    name:'1.jpg',//远程图片名称
+    src:'http://url/1.jpg',//远程图片url
+    width:200,//远程图片的原始宽度
+    height:200,//远程图片的原始高度
+}
+```
+
 ```javascript
 forIe9:function(){
 	// 此处需要先提交待裁剪的图片到服务器上，然后拿到图片name,src,width,height,这些参数必须传
@@ -63,7 +84,7 @@ forIe9:function(){
 
 
 ### 参数说明：
-
+----
 | 属性名 | 作用 | 类型  | 必填 | 默认值 |
 |:----:|----|:----:|:----:|:----:|
 |isModal|是否为弹窗模式|Boolean|否|true|
@@ -85,6 +106,7 @@ forIe9:function(){
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 返回值：
+----
 | 属性名 | 类型  |
 |:----:|:----:|
 |fileName|文件名|
@@ -92,7 +114,8 @@ forIe9:function(){
 |blob|blob类型的文件对象（IE部分版本可能不会返回）|
 |dataURL|dataURL|
 
-### 更新日志 
+### 更新日志：
+----
 #### 2.0.26
 - 修正了当没有选择图片直接选择取消会导致错误的问题
 #### 2.0.25
