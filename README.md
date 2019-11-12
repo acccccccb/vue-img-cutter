@@ -89,6 +89,10 @@ forIe9:function(){
 |dataURL|dataURL|
 
 ### 更新日志 
+#### 2.0.26
+- 修正了当没有选择图片直接选择取消会导致错误的问题
+#### 2.0.25
+- 更新说明文档
 #### 2.0.24
 - 简化了兼容IE9的方法，只需要在执行this.$refs['yourComponent'].handleOpen(imgObj)时传入对象，对象必须包含name,src,width,height属性
 - 修正了行内模式下鼠标滚轮缩放失效的问题

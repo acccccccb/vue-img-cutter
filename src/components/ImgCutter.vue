@@ -537,8 +537,10 @@
                 this.rotateImg.angle = 0;
                 this.drawImg.img = null;
                 this.turnReset();
-                this.cutImageObj.remove();
-                this.cutImageObj = null;
+                if(this.cutImageObj!==null) {
+                    this.cutImageObj.remove();
+                    this.cutImageObj = null;
+                }
             },
             // draw control
             drawControlBox: function (width, height, x, y) {
