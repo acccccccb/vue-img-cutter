@@ -10,6 +10,8 @@
 ##### Github:[https://github.com/acccccccb/vue-img-cutter](https://github.com/acccccccb/vue-img-cutter)
 ##### 码云：[https://gitee.com/GLUESTICK/vue-img-cutter](https://gitee.com/GLUESTICK/vue-img-cutter)
 
+> 如果此项目对你有帮助，请给我一个star :)
+
 ### 使用方法
 
 ```
