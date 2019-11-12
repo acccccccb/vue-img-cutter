@@ -150,6 +150,16 @@
     export default {
         name: 'ImgCutter',
         props: {
+            crossOrigin:{// 是否设置图片跨域
+                type:Boolean,
+                default:false,
+                required:false,
+            },
+            crossOriginHeader:{// 是否设置图片跨域
+                type:String,
+                default:'*',
+                required:false,
+            },
             label: { // 按钮文字
                 type: String,
                 default: "选择图片",
@@ -225,6 +235,7 @@
                 version:'',
                 visible: false,
                 fileName:'',
+                cutImageObj:null,
                 drawImg: {
                     img: null,//规定要使用的图像、画布或视频
                     sx: 0,//开始剪切的 x 坐标位置
@@ -298,7 +309,7 @@
             }
         },
         methods: {
-            handleOpen: function (callback) {
+            handleOpen: function (img) {
                 this.visible = true;
                 this.$nextTick(() => {
                     let mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
@@ -321,12 +332,43 @@
                             mask.style.overflowY = 'hidden';
                         }
                     }
-                })
-                if(callback && typeof callback == 'function') {
-                    setTimeout(()=>{
-                        callback();
-                    },300)
-                }
+                    // 如果传入了图片
+                    if(img && typeof img == 'object' && img.src ) {
+                        if( img.width && img.height && img.name) {
+                            let _this = this;
+                            let $image = document.createElement('img');
+                            if(this.crossOrigin===true) {
+                                $image.crossOrigin = this.crossOriginHeader;
+                            }
+                            $image.name = img.name;
+                            $image.src = img.src;
+                            $image.width = img.width;
+                            $image.height = img.height;
+                            $image.style.width = '1px;';
+                            $image.style.height = '1px;';
+                            $image.style.opacity = 0;
+                            $image.onerror = function(e){
+                                console.error('图片加载失败');
+                                _this.$emit('error',{
+                                    event:e,
+                                    msg:'图片加载失败'
+                                })
+                            };
+                            $image.onload = function(){
+                                if($image.complete) {
+                                    console.log('图片加载成功');
+                                    _this.importImgToCanv($image)
+                                } else {
+                                    console.log($image.complete)
+                                }
+                            };
+                            document.body.appendChild($image);
+                            this.cutImageObj = $image;
+                        } else {
+                            throw new Error('传入参数必须包含：src,width,height,name');
+                        }
+                    }
+                });
             },
             handleClose: function () {
                 this.clearAll();
@@ -389,7 +431,7 @@
                     file = e.target.files[0] || null;
                 } else {
                     // 如果是IE9及以下
-                    console.error('IE9及以下需要自己传入image对象，执行v-on:importImage');
+                    console.error('IE9及以下需要自己传入image对象');
                     // this.$emit('importImage',e);
                     return false;
                 }
@@ -495,6 +537,8 @@
                 this.rotateImg.angle = 0;
                 this.drawImg.img = null;
                 this.turnReset();
+                this.cutImageObj.remove();
+                this.cutImageObj = null;
             },
             // draw control
             drawControlBox: function (width, height, x, y) {
@@ -635,9 +679,10 @@
                     _this.drawImg.height = _this.drawImg.width / _this.scaleImg.rate;
                     _this.printImg();
                 }
-                let scrollTop = this.$refs['mask'].scrollTop;
-                // this.$refs['mask'].scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
-                window.scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
+                // let scrollTop = this.$refs['mask'].scrollTop;
+                // window.scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
+                e.preventDefault();
+                e.returnValue = false;
                 return false;
             },
             // 旋转
@@ -733,6 +778,9 @@
                 // get img
                 let canvas = this.$refs['canvas'];
                 let tempImg = new Image();
+                if(this.crossOrigin===true) {
+                    tempImg.crossOrigin = this.crossOriginHeader;
+                }
                 tempImg.src = canvas.toDataURL();
 
                 if (!HTMLCanvasElement.prototype.toBlob) {

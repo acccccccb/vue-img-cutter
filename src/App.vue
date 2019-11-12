@@ -1,74 +1,87 @@
 <template>
     <div id="app" style="width:1000px;margin-top:50px;margin-bottom:100px;margin-left:auto;margin-right:auto;">
-        <img v-show="false" id="image" width="737" height="552" src="./../static/image/eg.png" alt="">
         <div>
             <h1>vue-image-cutter <span class="font-size:12px!important;font-weight:normal!important;">{{version}}</span></h1>
             <p>
-                vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放 兼容IE8+,MSEdge,Chrome,Firefox;
+                - vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放 兼容IE8+,MSEdge,Chrome,Firefox;
             </p>
             <p>
-                要兼容IE9,需要先将图片上传，拿到服务器返回的图片URL创建image对象，然后传入裁剪插件中。
+                - 要兼容IE9,需要先将图片上传，拿到服务器返回的图片URL然后传入裁剪插件中。
+            </p>
+            <p>
+                - 跨域功能没有条件测试，所以尽量避免跨域
             </p>
             <div>
                 <div class="paramsOption">
                     <form autocomplete="off">
                         <div class="form-item">
-                            <label for="label">label：
+                            <label for="label">按钮文字（label）：
                                 <input @input="setData($event)" name="label" type="text" v-model="params.label">
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="boxWidth">boxWidth：
+                            <label for="boxWidth">画布宽度（boxWidth）：
                                 <input @input="setData($event)" name="boxWidth" type="text" v-model="params.boxWidth">
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="boxHeight">boxHeight：
+                            <label for="boxHeight">画布高度（boxHeight）：
                                 <input @input="setData($event)" name="boxHeight" type="text" v-model="params.boxHeight">
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="cutWidth">cutWidth：
+                            <label for="cutWidth">裁剪框初始宽度（cutWidth）：
                                 <input @input="setData($event)" name="cutWidth" type="text" v-model="params.cutWidth">
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="cutHeight">cutHeight：
+                            <label for="cutHeight">裁剪框初始高度（cutHeight）：
                                 <input @input="setData($event)" name="cutHeight" type="text" v-model="params.cutHeight">
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="isModal">isModal：
+                            <label for="crossOriginHeader">跨域信息（crossOriginHeader）：
+                                <input @input="setData($event)" name="crossOriginHeader" type="text" v-model="params.crossOriginHeader">
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label for="crossOrigin">是否跨域（crossOrigin）：
+                                true:<input @change="setData($event)" type="radio" checked="checked" name="crossOrigin" value="true" />
+                                false:<input @change="setData($event)" type="radio" name="crossOrigin" value="false" />
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label for="isModal">是否为弹窗（isModal）：
                                 true:<input @change="setData($event)" type="radio" checked="checked" name="isModal" value="true" />
                                 false:<input @change="setData($event)" type="radio" name="isModal" value="false" />
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="showChooseBtn">showChooseBtn：
+                            <label for="showChooseBtn">是否显示选择图片按钮（showChooseBtn）：
                                 true:<input @change="setData($event)" type="radio" checked="checked" name="showChooseBtn" value="true" />
                                 false:<input @change="setData($event)" type="radio" name="showChooseBtn" value="false" />
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="lockScroll">lockScroll：
+                            <label for="lockScroll">弹窗时是否锁定body滚动（lockScroll）：
                                 true:<input @change="setData($event)" type="radio" checked="checked" name="lockScroll" value="true" />
                                 false:<input @change="setData($event)" type="radio" name="lockScroll" value="false" />
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="sizeChange">sizeChange：
+                            <label for="sizeChange">是否允许修改裁剪尺寸（sizeChange）：
                                 true:<input @change="setData($event)" type="radio" checked="checked" name="sizeChange" value="true" />
                                 false:<input @change="setData($event)" type="radio" name="sizeChange" value="false" />
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="moveAble">moveAble：
+                            <label for="moveAble">是否允许移动裁剪框（moveAble）：
                                 true:<input @change="setData($event)" type="radio" checked="checked" name="moveAble" value="true" />
                                 false:<input @change="setData($event)" type="radio" name="moveAble" value="false" />
                             </label>
                         </div>
                         <div class="form-item">
-                            <label for="tool">tool：
+                            <label for="tool">是否显示工具条（tool）：
                                 true:<input @change="setData($event)" type="radio" checked="checked" name="tool" value="true" />
                                 false:<input @change="setData($event)" type="radio" name="tool" value="false" />
                             </label>
@@ -76,7 +89,7 @@
                     </form>
                 </div>
                 <div style="float:right;width:49%;">
-                    <textarea style="width:100%;border:1px solid #dedede;margin-top:20px;" rows="18" readonly>{{code1}}</textarea>
+                    <textarea style="width:100%;border:1px solid #dedede;margin-top:20px;" rows="19" readonly>{{code1}}</textarea>
                     <textarea style="width:100%;border:1px solid #dedede;margin-top:20px;" rows="12" readonly>{{code2}}</textarea>
                 </div>
                 <div style="clear:both;"></div>
@@ -93,10 +106,30 @@
                 </div>
             </div>
             <div>
-                <div v-if="params.showChooseBtn===false" class="btn btn-primary" style="margin-bottom:20px;" @click="forIe9">兼容IE9的裁剪按钮</div>
+                <div>
+                    <div>
+                        <div>
+                            <label for="cutImgSrc"> 需要裁剪的图片地址：
+                                <input type="text" name="cutImgSrc" style="width:600px;" @input="catchInput($event)" :value="cutImgSrc" placeholder="需要裁剪的图片地址">
+                            </label>
+                        </div>
+                        <div>
+                            <label for="cutImgWidth"> 需要裁剪的原始图片宽度：
+                                <input type="number" name="cutImgWidth" style="width:600px;" @input="catchInput($event)" :value="cutImgWidth" placeholder="需要裁剪的图片地址">
+                            </label>
+                        </div>
+                        <div>
+                            <label for="cutImgHeight"> 需要裁剪的原始图片高度：
+                                <input type="number" name="cutImgHeight" style="width:600px;" @input="catchInput($event)" :value="cutImgHeight" placeholder="需要裁剪的图片地址">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="btn btn-primary" style="margin-bottom:20px;margin-top:20px;" @click="forIe9">裁剪远程图片（兼容IE9）</div>
+                </div>
                 <ImgCutter
                         v-if="refresh"
                         ref="imgCutterModal"
+                        :crossOrigin="params.crossOrigin"
                         :label="params.label"
                         :isModal="params.isModal"
                         :showChooseBtn="params.showChooseBtn"
@@ -108,6 +141,7 @@
                         :sizeChange="params.sizeChange"
                         :moveAble="params.moveAble"
                         :tool="params.tool"
+                        v-on:error="catchError"
                         v-on:cutDown="cutDown">
                     <div class="btn btn-primary" slot="open">{{params.label}}</div>
                 </ImgCutter>
@@ -128,11 +162,16 @@
         data(){
             return {
                 version:'',
+                cutImgSrc:'../../static/image/eg.png',
+                cutImgWidth:512,
+                cutImgHeight:512,
                 imgSrc:null,
                 refresh:true,
                 isForIe9:false,
                 params:{
-                    label:'选择图片',
+                    label:'裁剪本地图片',
+                    crossOrigin:true,
+                    crossOriginHeader:'*',
                     isModal:true,
                     showChooseBtn:true,
                     lockScroll:true,
@@ -146,14 +185,13 @@
                 },
                 code1:"",
                 code2:"" +
-                "// 兼容IE9的方法\n" +
+                "// 裁剪远程图片（兼容IE9）\n" +
                 "forIe9:function(){\n" +
-                "   let $image = document.getElementById('image');\n" +
-                "   $image.name = 'eg.png';\n" +
-                "   this.$refs.imgCutterModal.handleOpen(()=>{\n" +
-                "   let $image = document.getElementById('image');\n" +
-                "   $image.name = 'eg.png';\n" +
-                "   this.$refs.imgCutterModal.importImgToCanv($image);\n" +
+                "   this.$refs.imgCutterModal.importImgToCanv({\n" +
+                "       name:1.png,\n" +
+                "       src:http://imgurl.com/1.png,\n" +
+                "       width:100,\n" +
+                "       height:100,\n" +
                 "   });\n" +
                 "}",
             }
@@ -168,12 +206,11 @@
                 this.imgSrc = res.dataURL;
             },
             forIe9:function(){
-                let $image = document.getElementById('image');
-                $image.name = 'eg.png';
-                this.$refs.imgCutterModal.handleOpen(()=>{
-                    let $image = document.getElementById('image');
-                    $image.name = 'eg.png';
-                    this.$refs.imgCutterModal.importImgToCanv($image);
+                this.$refs.imgCutterModal.handleOpen({
+                    name:this.cutImgSrc,
+                    src:this.cutImgSrc,
+                    width:this.cutImgWidth,
+                    height:this.cutImgHeight,
                 });
             },
             doRefresh:function(){
@@ -187,6 +224,8 @@
                     '<ImgCutter\n' +
                     '   :ref="imgCutterModal"\n' +
                     '   :label="'+ this.params.label +'"\n' +
+                    '   :crossOrigin="'+ this.params.crossOrigin +'"\n' +
+                    '   :crossOriginHeader="'+ this.params.crossOriginHeader +'"\n' +
                     '   :isModal="'+ this.params.isModal +'"\n' +
                     '   :showChooseBtn="'+ this.params.showChooseBtn +'"\n' +
                     '   :lockScroll="'+ this.params.lockScroll +'"\n' +
@@ -211,6 +250,15 @@
                 this.doRefresh();
                 this.createCode();
             },
+            catchInput(e){
+                let val = e.target.value;
+                let key = e.target.name;
+                this[key] = val;
+            },
+            catchError(res) {
+                console.log(res);
+                window.alert(res.msg);
+            }
         }
     }
 </script>

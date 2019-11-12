@@ -41,20 +41,17 @@ export default {
 </ImgCutter>
 ```
 > 如果要兼容IE9浏览器，原来的按钮就不能用了，需要自己写一个方法来触发裁剪工具弹出
-> 在方法中先将图片上传至服务器，拿到返回的url后创建image对象，然后将对象传入裁剪工具
+> 在方法中先将图片上传至服务器，拿到返回的url后创建一个obj，然后将对象传入裁剪工具
 > <button type="button" @click="forIe9">选择图片</button>
 ```javascript
 forIe9:function(){
-	// 此处需要先提交待裁剪的图片到服务器上，然后拿到图片的url；
-	// 创建image对象，填上url
-	// 将创建好的image对象传入裁剪工具
+	// 此处需要先提交待裁剪的图片到服务器上，然后拿到图片name,src,width,height,这些参数必须传
 	uploadMethod(file).then((res)=>{
-		let $image = document.getElementById('image');
-        $image.name = 'eg.png';
-        this.$refs.imgCutter.handleOpen(()=>{
-            let $image = document.getElementById('image');
-            $image.name = 'eg.png';
-            this.$refs.imgCutter.importImgToCanv($image);
+		this.$refs.imgCutterModal.importImgToCanv({
+            name:res.name,
+            src:res.src,
+            width:res.width,
+            height:res.height,
         });
 	});
 }
@@ -76,8 +73,11 @@ forIe9:function(){
 |tool|是否显示工具栏|Boolean|否|true|
 |sizeChange|是否能够调整裁剪框大小|Boolean|否|true|
 |moveAble|能否调整裁剪区域位置|Boolean|否|true|
+|crossOrigin|是否设置跨域，需要服务器做相应更改|Boolean|否|false|
+|crossOriginHeader|设置跨域信息crossOrigin为true时才生效|String|否|''|
 |rate|图片比例|String(例: "4:3")|否|-|
 |cutDown|完成截图后要执行的方法|Function|是|-|
+|error|错误回调|Function|否|-|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 返回值：
@@ -89,6 +89,11 @@ forIe9:function(){
 |dataURL|dataURL|
 
 ### 更新日志 
+#### 2.0.24
+- 简化了兼容IE9的方法，只需要在执行this.$refs['yourComponent'].handleOpen(imgObj)时传入对象，对象必须包含name,src,width,height属性
+- 修正了行内模式下鼠标滚轮缩放失效的问题
+- 增加了跨域参数
+- 增加了 error 参数，将会返回错误信息
 #### 2.0.23
 - 新增参数isModal/showChooseBtn/lockScroll
 - 可选择作为行内组件或者弹窗组件，可选是否显示选择图片按钮，是否在弹窗打开时锁定body滚动
