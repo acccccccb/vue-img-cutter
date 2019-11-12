@@ -1,6 +1,6 @@
 {
   "name": "vue-img-cutter",
-  "version": "2.0.25",
+  "version": "2.0.26",
   "description": "vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放",
   "author": "acccccccb <tabzhang@foxmail.com>",
   "private": false,
