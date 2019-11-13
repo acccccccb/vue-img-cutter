@@ -2,10 +2,10 @@
 # vue-img-cutter
 <div>
 
-[![GitHub stars](https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge)](https://github.com/acccccccb/vue-img-cutter/stargazers?style=for-the-badge)
-[![GitHub forks](https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge)](https://github.com/acccccccb/vue-img-cutter/network?style=for-the-badge)
-![npm](https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge)
-![npm](https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge)
+[![GitHub stars](https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge)](https://github.com/acccccccb/vue-img-cutter/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge)](https://github.com/acccccccb/vue-img-cutter/network)
+[![npm](https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge)](https://www.npmjs.com/package/vue-img-cutter)
+[![npm](https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge)](https://www.npmjs.com/package/vue-img-cutter)
 
 简单易用的vue图片裁剪插件，支持移动图像，裁剪图片，放大缩小图片，上下左右移动，固定比例，固定尺寸，远程图片裁剪，只需要很少的代码就可以实现裁剪功能，也可以通过调整参数以适应你自己的业务需求。
 
@@ -53,11 +53,11 @@ export default {
 ```
 3. 在页面中使用：
 
-```
+```html
 <ImgCutter v-on:cutDown="cutDown"></ImgCutter>
 ```
 4. 可使用solt
-```
+```html
 <ImgCutter v-on:cutDown="cutDown">
     <button slot="open">选择图片</button>
 </ImgCutter>
@@ -66,7 +66,7 @@ export default {
 
 > 需要自己写一个方法来触发裁剪工具弹出
 > 在方法中先将图片上传至服务器，拿到返回的url后创建一个obj，然后将对象传入裁剪工具
-```
+```javascript
 // 传入的obj必须包含这四个属性
 let obj = {
     name:'1.jpg',//远程图片名称
