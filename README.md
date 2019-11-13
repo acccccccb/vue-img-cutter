@@ -38,11 +38,11 @@ Github：[https://github.com/acccccccb/vue-img-cutter](https://github.com/accccc
 ### 使用方法：
 ----
 1. 安装
-```
+```shell
 npm install vue-img-cutter --save-dev
 ```
 2. 将ImgCutter.vue文件引入项目：
-```
+```javascript
 import ImgCutter from 'vue-img-cutter'
 export default {
         components:{
