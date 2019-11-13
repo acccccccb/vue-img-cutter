@@ -70,7 +70,7 @@
     "vue",
     "裁剪"
   ],
-  "license": "ISC",
+  "license": "Apache2.0",
   "bugs": {
     "url": "https://github.com/acccccccb/vue-img-cutter/issues"
   },

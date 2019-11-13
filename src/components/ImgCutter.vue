@@ -310,65 +310,82 @@
         },
         methods: {
             handleOpen: function (img) {
-                this.visible = true;
-                this.$nextTick(() => {
+                let _this = this;
+                let init = (callback)=>{
                     let mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
                     if (mousewheelevt == 'mousewheel') {
-                        this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
+                        _this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
                     } else {
-                        this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
+                        _this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
                     }
                     // 判断下窗口高度
-                    if(this.isModal===true) {
-                        if(this.lockScroll===true) {
+                    if(_this.isModal===true) {
+                        if(_this.lockScroll===true) {
                             document.body.style.overflowY="hidden";
                         }
-                        let dialogBoxHeight = this.$refs['dialogMainModalRef'].offsetHeight + 200;
+                        let dialogBoxHeight = _this.$refs['dialogMainModalRef'].offsetHeight + 200;
                         let windowHeight = window.innerHeight;
-                        let mask = this.$refs['mask'];
+                        let mask = _this.$refs['mask'];
                         if(dialogBoxHeight>windowHeight) {
                             mask.style.overflowY = 'scroll';
                         } else {
                             mask.style.overflowY = 'hidden';
                         }
                     }
-                    // 如果传入了图片
-                    if(img && typeof img == 'object' && img.src ) {
-                        if( img.width && img.height && img.name) {
-                            let _this = this;
-                            let $image = document.createElement('img');
-                            if(this.crossOrigin===true) {
-                                $image.crossOrigin = this.crossOriginHeader;
-                            }
-                            $image.name = img.name;
-                            $image.src = img.src;
-                            $image.width = img.width;
-                            $image.height = img.height;
-                            $image.style.width = '1px;';
-                            $image.style.height = '1px;';
-                            $image.style.opacity = 0;
-                            $image.onerror = function(e){
-                                console.error('图片加载失败');
-                                _this.$emit('error',{
-                                    event:e,
-                                    msg:'图片加载失败'
-                                })
-                            };
-                            $image.onload = function(){
-                                if($image.complete) {
-                                    console.log('图片加载成功');
-                                    _this.importImgToCanv($image)
-                                } else {
-                                    console.log($image.complete)
-                                }
-                            };
-                            document.body.appendChild($image);
-                            this.cutImageObj = $image;
-                        } else {
-                            throw new Error('传入参数必须包含：src,width,height,name');
-                        }
+                    if(callback && typeof callback === 'function') {
+                        callback();
                     }
-                });
+                };
+
+                // 如果传入了图片
+                if(img && typeof img == 'object' && img.src ) {
+                    if( img.width && img.height && img.name) {
+                        let $image = new Image();
+                        if(this.crossOrigin===true) {
+                            $image.crossOrigin = this.crossOriginHeader;
+                        }
+                        $image.name = img.name;
+                        $image.width = img.width;
+                        $image.height = img.height;
+                        // $image.style.width = '1px';
+                        // $image.style.height = '1px';
+                        $image.style.position = 'fixed';
+                        $image.style.top = -5000;
+                        $image.style.opacity = 0;
+                        $image.onerror = function(e){
+                            console.error('图片加载失败');
+                            _this.$emit('error',{
+                                event:e,
+                                msg:'图片加载失败'
+                            });
+                            _this.clearCutImageObj();
+                        };
+                        $image.onload = function(){
+                            console.log($image.complete);
+                            if($image.complete===true) {
+                                _this.visible = true;
+                                _this.$nextTick(() => {
+                                    init(()=>{
+                                        _this.importImgToCanv($image)
+                                    });
+                                });
+                            } else {
+                                throw new Error('图片加载失败');
+                                _this.handleClose();
+                            }
+                        };
+                        $image.src = img.src;
+                        this.cutImageObj = $image;
+                        document.body.appendChild($image);
+                    } else {
+                        throw new Error('传入参数必须包含：src,width,height,name');
+                    }
+                } else {
+                    _this.visible = true;
+                    _this.$nextTick(()=>{
+                        init();
+                    });
+                }
             },
             handleClose: function () {
                 this.clearAll();
@@ -537,10 +554,17 @@
                 this.rotateImg.angle = 0;
                 this.drawImg.img = null;
                 this.turnReset();
-                if(this.cutImageObj!==null) {
-                    this.cutImageObj.remove();
-                    this.cutImageObj = null;
+                this.clearCutImageObj();
+            },
+            clearCutImageObj:function(){
+                if(this.cutImageObj!==null && this.cutImageObj!==undefined) {
+                    if(typeof this.cutImageObj.remove === 'function') {
+                        this.cutImageObj.remove();
+                    } else {
+                        this.cutImageObj.removeNode();
+                    }
                 }
+                this.cutImageObj = null;
             },
             // draw control
             drawControlBox: function (width, height, x, y) {

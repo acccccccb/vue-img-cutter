@@ -1,13 +1,12 @@
 
 # vue-img-cutter
-<div>
+
+简单易用的vue图片裁剪插件，支持移动图像，裁剪图片，放大缩小图片，上下左右移动，固定比例，固定尺寸，远程图片裁剪，只需要很少的代码就可以实现裁剪功能，也可以通过调整参数以适应你自己的业务需求。
 
 [![GitHub stars](https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge)](https://github.com/acccccccb/vue-img-cutter/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge)](https://github.com/acccccccb/vue-img-cutter/network)
 [![npm](https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge)](https://www.npmjs.com/package/vue-img-cutter)
-[![npm](https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge)](https://www.npmjs.com/package/vue-img-cutter)
-
-简单易用的vue图片裁剪插件，支持移动图像，裁剪图片，放大缩小图片，上下左右移动，固定比例，固定尺寸，远程图片裁剪，只需要很少的代码就可以实现裁剪功能，也可以通过调整参数以适应你自己的业务需求。
+[![npm](https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge)](https://www.npmjs.com/package/vue-img-cutter)
 
 ### 特色：
 ---
@@ -124,6 +123,9 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.0.27
+- 修正了在IE浏览器下点击取消按钮报错的问题
+- 远程图片加载失败时不弹出裁剪工具
 #### 2.0.26
 - 修正了当没有选择图片直接选择取消会导致错误的问题
 #### 2.0.25
