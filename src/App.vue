@@ -164,7 +164,7 @@
         data(){
             return {
                 version:'',
-                cutImgSrc:'http://ihtmlcss.com/wp-content/uploads/2018/02/cropped-IMG_6853.jpg',
+                cutImgSrc:'https://ihtmlcss.com/wp-content/uploads/2018/02/cropped-IMG_6853.jpg',
                 cutImgWidth:512,
                 cutImgHeight:512,
                 imgSrc:null,
