@@ -1,5 +1,12 @@
 
 # vue-img-cutter
+<div>
+
+[![GitHub stars](https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge)](https://github.com/acccccccb/vue-img-cutter/stargazers?style=for-the-badge)
+[![GitHub forks](https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge)](https://github.com/acccccccb/vue-img-cutter/network?style=for-the-badge)
+![npm](https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge)
+![npm](https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge)
+
 简单易用的vue图片裁剪插件，支持移动图像，裁剪图片，放大缩小图片，上下左右移动，固定比例，固定尺寸，远程图片裁剪，只需要很少的代码就可以实现裁剪功能，也可以通过调整参数以适应你自己的业务需求。
 
 ### 特色：
@@ -11,12 +18,13 @@
  - 固定比例、大小裁剪
  - 支持远程图片裁剪、跨域设置
 
-
-<!-- ![插件截图](http://www.ihtmlcss.com/wp-content/uploads/2019/06/img-cutter.png) -->
+### 插件截图：
+----
+![插件截图](https://www.ihtmlcss.com/wp-content/uploads/2019/06/img-cutter.png)
 
 ### 演示地址：
 ----
-[http://ihtmlcss.com/demo/dist/#/croptool](http://ihtmlcss.com/demo/dist/#/croptool)
+[http://ihtmlcss.com/demo/dist/#/croptool](https://ihtmlcss.com/demo/dist/#/croptool)
 
 
 ### 项目地址：

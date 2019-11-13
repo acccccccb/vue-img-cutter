@@ -2,16 +2,19 @@
     <div id="app" style="width:1000px;margin-top:50px;margin-bottom:100px;margin-left:auto;margin-right:auto;">
         <div>
             <h1>vue-image-cutter <span class="font-size:12px!important;font-weight:normal!important;">{{version}}</span></h1>
-            <p>
-                - vue图片裁剪插件，支持任意尺寸裁剪，限制比例裁剪，拖动，缩放 兼容IE8+,MSEdge,Chrome,Firefox;
-            </p>
-            <p>
-                - 要兼容IE9,需要先将图片上传，拿到服务器返回的图片URL然后传入裁剪插件中。
-            </p>
-            <p>
-                - 跨域功能没有条件测试，所以尽量避免跨域
-            </p>
             <div>
+                <a href="https://github.com/acccccccb/vue-img-cutter/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge"></a>
+                <a href="https://github.com/acccccccb/vue-img-cutter/network"><img alt="GitHub forks" src="https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge"></a>
+                <a href="https://www.npmjs.com/package/vue-img-cutter"><img alt="npm" src="https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge"></a>
+                <a href="https://www.npmjs.com/package/vue-img-cutter"><img alt="npm" src="https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge"></a>
+                <img src="https://img.shields.io/badge/%E5%A6%82%E6%9E%9C%E6%AD%A4%E9%A1%B9%E7%9B%AE%E5%AF%B9%E4%BD%A0%E6%9C%89%E5%B8%AE%E5%8A%A9%EF%BC%8C%E8%AF%B7%E7%BB%99%E6%88%91%E4%B8%80%E4%B8%AAstar-red?style=for-the-badge" alt="">
+
+            </div>
+            <p>
+                简单易用的vue图片裁剪插件，支持移动图像，裁剪图片，放大缩小图片，上下左右移动，固定比例，固定尺寸，远程图片裁剪，只需要很少的代码就可以实现裁剪功能，也可以通过调整参数以适应你自己的业务需求。
+            </p>
+            <div style="margin-top:40px;">
+                <h3>这里可以调整参数生成插件代码：</h3>
                 <div class="paramsOption">
                     <form autocomplete="off">
                         <div class="form-item">
@@ -88,9 +91,9 @@
                         </div>
                     </form>
                 </div>
-                <div style="float:right;width:49%;">
-                    <textarea style="width:100%;border:1px solid #dedede;margin-top:20px;" rows="19" readonly>{{code1}}</textarea>
-                    <textarea style="width:100%;border:1px solid #dedede;margin-top:20px;" rows="12" readonly>{{code2}}</textarea>
+                <div style="float:right;width:49%;box-sizing:border-box;">
+                    <textarea style="width:100%;border:1px solid #dedede;resize: none;" rows="19" readonly>{{code1}}</textarea>
+                    <textarea style="width:100%;border:1px solid #dedede;margin-top:20px;resize: none;" rows="12" readonly>{{code2}}</textarea>
                 </div>
                 <div style="clear:both;"></div>
             </div>
@@ -147,7 +150,6 @@
                 </ImgCutter>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -358,7 +360,6 @@
         font-size:12px;
     }
     .paramsOption {
-        margin-top:20px;
         margin-bottom:20px;
         padding:15px;
         border:1px solid #dedede;
