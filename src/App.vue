@@ -8,11 +8,13 @@
                 <a href="https://www.npmjs.com/package/vue-img-cutter"><img alt="npm" src="https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge"></a>
                 <a href="https://www.npmjs.com/package/vue-img-cutter"><img alt="npm" src="https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge"></a>
                 <img src="https://img.shields.io/badge/%E5%A6%82%E6%9E%9C%E6%AD%A4%E9%A1%B9%E7%9B%AE%E5%AF%B9%E4%BD%A0%E6%9C%89%E5%B8%AE%E5%8A%A9%EF%BC%8C%E8%AF%B7%E7%BB%99%E6%88%91%E4%B8%80%E4%B8%AAstar-red?style=for-the-badge" alt="">
-
             </div>
+
             <p>
                 简单易用的vue图片裁剪插件，支持移动图像，裁剪图片，放大缩小图片，上下左右移动，固定比例，固定尺寸，远程图片裁剪，只需要很少的代码就可以实现裁剪功能，也可以通过调整参数以适应你自己的业务需求。
             </p>
+            <p>Github: <a href="https://github.com/acccccccb/vue-img-cutter" target="_blank">https://github.com/acccccccb/vue-img-cutter</a></p>
+            <p>Gitee: <a href="https://gitee.com/GLUESTICK/vue-img-cutter" target="_blank">https://gitee.com/GLUESTICK/vue-img-cutter</a></p>
             <div style="margin-top:40px;">
                 <h3>这里可以调整参数生成插件代码：</h3>
                 <div class="paramsOption">
@@ -45,6 +47,11 @@
                         <div class="form-item">
                             <label for="rate">按比例裁剪（rate）：
                                 <input @input="setData($event)" name="rate" type="text" v-model="params.rate">
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label for="toolBgc">工具栏背景色（toolBgc）：
+                                <input @input="setData($event)" name="toolBgc" type="text" v-model="params.toolBgc">
                             </label>
                         </div>
                         <div class="form-item">
@@ -97,7 +104,7 @@
                     </form>
                 </div>
                 <div style="float:right;width:49%;box-sizing:border-box;">
-                    <textarea style="width:100%;border:1px solid #dedede;resize: none;" rows="19" readonly>{{code1}}</textarea>
+                    <textarea style="width:100%;border:1px solid #dedede;resize: none;" rows="22" readonly>{{code1}}</textarea>
                     <textarea style="width:100%;border:1px solid #dedede;margin-top:20px;resize: none;" rows="12" readonly>{{code2}}</textarea>
                 </div>
                 <div style="clear:both;"></div>
@@ -150,9 +157,13 @@
                         :sizeChange="params.sizeChange"
                         :moveAble="params.moveAble"
                         :tool="params.tool"
+                        toolBgc="params.toolBgc"
                         v-on:error="catchError"
                         v-on:cutDown="cutDown">
                     <div class="btn btn-primary" slot="open">{{params.label}}</div>
+                    <div class="btn btn-primary btn-primary-plain" slot="choose">选择图片</div>
+                    <div class="btn btn-default" slot="cancel">取消</div>
+                    <div class="btn btn-primary" slot="confirm">确定</div>
                 </ImgCutter>
             </div>
         </div>
@@ -170,9 +181,9 @@
         data(){
             return {
                 version:'',
-                cutImgSrc:'//ihtmlcss.com/wp-content/uploads/2018/02/cropped-IMG_6853.jpg',
-                cutImgWidth:512,
-                cutImgHeight:512,
+                cutImgSrc:'http://placekitten.com/400/400',
+                cutImgWidth:400,
+                cutImgHeight:400,
                 imgSrc:null,
                 refresh:true,
                 isForIe9:false,
@@ -181,6 +192,7 @@
                     crossOrigin:true,
                     crossOriginHeader:'*',
                     rate:'',
+                    toolBgc:'none',
                     isModal:true,
                     showChooseBtn:true,
                     lockScroll:true,
@@ -236,6 +248,7 @@
                     '   :crossOrigin="'+ this.params.crossOrigin +'"\n' +
                     '   :crossOriginHeader="'+ this.params.crossOriginHeader +'"\n' +
                     '   :rate="'+ this.params.rate +'"\n' +
+                    '   :toolBgc="'+ this.params.toolBgc +'"\n' +
                     '   :isModal="'+ this.params.isModal +'"\n' +
                     '   :showChooseBtn="'+ this.params.showChooseBtn +'"\n' +
                     '   :lockScroll="'+ this.params.lockScroll +'"\n' +

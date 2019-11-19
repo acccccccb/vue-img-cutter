@@ -31,7 +31,7 @@
                     <div class="btn btn-warning btn-xs" @click="chooseImg">选择图片</div>
                   </div>
                   <!--工具栏-->
-                  <div v-if="tool==true" v-show="this.drawImg.img && dropImg.active!==true && controlBox.disable==true && toolBox.disable==true" class="dockMain" @mouseenter="dropImgOff">
+                  <div v-if="tool==true" v-show="this.drawImg.img && dropImg.active!==true && controlBox.disable==true && toolBox.disable==true" class="dockMain" :style="'background:'+ this.toolBgc" @mouseenter="dropImgOff">
                     <div class="dockBtn" v-if="rate">比例：{{rate}}</div>
                     <div class="dockBtn" @click="scaleReset">
                       缩放：{{drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-'}}
@@ -115,6 +115,10 @@
                       <div class="toolBoxControlLine toolBoxControlLineItem-4"></div>
                     </div>
                   </div>
+                  <div class="copyright">
+                    <a v-if="!DoNotDisplayCopyright" target="_blank" href="https://github.com/acccccccb/vue-img-cutter"
+                       rel="nofollow">vue-img-cutter {{version}}</a>
+                  </div>
                   <!--画布-->
                   <canvas class="canvasSelectBox" ref="canvasSelectBox" :width="boxWidth"
                           @mousedown="dropImgOn"
@@ -125,18 +129,25 @@
                 </div>
               </div>
               <span class="i-dialog-footer">
-                    <input @change="putImgToCanv" ref="inputFile" type="file" accept="image/gif, image/jpeg ,image/png" style="width:1px;height:1px;border:none;opacity: 0;">
-                    <div class="btn btn-primary btn-primary-plain" @click="chooseImg" v-if="showChooseBtn===true">选择图片</div>
-                    <div class="btn-group fr">
-                        <div class="btn btn-default" @click="handleClose">取消</div>
-                        <div class="btn btn-primary" :disabled="!drawImg.img" type="primary"
-                             @click="cropPicture">确定</div>
-                    </div>
+                <input @change="putImgToCanv" ref="inputFile" type="file" accept="image/gif, image/jpeg ,image/png" style="width:1px;height:1px;border:none;opacity: 0;">
+                <span @click="chooseImg">
+                  <slot name="choose">
+                    <div class="btn btn-primary btn-primary-plain" v-if="showChooseBtn===true">选择图片</div>
+                  </slot>
                 </span>
-              <div class="copyright">
-                <a v-if="!DoNotDisplayCopyright" target="_blank" href="https://github.com/acccccccb/vue-img-cutter"
-                   rel="nofollow">vue-img-cutter {{version}}</a>
-              </div>
+                <div class="btn-group fr">
+                  <span  @click="handleClose">
+                    <slot name="cancel">
+                      <div class="btn btn-default">取消</div>
+                    </slot>
+                  </span>
+                  <span @click="cropPicture">
+                    <slot name="confirm">
+                      <div class="btn btn-primary" :disabled="!drawImg.img" type="primary">确定</div>
+                    </slot>
+                  </span>
+                </div>
+              </span>
             </div>
           </transition>
           <div style="clear:both;"></div>
@@ -209,6 +220,11 @@
                 type:Boolean,
                 default:true,
                 required:false
+            },
+            toolBgc:{// 工具栏背景色
+                type: String,
+                default: '#fff',
+                required: false,
             },
             sizeChange:{ // 能否调整裁剪尺寸
                 type:Boolean,
@@ -503,8 +519,8 @@
 
             },
             putToolBox:function(){
-                this.toolBox.width = this.cutWidth;
-                this.toolBox.height = this.cutHeight;
+                this.toolBox.width = this.cutWidth>this.boxWidth?this.boxWidth:this.cutWidth;
+                this.toolBox.height = this.cutHeight>this.boxHeight?this.boxHeight:this.cutHeight;
                 this.toolBox.x = this.boxWidth/2 - this.toolBox.width/2;
                 this.toolBox.y = this.boxHeight/2 - this.toolBox.height/2;
                 this.drawControlBox(this.toolBox.width, this.toolBox.height, this.toolBox.x, this.toolBox.y);
@@ -568,8 +584,10 @@
             },
             // draw control
             drawControlBox: function (width, height, x, y) {
-                if(width<20) { width=20 }
-                if(height<20) { height=20 }
+                if(width < 20) { width = 20 }
+                if(height < 20) { height = 20 }
+                if(width > this.boxWidth) { width = this.boxWidth }
+                if(height > this.boxHeight) { height = this.boxHeight }
                 if (x < 0) { x = 0 }
                 if (y < 0) { y = 0 }
 
@@ -582,10 +600,15 @@
                 ctx.fillRect(0, 0, c.width, c.height);
 
                 let toolBoxControlWidth,toolBoxControlHeight;
-                if (this.rate) {
+                if (this.rate && this.rate !== '') {
                     let p = this.rate.split(':')[0] / this.rate.split(':')[1];
-                    toolBoxControlWidth = width;
-                    toolBoxControlHeight = width / p;
+                    if(p>=1) {
+                        toolBoxControlWidth = width;
+                        toolBoxControlHeight = width / p;
+                    } else {
+                        toolBoxControlWidth = height * p;
+                        toolBoxControlHeight = height;
+                    }
                 } else {
                     toolBoxControlWidth = width;
                     toolBoxControlHeight = height;
@@ -926,7 +949,8 @@
   .i-dialog-footer {
     display: block;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
   }
 
   .mask {
@@ -1016,14 +1040,14 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 99;
+    z-index: 98;
   }
 
   .canvasSelectBox {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 99;
   }
   @keyframes zi-antBorder {
     0% {
@@ -1400,18 +1424,23 @@
     clear: both !important;
     width: 100% !important;
     text-align: right !important;
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
     display: block !important;
-    opacity: 1 !important;
-    position: relative !important;
+    opacity: 0.5 !important;
+    position: absolute!important;
+    bottom:0!important;
+    right:0!important;
+    line-height:100%!important;
+    z-index:100!important;
   }
 
   .copyright a {
-    color: #EBEBEB !important;
+    color: #fff !important;
     text-decoration: none !important;
     position: relative !important;
     opacity: 1 !important;
+    display:inline-block!important;
+    padding:2px!important;
+    background:rgba(0,0,0,0.4);
   }
 
   /*工具栏*/
@@ -1419,15 +1448,14 @@
     position: absolute;
     z-index: 1002;
     bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 5px;
+    /*transform: translateX(-50%);*/
     opacity: 0.5;
     transition: opacity 0.5s;
-    width: 98%;
+    /*width: 98%;*/
     box-sizing: border-box;
-    padding: 10px 10px;
+    padding: 5px 5px;
     border-radius: 5px;
-    background: #fff;
   }
 
   .dockMain:hover {

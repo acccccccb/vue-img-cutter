@@ -19,7 +19,7 @@
 
 ### 插件截图：
 ----
-![插件截图](https://www.ihtmlcss.com/wp-content/uploads/2019/06/img-cutter.png)
+![插件截图](https://i.bmp.ovh/imgs/2019/11/28f8a9059f089e05.png)
 
 ### 演示地址：
 ----
@@ -103,6 +103,7 @@ forIe9:function(){
 |cutWidth|默认裁剪宽度|Number|否|200|
 |cutHeight|默认裁剪高度|Number|否|200|
 |tool|是否显示工具栏|Boolean|否|true|
+|toolBgc|工具栏背景色|String(例: "#fff")|否|#fff|
 |sizeChange|是否能够调整裁剪框大小|Boolean|否|true|
 |moveAble|能否调整裁剪区域位置|Boolean|否|true|
 |crossOrigin|是否设置跨域，需要服务器做相应更改|Boolean|否|false|
@@ -111,6 +112,14 @@ forIe9:function(){
 |cutDown|完成截图后要执行的方法|Function|是|-|
 |error|错误回调|Function|否|-|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
+
+### 插槽(slot)：
+| 插槽名称 | 作用  |
+|:----:|:----:|
+|open 或 openImgCutter|弹出裁剪框|
+|choose|选择本地图片|
+|cancel|取消/清空|
+|confirm|确认裁剪|
 
 ### 返回值：
 ----
@@ -123,6 +132,11 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.0.28
+- 调整了版本号显示的位置
+- 新增三个插槽：choose/cancel/confirm
+- 新增属性：工具栏背景色 toolBgc
+- 将裁剪框限制在画布内
 #### 2.0.27
 - 修正了裁剪远程图片时创建的img对象被显示出来的问题
 - 修正了在IE浏览器下点击取消按钮报错的问题
