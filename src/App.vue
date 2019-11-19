@@ -43,6 +43,11 @@
                             </label>
                         </div>
                         <div class="form-item">
+                            <label for="rate">按比例裁剪（rate）：
+                                <input @input="setData($event)" name="rate" type="text" v-model="params.rate">
+                            </label>
+                        </div>
+                        <div class="form-item">
                             <label for="crossOriginHeader">跨域信息（crossOriginHeader）：
                                 <input @input="setData($event)" name="crossOriginHeader" type="text" v-model="params.crossOriginHeader">
                             </label>
@@ -134,6 +139,7 @@
                         ref="imgCutterModal"
                         :crossOrigin="params.crossOrigin"
                         :label="params.label"
+                        :rate="params.rate"
                         :isModal="params.isModal"
                         :showChooseBtn="params.showChooseBtn"
                         :lockScroll="params.lockScroll"
@@ -174,6 +180,7 @@
                     label:'裁剪本地图片',
                     crossOrigin:true,
                     crossOriginHeader:'*',
+                    rate:'',
                     isModal:true,
                     showChooseBtn:true,
                     lockScroll:true,
@@ -228,6 +235,7 @@
                     '   :label="'+ this.params.label +'"\n' +
                     '   :crossOrigin="'+ this.params.crossOrigin +'"\n' +
                     '   :crossOriginHeader="'+ this.params.crossOriginHeader +'"\n' +
+                    '   :rate="'+ this.params.rate +'"\n' +
                     '   :isModal="'+ this.params.isModal +'"\n' +
                     '   :showChooseBtn="'+ this.params.showChooseBtn +'"\n' +
                     '   :lockScroll="'+ this.params.lockScroll +'"\n' +
@@ -242,10 +250,19 @@
                     '</ImgCutter>'
             },
             setData:function($event){
+                function isNumber(val) {
+                    let regPos = /^\d+(\.\d+)?$/; //非负浮点数
+                    let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+                    if(regPos.test(val) || regNeg.test(val)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
                 let value = $event.target.value;
                 if(value==='true') {value = true}
                 if(value==='false') {value = false}
-                if(typeof parseInt(value) === 'number' && parseInt(value)>0) {
+                if(isNumber(value)===true) {
                     value = parseInt(value);
                 }
                 this.params[$event.target.name] = value;
