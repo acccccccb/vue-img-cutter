@@ -193,7 +193,7 @@
                     crossOriginHeader:'*',
                     rate:'',
                     toolBgc:'none',
-                    isModal:true,
+                    isModal:false,
                     showChooseBtn:true,
                     lockScroll:true,
                     boxWidth:1000,

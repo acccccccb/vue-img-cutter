@@ -72,7 +72,7 @@
                         <div class="controlBoxInnerLine controlBoxInnerLineRight"></div>
                         <!--工具栏提示-->
                         <div class="selectArea">宽:{{toolBox.width}} 高:{{toolBox.height}}
-                          (x:{{toolBox.boxMove.moveTo.x}},y:{{toolBox.boxMove.moveTo.y}})
+                          (x:{{toolBoxPosition.x}},y:{{toolBoxPosition.y}})
                         </div>
                         <!--操作杆-->
                         <div data-name="leftUp"
@@ -252,6 +252,10 @@
                 visible: false,
                 fileName:'',
                 cutImageObj:null,
+                toolBoxPosition:{
+                  x:0,
+                  y:0
+                },
                 drawImg: {
                     img: null,//规定要使用的图像、画布或视频
                     sx: 0,//开始剪切的 x 坐标位置
@@ -584,8 +588,9 @@
             },
             // draw control
             drawControlBox: function (width, height, x, y) {
-                if(width < 20) { width = 20 }
-                if(height < 20) { height = 20 }
+//                let boxLimit = 0;
+//                if(width < boxLimit) { width = boxLimit }
+//                if(height < boxLimit) { height = boxLimit }
                 if(width > this.boxWidth) { width = this.boxWidth }
                 if(height > this.boxHeight) { height = this.boxHeight }
                 if (x < 0) { x = 0 }
@@ -616,24 +621,50 @@
                 this.toolBox.width = toolBoxControlWidth;
                 this.toolBox.height = toolBoxControlHeight;
 
-                $toolBoxControl.style.width = toolBoxControlWidth + 'px';
-                $toolBoxControl.style.height = toolBoxControlHeight + 'px';
+                $toolBoxControl.style.width = Math.abs(toolBoxControlWidth) + 'px';
+                $toolBoxControl.style.height = Math.abs(toolBoxControlHeight) + 'px';
 
+              this.toolBox.boxMove.moveTo.x = x;
+              this.toolBox.boxMove.moveTo.y = y;
 
-                if (x + this.toolBox.width > this.boxWidth) {
-                    x = this.boxWidth - this.toolBox.width;
-                }
-                if (y + this.toolBox.height > this.boxHeight) {
-                    y = this.boxHeight - this.toolBox.height;
-                }
+              if(toolBoxControlWidth<0) {
+                x = x+toolBoxControlWidth;
+              }
+              if(toolBoxControlHeight<0) {
+                y = y+toolBoxControlHeight;
+              }
+              if (x + this.toolBox.width > this.boxWidth) {
+                x = this.boxWidth - this.toolBox.width;
+              }
+              if(x<0) {
+                x = 0
+              }
+              if (y + this.toolBox.height > this.boxHeight) {
+                y = this.boxHeight - this.toolBox.height;
+              }
+              if(y<0) {
+                y = 0
+              }
+              this.toolBoxPosition.x = x;
+              this.toolBoxPosition.y = y;
 
-                this.toolBox.boxMove.moveTo.x = x;
-                this.toolBox.boxMove.moveTo.y = y;
-                $toolBoxControl.style.left = x + 'px';
-                $toolBoxControl.style.top = y + 'px';
-                ctx.clearRect(x, y, toolBoxControlWidth, toolBoxControlHeight);
+              $toolBoxControl.style.left = x + 'px';
+              $toolBoxControl.style.top = y + 'px';
+              ctx.clearRect(this.toolBox.boxMove.moveTo.x, this.toolBox.boxMove.moveTo.y, toolBoxControlWidth, toolBoxControlHeight);
             },
-            // toolBoxMouseDown
+
+            resetToolBox:function(){
+              console.info('resetToolBox');
+              if(this.toolBox.width<0) {
+                this.toolBox.boxMove.moveTo.x = this.toolBox.x - this.toolBox.width;
+              }
+              if(this.toolBox.height<0) {
+                this.toolBox.boxMove.moveTo.y = this.toolBox.y - this.toolBox.height;
+              }
+              this.toolBox.width = Math.abs(this.toolBox.width);
+              this.toolBox.height = Math.abs(this.toolBox.height);
+            },
+          // toolBoxMouseDown
             toolBoxMouseDown: function (e) {
                 let $toolBox = this.$refs['toolBoxControl'];
                 this.toolBox.x = parseInt($toolBox.style.left.split('px')[0]);
@@ -659,13 +690,15 @@
             },
             toolBoxMouseLeave: function () {
                 this.toolBox.disable = true;
+                this.resetToolBox();
             },
             toolBoxMouseUp: function (e) {
-                let $toolBox = this.$refs['toolBoxControl'];
-                this.toolBox.x = parseInt($toolBox.style.left.split('px')[0]);
-                this.toolBox.y = parseInt($toolBox.style.top.split('px')[0]);
+                console.log('toolBoxMouseUp');
+                this.toolBox.x = parseInt(this.toolBoxPosition.x);
+                this.toolBox.y = parseInt(this.toolBoxPosition.y);
                 this.toolBox.disable = true;
                 this.dropImg.active = false;
+                this.resetToolBox();
             },
             // 绘制图片
             printImg: function () {
@@ -760,8 +793,11 @@
                 e.stopPropagation();
             },
             controlBtnMouseUp: function (e) {
-                this.controlBox.disable = true;
+              console.log('controlBtnMouseUp');
+              this.controlBox.disable = true;
                 this.dropImgOff();
+                this.resetToolBox();
+                this.toolBoxMouseUp();
                 e.stopPropagation();
             },
 
@@ -864,8 +900,9 @@
                                     newCanv.height = _this.toolBox.height;
                                     let ctx = newCanv.getContext("2d");
                                     let params = _this.toolBox;
-                                    if (this.rate) {
-                                        let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                                    console.log('params',params);
+                                    if (_this.rate) {
+                                        let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
                                         ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
                                     } else {
                                         ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
@@ -891,8 +928,8 @@
                         newCanv.height = _this.toolBox.height;
                         let ctx = newCanv.getContext("2d");
                         let params = _this.toolBox;
-                        if (this.rate) {
-                            let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                        if (_this.rate) {
+                            let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
                             ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
                         } else {
                             ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
