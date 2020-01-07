@@ -67,8 +67,8 @@
                         </div>
                         <div class="form-item">
                             <label for="isModal">是否为弹窗（isModal）：
-                                true:<input @change="setData($event)" type="radio" checked="checked" name="isModal" value="true" />
-                                false:<input @change="setData($event)" type="radio" name="isModal" value="false" />
+                                true:<input @change="setData($event)" type="radio" name="isModal" value="true" />
+                                false:<input @change="setData($event)" type="radio" checked="checked" name="isModal" value="false" />
                             </label>
                         </div>
                         <div class="form-item">
