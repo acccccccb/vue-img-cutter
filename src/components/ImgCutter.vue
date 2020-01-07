@@ -93,19 +93,19 @@
                              class="rightDown controlBtn"></div>
 
                         <div data-name="topCenter"
-                             v-if="sizeChange===true && !rate"
+                             v-if="sizeChange===true && !rate && this.toolBox.width>20"
                              v-on:mousedown="controlBtnMouseDown($event,'topCenter')"
                              class="topCenter controlBtn"></div>
                         <div data-name="downCenter"
-                             v-if="sizeChange===true && !rate"
+                             v-if="sizeChange===true && !rate && this.toolBox.width>20"
                              v-on:mousedown="controlBtnMouseDown($event,'downCenter')"
                              class="downCenter controlBtn"></div>
                         <div data-name="leftCenter"
-                             v-if="sizeChange===true && !rate"
+                             v-if="sizeChange===true && !rate && this.toolBox.height>20"
                              v-on:mousedown="controlBtnMouseDown($event,'leftCenter')"
                              class="leftCenter controlBtn"></div>
                         <div data-name="rightCenter"
-                             v-if="sizeChange===true && !rate"
+                             v-if="sizeChange===true && !rate && this.toolBox.height>20"
                              v-on:mousedown="controlBtnMouseDown($event,'rightCenter')"
                              class="rightCenter controlBtn"></div>
                       </div>
