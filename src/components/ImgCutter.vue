@@ -236,6 +236,11 @@
                 default:true,
                 required:false
             },
+           CuttingOriginal: { // 是否裁剪原图
+                type: Boolean,
+                default: false,
+                required: false,
+            },
             DoNotDisplayCopyright: {
                 type: Boolean,
                 default: false,
@@ -588,9 +593,7 @@
             },
             // draw control
             drawControlBox: function (width, height, x, y) {
-//                let boxLimit = 0;
-//                if(width < boxLimit) { width = boxLimit }
-//                if(height < boxLimit) { height = boxLimit }
+
                 if(width > this.boxWidth) { width = this.boxWidth }
                 if(height > this.boxHeight) { height = this.boxHeight }
                 if (x < 0) { x = 0 }
@@ -650,7 +653,9 @@
 
               $toolBoxControl.style.left = x + 'px';
               $toolBoxControl.style.top = y + 'px';
-              ctx.clearRect(this.toolBox.boxMove.moveTo.x, this.toolBox.boxMove.moveTo.y, toolBoxControlWidth, toolBoxControlHeight);
+
+              ctx.clearRect(x, y, Math.abs(toolBoxControlWidth), Math.abs(toolBoxControlHeight));
+
             },
 
             resetToolBox:function(){
