@@ -132,6 +132,12 @@ forIe9:function(){
 
 ### 开发中功能：
 - 原图裁剪 开发中
+
+### 捐赠:
+
+![微信](https://www.ihtmlcss.com/wp-content/uploads/2020/01/weixinpay.png)
+![支付宝](http://www.ihtmlcss.com/wp-content/uploads/2020/01/alipay.png)
+
 ### 更新日志：
 ----
 #### 2.0.30
