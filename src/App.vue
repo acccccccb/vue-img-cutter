@@ -93,7 +93,7 @@
           使用此配置工具进行更多个性化设置，不仅能实时预览，还可直接生成代码复制粘贴到你的项目。
         </p>
         <div class="row" style="margin-top:40px;">
-          <div class="col-md-6" ref="imgCutterBox">
+          <div class="col-md-6" ref="imgCutterBox" style="height:458px;overflow:hidden;">
             <div v-if="params.isModal" style="width:100%;height:458px;background:#dedede;box-sizing:border-box;border:1px solid #dedede;">
               <div style="width:50%;margin:180px auto auto auto;">
                 <div class="btn btn-primary btn-block" @click="pluginExe('handleOpen')">{{params.label}}</div>
