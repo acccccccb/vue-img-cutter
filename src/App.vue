@@ -23,46 +23,39 @@
           <li class="nav-item">
             <a class="nav-link" :href="download">download</a>
           </li>
-        </ul>
-      </div>
-      <form class="form-inline">
-        <ul class="navbar-nav mr-auto">
           <li class="nav-item">
             <a class="nav-link" :href="homepage">Author Home page</a>
           </li>
         </ul>
-      </form>
+      </div>
     </nav>
-    <div class="row">
-      <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img :src="banner" class="d-block w-100">
-            <div class="carousel-caption d-none d-md-block">
-              <h1 style="margin-bottom:20px;">{{name}} <span class="badge badge-light">{{version}}</span></h1>
-              <p>
-                <a href="https://github.com/acccccccb/vue-img-cutter/stargazers"><img alt="GitHub stars"
-                                                                                      src="https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge"></a>
-                <a href="https://github.com/acccccccb/vue-img-cutter/network"><img alt="GitHub forks"
-                                                                                   src="https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge"></a>
-                <a href="https://www.npmjs.com/package/vue-img-cutter"><img alt="npm"
-                                                                            src="https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge"></a>
-                <a href="https://www.npmjs.com/package/vue-img-cutter"><img alt="npm"
-                                                                            src="https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge"></a>
-              </p>
-              <p style="padding-bottom:20px;">{{description}}</p>
-              <div style="margin-bottom:80px;margin-top:50px;">
-                <a class="btn btn-success btn-lg"
-                   :href="download" target="_blank"
-                   role="button"><i class="fa fa-download"></i> Download</a>
-                <a class="btn btn-light btn-lg" :href="github" target="_blank"
-                   role="button"><i class="fa fa-link"></i> Github</a>
-                <a class="btn btn-link" style="color:#fff;text-decoration: underline;"
-                   :href="gitee" target="_blank" role="button">Github</a>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="jumbotron" :style="'background:url('+ banner +') center center no-repeat;color:#fff;'">
+      <div class="container">
+        <h1 class="display-3" style="margin-bottom:20px;">{{name}} <span class="badge badge-light">{{version}}</span></h1>
+        <p>
+          <a href="https://github.com/acccccccb/vue-img-cutter/stargazers">
+            <img alt="GitHub stars" src="https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge">
+          </a>
+          <a href="https://github.com/acccccccb/vue-img-cutter/network">
+            <img alt="GitHub forks" src="https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge">
+          </a>
+          <a href="https://www.npmjs.com/package/vue-img-cutter">
+            <img alt="npm" src="https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge">
+          </a>
+          <a href="https://www.npmjs.com/package/vue-img-cutter">
+            <img alt="npm" src="https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge">
+          </a>
+        </p>
+        <p>{{description}}</p>
+        <p>
+          <a class="btn btn-success btn-lg"
+             :href="download" target="_blank"
+             role="button"><i class="fa fa-download"></i> Download</a>
+          <a class="btn btn-light btn-lg" :href="github" target="_blank"
+             role="button"><i class="fa fa-link"></i> Github</a>
+          <a class="btn btn-link" style="color:#fff;text-decoration: underline;"
+             :href="gitee" target="_blank" role="button">Github</a>
+        </p>
       </div>
     </div>
     <div class="row bg">
@@ -400,7 +393,7 @@
         version: '',
         author: '',
         description: '',
-        banner: 'https://i.picsum.photos/id/738/1920/500.jpg',
+        banner: 'https://i.picsum.photos/id/743/1920/500.jpg',
         github:'https://github.com/acccccccb/vue-img-cutter',
         gitee:'https://gitee.com/GLUESTICK/vue-img-cutter',
         download:'https://github.com/acccccccb/vue-img-cutter/archive/master.zip',
@@ -448,12 +441,12 @@
       this.version = config.version;
       this.author = config.author;
       this.description = config.description;
-      this.createCode();
     },
     mounted() {
       let $imgCutterBox = this.$refs.imgCutterBox;
       this.params.boxWidth = $imgCutterBox.offsetWidth-30;
-//      this.forIe9();
+      this.createCode();
+//    this.forIe9();
     },
     methods: {
       cutDown: function (res) {
