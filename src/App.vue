@@ -109,6 +109,7 @@
               :sizeChange="params.sizeChange"
               :moveAble="params.moveAble"
               :tool="params.tool"
+              :originalGraph="params.originalGraph"
               :DoNotDisplayCopyright="true"
               toolBgc="params.toolBgc"
               v-on:error="catchError"
@@ -243,7 +244,7 @@
                   <div class="form-group custom-control">
                     <label for="crossOrigin">是否跨域（crossOrigin）：</label>
                     <select @change="setData($event)" name="crossOrigin" class="custom-select">
-                      <option value="true">是</option>
+                      <option value="true" selected>是</option>
                       <option value="false">否</option>
                     </select>
                   </div>
@@ -261,7 +262,7 @@
                   <div class="form-group custom-control">
                     <label for="showChooseBtn">是否显示选择图片按钮（showChooseBtn）：</label>
                     <select @change="setData($event)" name="showChooseBtn" class="custom-select">
-                      <option value="true">是</option>
+                      <option value="true" selected>是</option>
                       <option value="false">否</option>
                     </select>
                   </div>
@@ -270,7 +271,7 @@
                   <div class="form-group custom-control">
                     <label for="lockScroll">弹窗时是否锁定body滚动（lockScroll）：</label>
                     <select @change="setData($event)" name="lockScroll" class="custom-select">
-                      <option value="true">是</option>
+                      <option value="true" selected>是</option>
                       <option value="false">否</option>
                     </select>
                   </div>
@@ -282,7 +283,7 @@
                   <div class="form-group custom-control">
                     <label for="sizeChange">是否允许修改裁剪尺寸（sizeChange）：</label>
                     <select @change="setData($event)" name="sizeChange" class="custom-select">
-                      <option value="true">是</option>
+                      <option value="true" selected>是</option>
                       <option value="false">否</option>
                     </select>
                   </div>
@@ -291,7 +292,7 @@
                   <div class="form-group custom-control">
                     <label for="moveAble">是否允许移动裁剪框（moveAble）：</label>
                     <select @change="setData($event)" name="moveAble" class="custom-select">
-                      <option value="true">是</option>
+                      <option value="true" selected>是</option>
                       <option value="false">否</option>
                     </select>
                   </div>
@@ -300,12 +301,20 @@
                   <div class="form-group custom-control">
                     <label for="tool">是否显示工具栏（tool）：</label>
                     <select @change="setData($event)" name="tool" class="custom-select">
-                      <option value="true">是</option>
+                      <option value="true" selected>是</option>
                       <option value="false">否</option>
                     </select>
                   </div>
                 </div>
-                <div class="col"></div>
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="tool">是否启用原图裁剪（originalGraph）：</label>
+                    <select @change="setData($event)" name="originalGraph" class="custom-select">
+                      <option value="true">是</option>
+                      <option value="false" selected>否</option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </form>
           </div>
@@ -423,6 +432,7 @@
           sizeChange: true,
           moveAble: true,
           tool: true,
+          originalGraph: false,
         },
         code1: "",
         code2: "\n" +
@@ -486,6 +496,7 @@
           '   :cutHeight="' + this.params.cutHeight + '"\n' +
           '   :sizeChange="' + this.params.sizeChange + '"\n' +
           '   :moveAble="' + this.params.moveAble + '"\n' +
+          '   :originalGraph="' + this.params.originalGraph + '"\n' +
           '   v-on:cutDown="cutDown">\n' +
           '       <div class="btn btn-primary" slot="open">' + this.params.label + '</div>\n' +
           '</ImgCutter>'

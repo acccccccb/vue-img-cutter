@@ -106,6 +106,7 @@ forIe9:function(){
 |toolBgc|工具栏背景色|String(例: "#fff")|否|#fff|
 |sizeChange|是否能够调整裁剪框大小|Boolean|否|true|
 |moveAble|能否调整裁剪区域位置|Boolean|否|true|
+|originalGraph|是否直接裁剪原图|Boolean|否|false|
 |crossOrigin|是否设置跨域，需要服务器做相应更改|Boolean|否|false|
 |crossOriginHeader|设置跨域信息crossOrigin为true时才生效|String|否|''|
 |rate|图片比例|String(例: "4:3")|否|-|
@@ -140,6 +141,9 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.1.0
+- 新增属性：originalGraph，originalGraph等于true时裁剪原图，不支持图像旋转
+- 修复非弹窗模式下无法使用鼠标滚轮缩放图片的问题
 #### 2.0.30
 - 修复了选区超出画布的问题
 #### 2.0.29

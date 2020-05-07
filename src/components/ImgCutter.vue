@@ -36,10 +36,10 @@
                     <div class="dockBtn" @click="scaleReset">
                       缩放：{{drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-'}}
                     </div>
-                    <div @click="turnImg(-90)" class="dockBtn">左转90°</div>
-                    <div @click="turnImg(90)" class="dockBtn">右转90°</div>
-                    <div @click="turnReset()" class="dockBtn">复位</div>
-                    <div class="dockBtnScrollBar">
+                    <div v-if="originalGraph===false" @click="turnImg(-90)" class="dockBtn">左转90°</div>
+                    <div v-if="originalGraph===false" @click="turnImg(90)" class="dockBtn">右转90°</div>
+                    <div v-if="originalGraph===false" @click="turnReset()" class="dockBtn">复位</div>
+                    <div v-if="originalGraph===false" class="dockBtnScrollBar">
                       <div
                               ref="dockBtnScrollControl"
                               @mousemove="scrollBarControlMove"
@@ -71,7 +71,13 @@
                         <div class="controlBoxInnerLine controlBoxInnerLineLeft"></div>
                         <div class="controlBoxInnerLine controlBoxInnerLineRight"></div>
                         <!--工具栏提示-->
-                        <div class="selectArea">宽:{{toolBox.width}} 高:{{toolBox.height}}
+                        <div class="selectArea" v-if="originalGraph===false">
+                          宽:{{toolBox.width}} 高:{{toolBox.height}}
+                          (x:{{toolBoxPosition.x}},y:{{toolBoxPosition.y}})
+                        </div>
+                        <!--如果是裁剪原图则显示实际大小-->
+                        <div class="selectArea" v-if="originalGraph===true">
+                          宽:{{(toolBox.height/(drawImg.width / drawImg.swidth)).toFixed(0)}} 高:{{(toolBox.height/(drawImg.width / drawImg.swidth)).toFixed(0)}}
                           (x:{{toolBoxPosition.x}},y:{{toolBoxPosition.y}})
                         </div>
                         <!--操作杆-->
@@ -128,7 +134,7 @@
                   <canvas class="canvas" ref="canvas" :width="boxWidth" :height="boxHeight"></canvas>
                 </div>
               </div>
-              <span class="i-dialog-footer">
+              <div class="i-dialog-footer">
                 <input @change="putImgToCanv" ref="inputFile" type="file" accept="image/gif, image/jpeg ,image/png" style="width:1px;height:1px;border:none;opacity: 0;">
                 <span @click="chooseImg">
                   <slot name="choose">
@@ -143,11 +149,11 @@
                   </span>
                   <span @click="cropPicture">
                     <slot name="confirm">
-                      <div class="btn btn-primary" :disabled="!drawImg.img" type="primary">确定</div>
+                      <div class="btn btn-primary" style="margin-left:15px;" :disabled="!drawImg.img" type="primary">确定</div>
                     </slot>
                   </span>
                 </div>
-              </span>
+              </div>
             </div>
           </transition>
           <div style="clear:both;"></div>
@@ -229,6 +235,11 @@
             sizeChange:{ // 能否调整裁剪尺寸
                 type:Boolean,
                 default:true,
+                required:false
+            },
+            originalGraph:{ // 是否为原图裁剪
+                type:Boolean,
+                default:false,
                 required:false
             },
             moveAble:{ // 能否调整裁剪区域位置
@@ -331,6 +342,14 @@
             // 是否为弹窗模式
             if(this.isModal===false) {
                 this.visible = true;
+                this.$nextTick(()=>{
+                    let mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+                    if (mousewheelevt == 'mousewheel') {
+                        this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
+                    } else {
+                        this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
+                    }
+                })
             }
         },
         methods: {
@@ -386,7 +405,6 @@
                             _this.clearCutImageObj();
                         };
                         $image.onload = function(){
-                            console.log($image.complete);
                             if($image.complete===true) {
                                 _this.visible = true;
                                 _this.$nextTick(() => {
@@ -428,7 +446,6 @@
                 this.$refs['inputFile'].click();
             },
             importImgToCanv:function(img){
-                console.log(img);
                 let _this = this;
                 _this.fileName = img.name;
                 let imgHeight = img.height;
@@ -465,8 +482,6 @@
             },
             // 将选择的图片绘制到画布
             putImgToCanv: function (e) {
-                console.log('putImgToCanv');
-                console.log(e);
                 let _this = this;
                 let file;
                 if(e.target.files) {
@@ -659,7 +674,6 @@
             },
 
             resetToolBox:function(){
-              console.info('resetToolBox');
               if(this.toolBox.width<0) {
                 this.toolBox.boxMove.moveTo.x = this.toolBox.x - this.toolBox.width;
               }
@@ -698,7 +712,6 @@
                 this.resetToolBox();
             },
             toolBoxMouseUp: function (e) {
-                console.log('toolBoxMouseUp');
                 this.toolBox.x = parseInt(this.toolBoxPosition.x);
                 this.toolBox.y = parseInt(this.toolBoxPosition.y);
                 this.toolBox.disable = true;
@@ -798,7 +811,6 @@
                 e.stopPropagation();
             },
             controlBtnMouseUp: function (e) {
-              console.log('controlBtnMouseUp');
               this.controlBox.disable = true;
                 this.dropImgOff();
                 this.resetToolBox();
@@ -901,16 +913,39 @@
                                 if (reader.readyState == 2) {
                                     clearInterval(timmer);
                                     let newCanv = document.createElement('canvas');
-                                    newCanv.width = _this.toolBox.width;
-                                    newCanv.height = _this.toolBox.height;
                                     let ctx = newCanv.getContext("2d");
-                                    let params = _this.toolBox;
-                                    console.log('params',params);
-                                    if (_this.rate) {
-                                        let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
-                                        ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
+
+                                    // 原图裁剪 originalGraph
+                                    if(_this.originalGraph==true) {
+                                        let scale = _this.drawImg.width / _this.drawImg.swidth;
+
+                                        // 计算实际图像大小
+                                        let transWidth = _this.toolBox.width/scale;
+                                        let transHeight = _this.toolBox.height/scale;
+                                        newCanv.width = transWidth;
+                                        newCanv.height = transHeight;
+                                        // 重新计算裁剪坐标
+                                        let sx = (_this.toolBox.x-_this.drawImg.x)/scale;
+                                        let sy = (_this.toolBox.y-_this.drawImg.y)/scale;
+
+                                        let swidth = _this.drawImg.swidth;
+                                        let sheight = _this.drawImg.sheight;
+                                        // TODO 使原图裁剪支持旋转后的图像
+                                        // ctx.translate(sx + transWidth/2, sy + transHeight/2);
+                                        // ctx.rotate((_this.rotateImg.angle) * Math.PI / 180);
+                                        // ctx.translate(-(sx + transWidth/2), -(sy + transHeight/2));
+                                        ctx.translate(-sx, -sy);
+                                        ctx.drawImage(_this.drawImg.img, 0, 0, swidth, sheight);
                                     } else {
-                                        ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
+                                        newCanv.width = _this.toolBox.width;
+                                        newCanv.height = _this.toolBox.height;
+                                        let params = _this.toolBox;
+                                        if (_this.rate) {
+                                            let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
+                                            ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
+                                        } else {
+                                            ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
+                                        }
                                     }
                                     newCanv.toBlob(function (blob) {
                                         _this.handleClose();
@@ -926,8 +961,6 @@
                         };
                     } else {
                         // IE9及以下
-                        console.log('IE9及以下');
-                        console.log(tempImg);
                         let newCanv = document.createElement('canvas');
                         newCanv.width = _this.toolBox.width;
                         newCanv.height = _this.toolBox.height;
