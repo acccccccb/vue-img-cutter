@@ -152,7 +152,8 @@
 
               </div>
               <div class="form-group">
-                <div class="btn btn-primary btn-block" @click="pluginExe('chooseImg')">{{params.label}}</div>
+                <div class="btn btn-primary btn-block" v-if="params.isModal===false" @click="pluginExe('chooseImg')">{{params.label}}</div>
+                <div class="btn btn-primary btn-block" v-if="params.isModal===true" @click="pluginExe('handleOpen')">{{params.label}}</div>
               </div>
               <div class="form-group">
                 <div class="btn btn-secondary btn-block" @click="forIe9">裁剪远程图片（兼容IE9）</div>
