@@ -159,10 +159,10 @@
                 <div class="btn btn-secondary btn-block" @click="forIe9">裁剪远程图片（兼容IE9）</div>
               </div>
               <div class="form-group">
-                <div class="btn btn-success btn-block" @click="pluginExe('cropPicture')">确定</div>
+                <button type="button" :disabled="params.isModal===true" class="btn btn-success btn-block" @click="pluginExe('cropPicture')">确定</button>
               </div>
               <div class="form-group">
-                <div class="btn btn-light btn-block" @click="pluginExe('clearAll')">重置</div>
+                <button type="button" class="btn btn-light btn-block" :disabled="params.isModal===true" @click="pluginExe('clearAll')">重置</button>
               </div>
             </form>
           </div>
