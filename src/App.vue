@@ -29,7 +29,7 @@
         </ul>
       </div>
     </nav>
-    <div class="jumbotron" :style="'background:url('+ banner +') center center no-repeat;color:#fff;'">
+    <div class="jumbotron">
       <div class="container">
         <h1 class="display-3" style="margin-bottom:20px;">{{name}} <span class="badge badge-light">{{version}}</span></h1>
         <p>
@@ -54,11 +54,22 @@
           <a class="btn btn-light btn-lg" :href="github" target="_blank"
              role="button"><i class="fa fa-link"></i> Github</a>
           <a class="btn btn-link" style="color:#fff;text-decoration: underline;"
-             :href="gitee" target="_blank" role="button">Github</a>
+             :href="gitee" target="_blank" role="button">Gitee</a>
         </p>
       </div>
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+      </svg>
     </div>
-    <div class="row bg">
+    <div class="row bg" style="padding-top:0;">
       <div class="col-md-10 offset-md-1">
         <h1 class="bd-title">
           <i class="fa fa-plane"></i> 简洁 / 高效
@@ -585,5 +596,48 @@
   }
   .alipay img {
     width:100%;
+  }
+  .jumbotron {
+    background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%)!important;
+    padding:4rem 0 0 0 ;
+    color:#fff;
+    text-align:center;
+  }
+  svg {
+    shape-rendering: auto;
+    width: 100%;
+    height: 100px;
+  }
+  svg:not(:root) {
+    overflow: hidden;
+  }
+  /* Animation */
+
+  .parallax > use {
+    animation: move-forever 25s cubic-bezier(.55,.5,.45,.5)     infinite;
+  }
+  .parallax > use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 7s;
+  }
+  .parallax > use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 10s;
+  }
+  .parallax > use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 13s;
+  }
+  .parallax > use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+  }
+  @keyframes move-forever {
+    0% {
+      transform: translate3d(-90px,0,0);
+    }
+    100% {
+      transform: translate3d(85px,0,0);
+    }
   }
 </style>
