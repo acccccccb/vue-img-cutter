@@ -598,6 +598,7 @@
     width:100%;
   }
   .jumbotron {
+    border-radius: 0;
     background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%)!important;
     padding:4rem 0 0 0 ;
     color:#fff;
