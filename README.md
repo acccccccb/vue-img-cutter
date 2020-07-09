@@ -145,6 +145,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.1
+- Add english documents
 #### 2.1.0
 - Add new attribute:originalGraph，originalGraph
 - Fix bug: Inline mode can not scale image.
