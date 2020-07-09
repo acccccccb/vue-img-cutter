@@ -72,36 +72,36 @@
     <div class="row bg" style="padding-top:0;">
       <div class="col-md-10 offset-md-1">
         <h1 class="bd-title">
-          <i class="fa fa-plane"></i> 简洁 / 高效
-          <small class="text-muted">Simple and efficient</small>
+          <i class="fa fa-plane"></i> Easy to use
+          <small class="text-muted">Increase of efficiency</small>
         </h1>
         <p class="lead">
-          只需简单几步 即可实现基础功能
+          You can use it in a few simple steps
         </p>
         <div class="alert alert-light" style="margin-top:40px;">
-          <code class="language-html"><pre>1.安装 npm i vue-img-cutter --save-dev</pre></code>
-          <code class="language-html"><pre>2.引用 import ImgCutter from 'vue-img-cutter';</pre></code>
-          <code class="language-html"><pre>3.注册 components: { ImgCutter }</pre></code>
-          <code class="language-html"><pre>4.使用 &lt;ImgCutter @cutDown="cutDown"&gt;&lt;/ImgCutter&gt;</pre></code>
-          <code class="language-html"><pre class="mb-0">5.返回值 cutDown:function(){ ...Do something }</pre></code>
+          <code class="language-html"><pre>1.Install: npm i vue-img-cutter --save-dev</pre></code>
+          <code class="language-html"><pre>2.Import: import ImgCutter from 'vue-img-cutter';</pre></code>
+          <code class="language-html"><pre>3.Register components: components: { ImgCutter }</pre></code>
+          <code class="language-html"><pre>4.Code: &lt;ImgCutter @cutDown="cutDown"&gt;&lt;/ImgCutter&gt;</pre></code>
+          <code class="language-html"><pre class="mb-0">5.Return: cutDown:function(res){ ...Do something }</pre></code>
         </div>
       </div>
     </div>
     <div class="row bg grayBg" style="padding-bottom:60px;">
       <div class="col-md-10 offset-md-1">
         <h1 class="bd-title">
-          <i class="fa fa-cog"></i> 在线配置
-          <small class="text-muted">Online config</small>
+          <i class="fa fa-cog"></i> Online configuration
+          <small class="text-muted">Preview and generate code</small>
         </h1>
         <p class="lead">
-          使用此配置工具进行更多个性化设置，不仅能实时预览，还可直接生成代码复制粘贴到你的项目。
+          Use this tool to preview and generate code。
         </p>
         <div class="row" style="margin-top:40px;">
           <div class="col-md-6" ref="imgCutterBox" style="height:458px;overflow:hidden;">
             <div v-if="params.isModal" style="width:100%;height:458px;background:#dedede;box-sizing:border-box;border:1px solid #dedede;">
               <div style="width:50%;margin:180px auto auto auto;">
                 <div class="btn btn-primary btn-block" @click="pluginExe('handleOpen')">{{params.label}}</div>
-                <div class="btn btn-secondary btn-block" @click="forIe9">裁剪远程图片（兼容IE9）</div>
+                <div class="btn btn-secondary btn-block" @click="forIe9">Crop remote pictures（For IE9+）</div>
               </div>
             </div>
             <ImgCutter
@@ -136,31 +136,31 @@
 
               <div class="imgCutDownBoxContainer">
                 <img :src="imgSrc" v-if="!!imgSrc" alt="">
-                <span v-else class="imgCutDownTips">裁剪后显示在这里</span>
+                <span v-else class="imgCutDownTips">Cut it out and show it here</span>
               </div>
 
               <div class="text-center">
-                <a :class="'btn btn-light'+ (imgSrc?'':' disabled')" :disabled="!imgSrc" :href="imgSrc" download="image.jpg" role="button">下载图片</a>
+                <a :class="'btn btn-light'+ (imgSrc?'':' disabled')" :disabled="!imgSrc" :href="imgSrc" download="image.jpg" role="button">Download</a>
               </div>
             </div>
           </div>
           <div class="col-md-3">
             <form>
               <div class="form-group">
-                <label for="cutImgSrc"> 远程图片地址：</label>
+                <label for="cutImgSrc"> Remote pictures src：</label>
                 <input type="text" name="cutImgSrc" class="form-control" @input="catchInput($event)"
-                       :value="cutImgSrc" placeholder="需要裁剪的图片地址">
+                       :value="cutImgSrc" placeholder="Remote pictures src">
               </div>
               <div class="form-group">
-                <label for="cutImgWidth"> 远程图片宽度：</label>
+                <label for="cutImgWidth"> Remote pictures width：</label>
                 <input type="number" name="cutImgWidth" class="form-control" @input="catchInput($event)"
-                       :value="cutImgWidth" placeholder="需要裁剪的图片地址">
+                       :value="cutImgWidth" placeholder="Remote pictures width">
 
               </div>
               <div class="form-group">
-                <label for="cutImgHeight"> 远程图片高度：</label>
+                <label for="cutImgHeight"> Remote pictures height：</label>
                 <input type="number" name="cutImgHeight" class="form-control" @input="catchInput($event)"
-                       :value="cutImgHeight" placeholder="需要裁剪的图片地址">
+                       :value="cutImgHeight" placeholder="Remote pictures height">
 
               </div>
               <div class="form-group">
@@ -168,13 +168,13 @@
                 <div class="btn btn-primary btn-block" v-if="params.isModal===true" @click="pluginExe('handleOpen')">{{params.label}}</div>
               </div>
               <div class="form-group">
-                <div class="btn btn-secondary btn-block" @click="forIe9">裁剪远程图片（兼容IE9）</div>
+                <div class="btn btn-secondary btn-block" @click="forIe9">Crop remote pictures（For IE9+）</div>
               </div>
               <div class="form-group">
-                <button type="button" :disabled="params.isModal===true" class="btn btn-success btn-block" @click="pluginExe('cropPicture')">确定</button>
+                <button type="button" :disabled="params.isModal===true" class="btn btn-success btn-block" @click="pluginExe('cropPicture')">Confirm</button>
               </div>
               <div class="form-group">
-                <button type="button" class="btn btn-light btn-block" :disabled="params.isModal===true" @click="pluginExe('clearAll')">重置</button>
+                <button type="button" class="btn btn-light btn-block" :disabled="params.isModal===true" @click="pluginExe('clearAll')">Reset</button>
               </div>
             </form>
           </div>
@@ -182,27 +182,27 @@
       </div>
       <div class="col-md-10 offset-md-1">
         <div class="card">
-          <div class="card-header">在线配置</div>
+          <div class="card-header">Config tool</div>
           <div class="card-body">
             <form autocomplete="off">
               <div class="row">
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="label">按钮文字（label）：</label>
+                    <label for="label">Button text（label）：</label>
                     <input @input="setData($event)" name="label" type="text" class="form-control"
                            v-model="params.label">
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="boxWidth">画布宽度（boxWidth）：</label>
+                    <label for="boxWidth">Tool width（boxWidth）：</label>
                     <input @input="setData($event)" :readonly="params.isModal==false" name="boxWidth" type="text" class="form-control"
                            v-model="params.boxWidth">
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="boxHeight">画布高度（boxHeight）：</label>
+                    <label for="boxHeight">Tool height（boxHeight）：</label>
                     <input @input="setData($event)" :readonly="params.isModal==false" name="boxHeight" type="text" class="form-control"
                            v-model="params.boxHeight">
 
@@ -210,7 +210,7 @@
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="cutWidth">裁剪框初始宽度（cutWidth）：</label>
+                    <label for="cutWidth">Selection box width（cutWidth）：</label>
                     <input @input="setData($event)" name="cutWidth" type="text" class="form-control"
                            v-model="params.cutWidth">
 
@@ -220,22 +220,22 @@
               <div class="row">
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="cutHeight">裁剪框初始高度（cutHeight）：</label>
+                    <label for="cutHeight">Selection box height（cutHeight）：</label>
                     <input @input="setData($event)" name="cutHeight" type="text" class="form-control"
                            v-model="params.cutHeight">
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="rate">按比例裁剪（rate）：</label>
-                    <input @input="setData($event)" name="rate" type="text" class="form-control" placeholder="例：1:1"
+                    <label for="rate">Length-width ratio（rate）：</label>
+                    <input @input="setData($event)" name="rate" type="text" class="form-control" placeholder="eg：1:1"
                            v-model="params.rate">
 
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="toolBgc">工具栏背景色（toolBgc）：</label>
+                    <label for="toolBgc">Toolbar background color（toolBgc）：</label>
                     <input @input="setData($event)" name="toolBgc" type="text" class="form-control"
                            v-model="params.toolBgc">
 
@@ -243,7 +243,7 @@
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="crossOriginHeader">跨域信息（crossOriginHeader）：</label>
+                    <label for="crossOriginHeader">Cross origin header（crossOriginHeader）：</label>
                     <input @input="setData($event)" name="crossOriginHeader" type="text" class="form-control"
                            v-model="params.crossOriginHeader">
 
@@ -253,37 +253,37 @@
               <div class="row">
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="crossOrigin">是否跨域（crossOrigin）：</label>
+                    <label for="crossOrigin">Is cross origin（crossOrigin）：</label>
                     <select @change="setData($event)" name="crossOrigin" class="custom-select">
-                      <option value="true" selected>是</option>
-                      <option value="false">否</option>
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
                     </select>
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="isModal">是否为弹窗（isModal）：</label>
+                    <label for="isModal">Is modal（isModal）：</label>
                     <select @change="setData($event)" name="isModal" class="custom-select">
-                      <option value="true">是</option>
-                      <option value="false" selected>否</option>
+                      <option value="true">YES</option>
+                      <option value="false" selected>NO</option>
                     </select>
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="showChooseBtn">是否显示选择图片按钮（showChooseBtn）：</label>
+                    <label for="showChooseBtn">Show select button（showChooseBtn）：</label>
                     <select @change="setData($event)" name="showChooseBtn" class="custom-select">
-                      <option value="true" selected>是</option>
-                      <option value="false">否</option>
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
                     </select>
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="lockScroll">弹窗时是否锁定body滚动（lockScroll）：</label>
+                    <label for="lockScroll">Lock scroll（lockScroll）：</label>
                     <select @change="setData($event)" name="lockScroll" class="custom-select">
-                      <option value="true" selected>是</option>
-                      <option value="false">否</option>
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
                     </select>
                   </div>
                 </div>
@@ -292,37 +292,37 @@
 
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="sizeChange">是否允许修改裁剪尺寸（sizeChange）：</label>
+                    <label for="sizeChange">Allow to change size（sizeChange）：</label>
                     <select @change="setData($event)" name="sizeChange" class="custom-select">
-                      <option value="true" selected>是</option>
-                      <option value="false">否</option>
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
                     </select>
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="moveAble">是否允许移动裁剪框（moveAble）：</label>
+                    <label for="moveAble">Allow to move（moveAble）：</label>
                     <select @change="setData($event)" name="moveAble" class="custom-select">
-                      <option value="true" selected>是</option>
-                      <option value="false">否</option>
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
                     </select>
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="tool">是否显示工具栏（tool）：</label>
+                    <label for="tool">Show toolbar（tool）：</label>
                     <select @change="setData($event)" name="tool" class="custom-select">
-                      <option value="true" selected>是</option>
-                      <option value="false">否</option>
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
                     </select>
                   </div>
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="tool">是否启用原图裁剪（originalGraph）：</label>
+                    <label for="tool">Crop original image（originalGraph）：</label>
                     <select @change="setData($event)" name="originalGraph" class="custom-select">
-                      <option value="true">是</option>
-                      <option value="false" selected>否</option>
+                      <option value="true">YES</option>
+                      <option value="false" selected>NO</option>
                     </select>
                   </div>
                 </div>
@@ -361,11 +361,11 @@
     <div class="row bg">
       <div class="col-md-10 offset-md-1">
         <h1 class="bd-title">
-          <i class="fa fa-magic"></i> 捐赠
-          <small class="text-muted">Show me the money</small>
+          <i class="fa fa-magic"></i> Donation
+          <small class="text-muted">Donate in support of the author</small>
         </h1>
         <p class="lead">
-          请我喝一杯吧
+          Can you buy me a cup of coffee :)
         </p>
       </div>
       <div class="col-md-10 offset-md-1" style="margin-top:20px;">
@@ -428,7 +428,7 @@
         refresh: true,
         isForIe9: false,
         params: {
-          label: '裁剪本地图片',
+          label: 'Crop local pictures',
           crossOrigin: true,
           crossOriginHeader: '*',
           rate: '',
@@ -447,7 +447,7 @@
         },
         code1: "",
         code2: "\n" +
-        "// 裁剪远程图片（兼容IE9）\n" +
+        "// Crop remote pictures（For IE9）\n" +
         "forIe9:function(){\n" +
         "   this.$refs.imgCutterModal.handleOpen({\n" +
         "       name:1.png,\n" +
@@ -492,12 +492,12 @@
       createCode: function () {
         this.code1 = '\n' +
           '<ImgCutter\n' +
-          '   :ref="imgCutterModal"\n' +
-          '   :label="' + this.params.label + '"\n' +
+          '   ref="imgCutterModal"\n' +
+          '   label="' + this.params.label + '"\n' +
           '   :crossOrigin="' + this.params.crossOrigin + '"\n' +
-          '   :crossOriginHeader="' + this.params.crossOriginHeader + '"\n' +
-          '   :rate="' + this.params.rate + '"\n' +
-          '   :toolBgc="' + this.params.toolBgc + '"\n' +
+          '   crossOriginHeader="' + this.params.crossOriginHeader + '"\n' +
+          '   rate="' + this.params.rate + '"\n' +
+          '   toolBgc="' + this.params.toolBgc + '"\n' +
           '   :isModal="' + this.params.isModal + '"\n' +
           '   :showChooseBtn="' + this.params.showChooseBtn + '"\n' +
           '   :lockScroll="' + this.params.lockScroll + '"\n' +

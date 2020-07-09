@@ -28,7 +28,7 @@
                      class="toolBox">
                   <!--选取图片-->
                   <div class="tips" v-show="!drawImg.img && showChooseBtn===true">
-                    <div class="btn btn-warning btn-xs" @click="chooseImg">选择图片</div>
+                    <div class="btn btn-warning btn-xs" @click="chooseImg">{{label}}</div>
                   </div>
                   <!--工具栏-->
                   <div v-if="tool==true" v-show="this.drawImg.img && dropImg.active!==true && controlBox.disable==true && toolBox.disable==true" class="dockMain" :style="'background:'+ this.toolBgc" @mouseenter="dropImgOff">
@@ -138,7 +138,7 @@
                 <input @change="putImgToCanv" ref="inputFile" type="file" accept="image/gif, image/jpeg ,image/png" style="width:1px;height:1px;border:none;opacity: 0;">
                 <span @click="chooseImg">
                   <slot name="choose">
-                    <div class="btn btn-primary btn-primary-plain" v-if="showChooseBtn===true">选择图片</div>
+                    <div class="btn btn-primary btn-primary-plain" v-if="showChooseBtn===true">{{label}}</div>
                   </slot>
                 </span>
                 <div class="btn-group fr">
