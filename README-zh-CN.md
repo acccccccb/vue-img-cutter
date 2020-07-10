@@ -111,6 +111,11 @@ forIe9:function(){
 |crossOrigin|是否设置跨域，需要服务器做相应更改|Boolean|否|false|
 |crossOriginHeader|设置跨域信息crossOrigin为true时才生效|String|否|''|
 |rate|图片比例|String(例: "4:3")|否|-|
+|WatermarkText|水印文字|String|否|''|
+|WatermarkTextFont|水印文字字体|String|否|'12px Sans-serif'|
+|WatermarkTextColor|水印文字颜色|String|否|'#fff'|
+|WatermarkTextX|水印文字水平位置|Number|否|0.95|
+|WatermarkTextY|水印文字垂直位置|Number|否|0.95|
 |cutDown|完成截图后要执行的方法|Function|是|-|
 |error|错误回调|Function|否|-|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
@@ -131,6 +136,13 @@ forIe9:function(){
 |file|file类型的文件对象（IE部分版本可能不会返回）|
 |blob|blob类型的文件对象（IE部分版本可能不会返回）|
 |dataURL|dataURL|
+|ratio|工具栏：宽高比|
+|scaleReset|工具栏： 重置缩放|
+|turnLeft|工具栏： 向左旋转|
+|turnRight|工具栏： 向右旋转|
+|reset|工具栏： 重置旋转|
+|flipHorizontal|工具栏： 水平翻转|
+|flipVertically|工具栏： 垂直翻转|
 
 ### 开发中功能：
 - 原图裁剪 开发中
@@ -142,6 +154,9 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.1.2
+- 增加水平翻转和垂直翻转
+- 新增插槽:ratio,scaleReset,turnLeft,turnRight,reset,flipHorizontal,flipVertically
 #### 2.1.1
 - 新增英文文档
 #### 2.1.0

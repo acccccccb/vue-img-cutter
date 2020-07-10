@@ -32,13 +32,33 @@
                   </div>
                   <!--工具栏-->
                   <div v-if="tool==true" v-show="this.drawImg.img && dropImg.active!==true && controlBox.disable==true && toolBox.disable==true" class="dockMain" :style="'background:'+ this.toolBgc" @mouseenter="dropImgOff">
-                    <div class="dockBtn" v-if="rate">比例：{{rate}}</div>
-                    <div class="dockBtn" @click="scaleReset">
-                      缩放：{{drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-'}}
+                    <div class="dockBtn" v-if="rate">
+                      <slot name="ratio">
+                        Ratio:
+                      </slot>
+                      {{rate}}
                     </div>
-                    <div v-if="originalGraph===false" @click="turnImg(-90)" class="dockBtn">左转90°</div>
-                    <div v-if="originalGraph===false" @click="turnImg(90)" class="dockBtn">右转90°</div>
-                    <div v-if="originalGraph===false" @click="turnReset()" class="dockBtn">复位</div>
+                    <div class="dockBtn" @click="scaleReset">
+                      <slot name="scaleReset">
+                        Scale:
+                      </slot>
+                      {{drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-'}}
+                    </div>
+                    <div v-if="originalGraph===false" @click="turnImg(-90)" class="dockBtn">
+                      <slot name="turnLeft">
+                        ↳
+                      </slot>
+                    </div>
+                    <div v-if="originalGraph===false" @click="turnImg(90)" class="dockBtn">
+                      <slot name="turnRight">
+                        ↲
+                      </slot>
+                    </div>
+                    <div v-if="originalGraph===false" @click="turnReset()" class="dockBtn">
+                      <slot name="reset">
+                        ↻
+                      </slot>
+                    </div>
                     <div v-if="originalGraph===false" class="dockBtnScrollBar">
                       <div
                               ref="dockBtnScrollControl"
@@ -52,6 +72,16 @@
                            :style="'left:'+ rotateControl.position + 'px'">
                         {{rotateImg.angle.toFixed(0) + '°'}}
                       </div>
+                    </div>
+                    <div v-if="originalGraph===false" @click="flipHorizontal" class="dockBtn">
+                      <slot name="flipHorizontal">
+                        ⇆
+                      </slot>
+                    </div>
+                    <div v-if="originalGraph===false" @click="flipVertically" class="dockBtn">
+                      <slot name="turnRight">
+                        ⇅
+                      </slot>
                     </div>
                   </div>
                   <!--裁剪区域-->
@@ -252,6 +282,32 @@
                 default: false,
                 required: false,
             },
+            // 水印文字
+            WatermarkText:{
+                type:String,
+                default:'',
+                required:false,
+            },
+            WatermarkTextFont:{
+                type:String,
+                default:'12px Sans-serif',
+                required:false,
+            },
+            WatermarkTextColor:{
+                type:String,
+                default:'#fff',
+                required:false,
+            },
+            WatermarkTextX:{
+                type:Number,
+                default:0.95,
+                required:false,
+            },
+            WatermarkTextY:{
+                type:Number,
+                default:0.95,
+                required:false,
+            },
             DoNotDisplayCopyright: {
                 type: Boolean,
                 default: false,
@@ -335,6 +391,8 @@
                 },
                 selectBox: false,
                 selectBoxColor: 'rgba(0,0,0,0.6)',
+                isFlipHorizontal:false,//是否水平翻转
+                isFlipVertically:false,// 是否垂直翻转
             }
         },
         mounted(){
@@ -590,6 +648,8 @@
                     width: 0,//要使用的图像的宽度
                     height: 0//要使用的图像的高度
                 };
+                this.isFlipHorizontal = false;
+                this.isFlipVertically = false;
                 this.$refs['inputFile'].value = "";
                 this.rotateImg.angle = 0;
                 this.drawImg.img = null;
@@ -723,14 +783,22 @@
                 if (this.drawImg.img) {
                     let canv = this.$refs['canvas'];
                     let ctx = canv.getContext("2d");
+                    // 文字水印
+                    ctx.font = "18px bold 黑体";
+                    ctx.fillStyle = "#ff0";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+
                     ctx.save();
                     ctx.clearRect(0, 0, canv.width, canv.height);
                     ctx.translate(this.drawImg.x + this.drawImg.width / 2, this.drawImg.y + this.drawImg.height / 2);
                     ctx.rotate((this.rotateImg.angle) * Math.PI / 180);
                     ctx.translate(-(this.drawImg.x + this.drawImg.width / 2), -(this.drawImg.y + this.drawImg.height / 2));
                     ctx.translate(this.drawImg.x, this.drawImg.y);
-                    ctx.drawImage(this.drawImg.img, this.drawImg.sx, this.drawImg.sy, this.drawImg.swidth, this.drawImg.sheight, 0, 0, this.drawImg.width, this.drawImg.height);
-                    ctx.translate(-this.drawImg.x, -this.drawImg.y);
+                    ctx.scale(this.isFlipHorizontal?-1:1,this.isFlipVertically?-1:1);
+                    ctx.drawImage(this.drawImg.img, this.drawImg.sx, this.drawImg.sy, this.drawImg.swidth, this.drawImg.sheight, this.isFlipHorizontal?-this.drawImg.width:0, this.isFlipVertically?-this.drawImg.height:0, this.drawImg.width, this.drawImg.height);
+                    ctx.translate(-this.drawImg.x,this.drawImg.y);
+
                     ctx.restore();
                 }
             },
@@ -784,6 +852,28 @@
                 e.preventDefault();
                 e.returnValue = false;
                 return false;
+            },
+            // 水平翻转
+            flipHorizontal:function(){
+                if (this.drawImg.img) {
+                    if(this.isFlipHorizontal==false) {
+                        this.isFlipHorizontal = true;
+                    } else {
+                        this.isFlipHorizontal = false;
+                    }
+                    this.printImg();
+                }
+            },
+            // 垂直翻转
+            flipVertically:function(){
+                if (this.drawImg.img) {
+                    if(this.isFlipVertically==false) {
+                        this.isFlipVertically = true;
+                    } else {
+                        this.isFlipVertically = false;
+                    }
+                    this.printImg();
+                }
             },
             // 旋转
             turnImg: function (angle) {
@@ -879,6 +969,17 @@
                 let _this = this;
                 // get img
                 let canvas = this.$refs['canvas'];
+
+                // 文字水印
+                if(this.WatermarkText) {
+                    let ctx2 = canvas.getContext("2d");
+                    ctx2.font = this.WatermarkTextFont;
+                    ctx2.fillStyle = this.WatermarkTextColor;
+                    ctx2.textAlign = "right";
+                    ctx2.textBaseline = "bottom";
+                    ctx2.fillText(this.WatermarkText, this.toolBox.x+(this.toolBox.width*this.WatermarkTextX),this.toolBox.y+(this.toolBox.height*this.WatermarkTextY));
+                }
+
                 let tempImg = new Image();
                 if(this.crossOrigin===true) {
                     tempImg.crossOrigin = this.crossOriginHeader;
@@ -1548,7 +1649,7 @@
     padding: 1px 4px;
     border-radius: 3px;
     height:20px;
-    line-height:20px;
+    line-height:16px;
     transition: background 0.2s, color 0.2s;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Chrome/Safari/Opera */

@@ -121,7 +121,12 @@
               :moveAble="params.moveAble"
               :tool="params.tool"
               :originalGraph="params.originalGraph"
-              :DoNotDisplayCopyright="true"
+              :WatermarkText="params.WatermarkText"
+              :WatermarkTextFont="params.WatermarkTextFont"
+              :WatermarkTextColor="params.WatermarkTextColor"
+              :WatermarkTextX="params.WatermarkTextX"
+              :WatermarkTextY="params.WatermarkTextY"
+              :DoNotDisplayCopyright="false"
               toolBgc="params.toolBgc"
               v-on:error="catchError"
               v-on:cutDown="cutDown">
@@ -205,7 +210,6 @@
                     <label for="boxHeight">Tool height（boxHeight）：</label>
                     <input @input="setData($event)" :readonly="params.isModal==false" name="boxHeight" type="text" class="form-control"
                            v-model="params.boxHeight">
-
                   </div>
                 </div>
                 <div class="col">
@@ -319,11 +323,50 @@
                 </div>
                 <div class="col">
                   <div class="form-group custom-control">
-                    <label for="tool">Crop original image（originalGraph）：</label>
+                    <label for="originalGraph">Crop original image（originalGraph）：</label>
                     <select @change="setData($event)" name="originalGraph" class="custom-select">
                       <option value="true">YES</option>
                       <option value="false" selected>NO</option>
                     </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="WatermarkText">Watermark（WatermarkText）：</label>
+                    <input @input="setData($event)" name="WatermarkText" type="text" class="form-control"
+                           v-model="params.WatermarkText">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="WatermarkTextFont">Font size（WatermarkTextFont）：</label>
+                    <input @input="setData($event)" name="WatermarkTextFont" type="text" class="form-control"
+                           v-model="params.WatermarkTextFont">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="WatermarkTextColor">Font color（WatermarkTextColor）：</label>
+                    <input @input="setData($event)" name="WatermarkTextColor" type="text" class="form-control"
+                           v-model="params.WatermarkTextColor">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="WatermarkTextX">Position x（WatermarkTextX）：</label>
+                    <input @input="setData($event)" name="WatermarkTextX" type="text" class="form-control"
+                           v-model="params.WatermarkTextX">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="WatermarkTextY">Position y（WatermarkTextY）：</label>
+                    <input @input="setData($event)" name="WatermarkTextY" type="text" class="form-control"
+                           v-model="params.WatermarkTextY">
                   </div>
                 </div>
               </div>
@@ -348,7 +391,7 @@
               <div class="card-header">
                 Javascript
               </div>
-              <div class="card-body" style="height:497px;">
+              <div class="card-body" style="height:623px;">
               <pre>
                 <code>{{code2}}</code>
               </pre>
@@ -418,12 +461,12 @@
         github:'https://github.com/acccccccb/vue-img-cutter',
         gitee:'https://gitee.com/GLUESTICK/vue-img-cutter',
         download:'https://github.com/acccccccb/vue-img-cutter/archive/master.zip',
-        cutImgSrc: 'http://placekitten.com/300/300',
+        cutImgSrc: 'https://phpcrm-oss.oss-cn-chengdu.aliyuncs.com/weixinpay.png',
         homepage:'https://www.ihtmlcss.com',
         docs:'https://github.com/acccccccb/vue-img-cutter/blob/master/README.md',
         npm:'https://www.npmjs.com/package/vue-img-cutter',
-        cutImgWidth: 300,
-        cutImgHeight: 300,
+        cutImgWidth: 250,
+        cutImgHeight: 250,
         imgSrc: null,
         refresh: true,
         isForIe9: false,
@@ -444,6 +487,11 @@
           moveAble: true,
           tool: true,
           originalGraph: false,
+          WatermarkText:'vue-img-cutter',
+          WatermarkTextFont:'12px Sans-serif',
+          WatermarkTextColor:'#fff',
+          WatermarkTextX:0.95,
+          WatermarkTextY:0.95,
         },
         code1: "",
         code2: "\n" +
@@ -508,7 +556,12 @@
           '   :sizeChange="' + this.params.sizeChange + '"\n' +
           '   :moveAble="' + this.params.moveAble + '"\n' +
           '   :originalGraph="' + this.params.originalGraph + '"\n' +
-          '   v-on:cutDown="cutDown">\n' +
+          '   WatermarkText="' + this.params.WatermarkText + '"\n' +
+          '   WatermarkTextFont="' + this.params.WatermarkTextFont + '"\n' +
+          '   WatermarkTextColor="' + this.params.WatermarkTextColor + '"\n' +
+          '   :WatermarkTextX="' + this.params.WatermarkTextX + '"\n' +
+          '   :WatermarkTextY="' + this.params.WatermarkTextY + '"\n' +
+          '   @cutDown="cutDown">\n' +
           '       <div class="btn btn-primary" slot="open">' + this.params.label + '</div>\n' +
           '</ImgCutter>'
       },
@@ -524,15 +577,15 @@
         }
 
         let value = $event.target.value;
-        if (value === 'true') {
+        if (value == 'true') {
           value = true
         }
-        if (value === 'false') {
+        if (value == 'false') {
           value = false
         }
-        if (isNumber(value) === true) {
-          value = parseInt(value);
-        }
+        // if (isNumber(value) === true) {
+        //   value = parseInt(value);
+        // }
         this.params[$event.target.name] = value;
         this.doRefresh();
         this.createCode();

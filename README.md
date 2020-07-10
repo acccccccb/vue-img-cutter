@@ -113,6 +113,11 @@ ForIE9:function(){
 |crossOrigin|Is cross origin image|Boolean|No|false|
 |crossOriginHeader|Set cross origin header|String|No|''|
 |rate|Aspect ratio|String(eg: "4:3")|No|-|
+|WatermarkText|Watermark Text|String|No|''|
+|WatermarkTextFont|Watermark font size|String|No|'12px Sans-serif'|
+|WatermarkTextColor|Watermark font color|String|No|'#fff'|
+|WatermarkTextX|Watermark position x|Number|No|0.95|
+|WatermarkTextY|Watermark position y|Number|No|0.95|
 |cutDown|Return to cropped image|Function|Yes|-|
 |error|Catch error|Function|No|-|
 
@@ -124,6 +129,13 @@ ForIE9:function(){
 |choose|Choose btn(in tool)|
 |cancel|Cancel btn|
 |confirm|Confirm btn|
+|ratio|Toolbar ratio|
+|scaleReset|Toolbar reset scale|
+|turnLeft|Toolbar turn left|
+|turnRight|Toolbar turn right|
+|reset|Toolbar reset|
+|flipHorizontal|Toolbar flip horizontal|
+|flipVertically|Toolbar flip vertically|
 
 ### Return：
 ----
@@ -145,6 +157,9 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.2
+- New features:flip horizontal,flip vertically,Watermark
+- Add slot:ratio,scaleReset,turnLeft,turnRight,reset,flipHorizontal,flipVertically
 #### 2.1.1
 - Add english documents
 #### 2.1.0
