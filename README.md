@@ -157,6 +157,9 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.3
+- Fix bug:When no choose Image,you also can get an empty image,now you will get an error message in error callback
+- Fix bug:When rate < 0 the result image size error;
 #### 2.1.2
 - New features:flip horizontal,flip vertically,Watermark
 - Add slot:ratio,scaleReset,turnLeft,turnRight,reset,flipHorizontal,flipVertically

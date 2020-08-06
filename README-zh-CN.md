@@ -154,6 +154,9 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.1.3
+- 修复bug：如果没有选取图片直接点击确定，也能触发裁剪函数 #16，现在如果未选去图片，将会触发错误回调error
+- 修复bug：配置rate截图无法达到预期宽高 #15
 #### 2.1.2
 - 增加水平翻转和垂直翻转
 - 新增插槽:ratio,scaleReset,turnLeft,turnRight,reset,flipHorizontal,flipVertically
