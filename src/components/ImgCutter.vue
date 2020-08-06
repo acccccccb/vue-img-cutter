@@ -1043,7 +1043,13 @@
                                         let params = _this.toolBox;
                                         if (_this.rate) {
                                             let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
-                                            ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
+                                            let m = _this.rate.split(':')[0];
+                                            let n = _this.rate.split(':')[1];
+                                            if(m>=n) {
+                                                ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
+                                            } else {
+                                                ctx.drawImage(tempImg, params.x, params.y, params.width, params.width / p, 0, 0, params.width, params.width / p);
+                                            }
                                         } else {
                                             ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
                                         }
