@@ -174,12 +174,12 @@
                 <div class="btn-group fr">
                   <span  @click="handleClose">
                     <slot name="cancel">
-                      <div class="btn btn-default">取消</div>
+                      <button class="btn btn-default">取消</button>
                     </slot>
                   </span>
                   <span @click="cropPicture">
                     <slot name="confirm">
-                      <div class="btn btn-primary" style="margin-left:15px;" :disabled="!drawImg.img" type="primary">确定</div>
+                      <button class="btn btn-primary" style="margin-left:15px;" :disabled="!drawImg.img" type="primary">确定</button>
                     </slot>
                   </span>
                 </div>
@@ -966,126 +966,135 @@
                 e.stopPropagation();
             },
             cropPicture: function () {
+                console.log(this.drawImg.img);
                 let _this = this;
-                // get img
-                let canvas = this.$refs['canvas'];
+                if(this.drawImg.img) {
+                    // get img
+                    let canvas = this.$refs['canvas'];
 
-                // 文字水印
-                if(this.WatermarkText) {
-                    let ctx2 = canvas.getContext("2d");
-                    ctx2.font = this.WatermarkTextFont;
-                    ctx2.fillStyle = this.WatermarkTextColor;
-                    ctx2.textAlign = "right";
-                    ctx2.textBaseline = "bottom";
-                    ctx2.fillText(this.WatermarkText, this.toolBox.x+(this.toolBox.width*this.WatermarkTextX),this.toolBox.y+(this.toolBox.height*this.WatermarkTextY));
-                }
+                    // 文字水印
+                    if(this.WatermarkText) {
+                        let ctx2 = canvas.getContext("2d");
+                        ctx2.font = this.WatermarkTextFont;
+                        ctx2.fillStyle = this.WatermarkTextColor;
+                        ctx2.textAlign = "right";
+                        ctx2.textBaseline = "bottom";
+                        ctx2.fillText(this.WatermarkText, this.toolBox.x+(this.toolBox.width*this.WatermarkTextX),this.toolBox.y+(this.toolBox.height*this.WatermarkTextY));
+                    }
 
-                let tempImg = new Image();
-                if(this.crossOrigin===true) {
-                    tempImg.crossOrigin = this.crossOriginHeader;
-                }
-                tempImg.src = canvas.toDataURL();
+                    let tempImg = new Image();
+                    if(this.crossOrigin===true) {
+                        tempImg.crossOrigin = this.crossOriginHeader;
+                    }
+                    tempImg.src = canvas.toDataURL();
 
-                if (!HTMLCanvasElement.prototype.toBlob) {
-                    Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-                        value: function (callback, type, quality) {
-                            // callback(1,2,3);
-                            if(window.atob) {
-                                setTimeout(function () {
-                                    let binStr = atob(canvas.toDataURL(type, quality).split(',')[1]);
-                                    let len = binStr.length, arr = new Uint8Array(len);
-                                    for (var i = 0; i < len; i++) {
-                                        arr[i] = binStr.charCodeAt(i);
-                                    }
-                                    callback(new Blob([arr], {type: type || 'image/png'}));
-                                },200);
-                            } else {
-                                callback(false,{type:'image/png'});
+                    if (!HTMLCanvasElement.prototype.toBlob) {
+                        Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+                            value: function (callback, type, quality) {
+                                // callback(1,2,3);
+                                if(window.atob) {
+                                    setTimeout(function () {
+                                        let binStr = atob(canvas.toDataURL(type, quality).split(',')[1]);
+                                        let len = binStr.length, arr = new Uint8Array(len);
+                                        for (var i = 0; i < len; i++) {
+                                            arr[i] = binStr.charCodeAt(i);
+                                        }
+                                        callback(new Blob([arr], {type: type || 'image/png'}));
+                                    },200);
+                                } else {
+                                    callback(false,{type:'image/png'});
+                                }
                             }
+                        });
+                    }
+                    canvas.toBlob((blob) => {
+                        if(blob) {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(blob);
+                            reader.onload = function () {
+                                let timmer = setInterval(function () {
+                                    if (reader.readyState == 2) {
+                                        clearInterval(timmer);
+                                        let newCanv = document.createElement('canvas');
+                                        let ctx = newCanv.getContext("2d");
+
+                                        // 原图裁剪 originalGraph
+                                        if(_this.originalGraph==true) {
+                                            let scale = _this.drawImg.width / _this.drawImg.swidth;
+
+                                            // 计算实际图像大小
+                                            let transWidth = _this.toolBox.width/scale;
+                                            let transHeight = _this.toolBox.height/scale;
+                                            newCanv.width = transWidth;
+                                            newCanv.height = transHeight;
+                                            // 重新计算裁剪坐标
+                                            let sx = (_this.toolBox.x-_this.drawImg.x)/scale;
+                                            let sy = (_this.toolBox.y-_this.drawImg.y)/scale;
+
+                                            let swidth = _this.drawImg.swidth;
+                                            let sheight = _this.drawImg.sheight;
+                                            // TODO 使原图裁剪支持旋转后的图像
+                                            // ctx.translate(sx + transWidth/2, sy + transHeight/2);
+                                            // ctx.rotate((_this.rotateImg.angle) * Math.PI / 180);
+                                            // ctx.translate(-(sx + transWidth/2), -(sy + transHeight/2));
+                                            ctx.translate(-sx, -sy);
+                                            ctx.drawImage(_this.drawImg.img, 0, 0, swidth, sheight);
+                                        } else {
+                                            newCanv.width = _this.toolBox.width;
+                                            newCanv.height = _this.toolBox.height;
+                                            let params = _this.toolBox;
+                                            if (_this.rate) {
+                                                let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
+                                                let m = _this.rate.split(':')[0];
+                                                let n = _this.rate.split(':')[1];
+                                                if(m>=n) {
+                                                    ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
+                                                } else {
+                                                    ctx.drawImage(tempImg, params.x, params.y, params.width, params.width / p, 0, 0, params.width, params.width / p);
+                                                }
+                                            } else {
+                                                ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
+                                            }
+                                        }
+                                        newCanv.toBlob(function (blob) {
+                                            _this.handleClose();
+                                            _this.$emit('cutDown', {
+                                                fileName:_this.fileName,
+                                                blob: blob,
+                                                file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
+                                                dataURL: newCanv.toDataURL(),
+                                            })
+                                        }, 'image/jpeg', 0.95);
+                                    }
+                                }, 200);
+                            };
+                        } else {
+                            // IE9及以下
+                            let newCanv = document.createElement('canvas');
+                            newCanv.width = _this.toolBox.width;
+                            newCanv.height = _this.toolBox.height;
+                            let ctx = newCanv.getContext("2d");
+                            let params = _this.toolBox;
+                            if (_this.rate) {
+                                let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
+                                ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
+                            } else {
+                                ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
+                            }
+                            _this.handleClose();
+                            _this.$emit('cutDown', {
+                                fileName:_this.fileName,
+                                dataURL: newCanv.toDataURL(),
+                            })
                         }
                     });
+                } else {
+                    console.warn('No picture selected');
+                    _this.$emit('error',{
+                        err:1,
+                        msg:'No picture selected'
+                    });
                 }
-                canvas.toBlob((blob) => {
-                    if(blob) {
-                        let reader = new FileReader();
-                        reader.readAsDataURL(blob);
-                        reader.onload = function () {
-                            let timmer = setInterval(function () {
-                                if (reader.readyState == 2) {
-                                    clearInterval(timmer);
-                                    let newCanv = document.createElement('canvas');
-                                    let ctx = newCanv.getContext("2d");
-
-                                    // 原图裁剪 originalGraph
-                                    if(_this.originalGraph==true) {
-                                        let scale = _this.drawImg.width / _this.drawImg.swidth;
-
-                                        // 计算实际图像大小
-                                        let transWidth = _this.toolBox.width/scale;
-                                        let transHeight = _this.toolBox.height/scale;
-                                        newCanv.width = transWidth;
-                                        newCanv.height = transHeight;
-                                        // 重新计算裁剪坐标
-                                        let sx = (_this.toolBox.x-_this.drawImg.x)/scale;
-                                        let sy = (_this.toolBox.y-_this.drawImg.y)/scale;
-
-                                        let swidth = _this.drawImg.swidth;
-                                        let sheight = _this.drawImg.sheight;
-                                        // TODO 使原图裁剪支持旋转后的图像
-                                        // ctx.translate(sx + transWidth/2, sy + transHeight/2);
-                                        // ctx.rotate((_this.rotateImg.angle) * Math.PI / 180);
-                                        // ctx.translate(-(sx + transWidth/2), -(sy + transHeight/2));
-                                        ctx.translate(-sx, -sy);
-                                        ctx.drawImage(_this.drawImg.img, 0, 0, swidth, sheight);
-                                    } else {
-                                        newCanv.width = _this.toolBox.width;
-                                        newCanv.height = _this.toolBox.height;
-                                        let params = _this.toolBox;
-                                        if (_this.rate) {
-                                            let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
-                                            let m = _this.rate.split(':')[0];
-                                            let n = _this.rate.split(':')[1];
-                                            if(m>=n) {
-                                                ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
-                                            } else {
-                                                ctx.drawImage(tempImg, params.x, params.y, params.width, params.width / p, 0, 0, params.width, params.width / p);
-                                            }
-                                        } else {
-                                            ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
-                                        }
-                                    }
-                                    newCanv.toBlob(function (blob) {
-                                        _this.handleClose();
-                                        _this.$emit('cutDown', {
-                                            fileName:_this.fileName,
-                                            blob: blob,
-                                            file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
-                                            dataURL: newCanv.toDataURL(),
-                                        })
-                                    }, 'image/jpeg', 0.95);
-                                }
-                            }, 200);
-                        };
-                    } else {
-                        // IE9及以下
-                        let newCanv = document.createElement('canvas');
-                        newCanv.width = _this.toolBox.width;
-                        newCanv.height = _this.toolBox.height;
-                        let ctx = newCanv.getContext("2d");
-                        let params = _this.toolBox;
-                        if (_this.rate) {
-                            let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
-                            ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
-                        } else {
-                            ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
-                        }
-                        _this.handleClose();
-                        _this.$emit('cutDown', {
-                            fileName:_this.fileName,
-                            dataURL: newCanv.toDataURL(),
-                        })
-                    }
-                });
             },
             scrollBarControlMove: function (e) {
                 if (this.rotateControl.active) {
