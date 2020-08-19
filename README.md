@@ -157,6 +157,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.4
+- Fix bug:Width display error
 #### 2.1.3
 - Fix bug:When no choose Image,you also can get an empty image,now you will get an error message in error callback
 - Fix bug:When rate < 0 the result image size error;
