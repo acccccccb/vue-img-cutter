@@ -107,7 +107,7 @@
                         </div>
                         <!--如果是裁剪原图则显示实际大小-->
                         <div class="selectArea" v-if="originalGraph===true">
-                          宽:{{(toolBox.height/(drawImg.width / drawImg.swidth)).toFixed(0)}} 高:{{(toolBox.height/(drawImg.width / drawImg.swidth)).toFixed(0)}}
+                          宽:{{(toolBox.width/(drawImg.width / drawImg.swidth)).toFixed(0)}} 高:{{(toolBox.height/(drawImg.width / drawImg.swidth)).toFixed(0)}}
                           (x:{{toolBoxPosition.x}},y:{{toolBoxPosition.y}})
                         </div>
                         <!--操作杆-->
