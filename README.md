@@ -157,6 +157,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.5
+- Fix bug:Button add attrib type=button
 #### 2.1.4
 - Fix bug:Width display error
 #### 2.1.3

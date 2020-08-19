@@ -4,7 +4,7 @@
       <slot name="openImgCutter"></slot>
       <slot name="open"></slot>
     </div>
-    <button v-if="!$slots.openImgCutter && !$slots.open && isModal===true" class="btn btn-primary" @click="handleOpen">{{label}}</button>
+    <button type="button" v-if="!$slots.openImgCutter && !$slots.open && isModal===true" class="btn btn-primary" @click="handleOpen">{{label}}</button>
     <transition name="fade">
       <div v-if="visible"  :class="isModal===true?'mask vue-img-cutter':''" ref="mask">
         <div :class="isModal===true?'dialogBoxModal':'dialogBox'" v-if="visible">
@@ -174,12 +174,12 @@
                 <div class="btn-group fr">
                   <span  @click="handleClose">
                     <slot name="cancel">
-                      <button class="btn btn-default">取消</button>
+                      <button type="button" class="btn btn-default">取消</button>
                     </slot>
                   </span>
                   <span @click="cropPicture">
                     <slot name="confirm">
-                      <button class="btn btn-primary" style="margin-left:15px;" :disabled="!drawImg.img" type="primary">确定</button>
+                      <button type="button" class="btn btn-primary" style="margin-left:15px;" :disabled="!drawImg.img">确定</button>
                     </slot>
                   </span>
                 </div>
