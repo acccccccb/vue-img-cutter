@@ -116,9 +116,15 @@ forIe9:function(){
 |WatermarkTextColor|水印文字颜色|String|否|'#fff'|
 |WatermarkTextX|水印文字水平位置|Number|否|0.95|
 |WatermarkTextY|水印文字垂直位置|Number|否|0.95|
-|cutDown|完成截图后要执行的方法|Function|是|-|
-|error|错误回调|Function|否|-|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
+
+### 钩子函数：
+| 属性名 | 作用 | 类型  | 必填 | 返回值 |
+|cutDown|完成截图后要执行的方法|Function|是|Object|
+|error|错误回调|Function|否|Error object|
+|onChooseImg|选择图片后|Function|否|Object|
+|onPrintImg|在画布上绘制图片|Function|否|Object|
+|onClearAll|清空画布|Function|否|null|
 
 ### 插槽(slot)：
 | 插槽名称 | 作用  |
@@ -127,15 +133,6 @@ forIe9:function(){
 |choose|选择本地图片|
 |cancel|取消/清空|
 |confirm|确认裁剪|
-
-### 返回值：
-----
-| 属性名 | 类型  |
-|:----:|:----:|
-|fileName|文件名|
-|file|file类型的文件对象（IE部分版本可能不会返回）|
-|blob|blob类型的文件对象（IE部分版本可能不会返回）|
-|dataURL|dataURL|
 |ratio|工具栏：宽高比|
 |scaleReset|工具栏： 重置缩放|
 |turnLeft|工具栏： 向左旋转|
@@ -143,6 +140,16 @@ forIe9:function(){
 |reset|工具栏： 重置旋转|
 |flipHorizontal|工具栏： 水平翻转|
 |flipVertically|工具栏： 垂直翻转|
+
+### 返回值 @cutDown：
+----
+| 属性名 | 类型  |
+|:----:|:----:|
+|fileName|文件名|
+|file|file类型的文件对象（IE部分版本可能不会返回）|
+|blob|blob类型的文件对象（IE部分版本可能不会返回）|
+|dataURL|dataURL|
+
 
 ### 开发中功能：
 - 原图裁剪 开发中
@@ -154,6 +161,8 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.1.6
+- 新增三个事件钩子：onClearAll,onPrintImg,onChooseImg
 #### 2.1.5
 - 修复bug：button添加属性type=button
 #### 2.1.4

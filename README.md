@@ -118,8 +118,15 @@ ForIE9:function(){
 |WatermarkTextColor|Watermark font color|String|No|'#fff'|
 |WatermarkTextX|Watermark position x|Number|No|0.95|
 |WatermarkTextY|Watermark position y|Number|No|0.95|
-|cutDown|Return to cropped image|Function|Yes|-|
-|error|Catch error|Function|No|-|
+
+### Hook function：
+| Attribute | Effect | Type  | Require | Return |
+|cutDown|Cut down image|Function|Yes|Object|
+|error|Throw error|Function|No|Error object|
+|onChooseImg|ChooseImg|Function|No|Object|
+|onPrintImg|Print image to canvas|Function|No|Object|
+|onClearAll|Clear all|Function|No|null|
+
 
 ### Slot（You can use slot="slot name" to custom button）：
 | Slot name | Effect |
@@ -137,7 +144,7 @@ ForIE9:function(){
 |flipHorizontal|Toolbar flip horizontal|
 |flipVertically|Toolbar flip vertically|
 
-### Return：
+### Return @cutDown：
 ----
 | Attribute | Description  |
 |:----:|:----:|
@@ -157,6 +164,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.6
+- Add new hook function：onClearAll,onPrintImg,onChooseImg
 #### 2.1.5
 - Fix bug:Button add attrib type=button
 #### 2.1.4

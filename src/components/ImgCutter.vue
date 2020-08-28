@@ -324,6 +324,7 @@
                 visible: false,
                 fileName:'',
                 cutImageObj:null,
+                onPrintImgTimmer:null,
                 toolBoxPosition:{
                   x:0,
                   y:0
@@ -401,12 +402,8 @@
             if(this.isModal===false) {
                 this.visible = true;
                 this.$nextTick(()=>{
-                    let mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
-                    if (mousewheelevt == 'mousewheel') {
-                        this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
-                    } else {
-                        this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
-                    }
+                    this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
+                    this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
                 })
             }
         },
@@ -414,12 +411,8 @@
             handleOpen: function (img) {
                 let _this = this;
                 let init = (callback)=>{
-                    let mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
-                    if (mousewheelevt == 'mousewheel') {
-                        _this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
-                    } else {
-                        _this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
-                    }
+                    _this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
+                    _this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
                     // 判断下窗口高度
                     if(_this.isModal===true) {
                         if(_this.lockScroll===true) {
@@ -478,6 +471,7 @@
                         $image.src = img.src;
                         this.cutImageObj = $image;
                         document.body.appendChild($image);
+                        this.$emit('onChooseImg',img);
                     } else {
                         throw new Error('传入参数必须包含：src,width,height,name');
                     }
@@ -597,6 +591,7 @@
                     };
 
                     this.putToolBox();
+                    this.$emit('onChooseImg',file);
                 }
 
             },
@@ -655,6 +650,7 @@
                 this.drawImg.img = null;
                 this.turnReset();
                 this.clearCutImageObj();
+                this.$emit('onClearAll');
             },
             clearCutImageObj:function(){
                 if(this.cutImageObj!==null && this.cutImageObj!==undefined) {
@@ -730,7 +726,12 @@
               $toolBoxControl.style.top = y + 'px';
 
               ctx.clearRect(x, y, Math.abs(toolBoxControlWidth), Math.abs(toolBoxControlHeight));
-
+                if(this.onPrintImgTimmer) {
+                    clearTimeout(this.onPrintImgTimmer);
+                }
+                this.onPrintImgTimmer = setTimeout(()=>{
+                    this.cropPicture(true);
+                },100);
             },
 
             resetToolBox:function(){
@@ -769,6 +770,12 @@
             },
             toolBoxMouseLeave: function () {
                 this.toolBox.disable = true;
+                if(this.onPrintImgTimmer) {
+                    clearTimeout(this.onPrintImgTimmer);
+                }
+                this.onPrintImgTimmer = setTimeout(()=>{
+                    this.cropPicture(true);
+                },100);
                 this.resetToolBox();
             },
             toolBoxMouseUp: function (e) {
@@ -800,6 +807,12 @@
                     ctx.translate(-this.drawImg.x,this.drawImg.y);
 
                     ctx.restore();
+                    if(this.onPrintImgTimmer) {
+                        clearTimeout(this.onPrintImgTimmer);
+                    }
+                    this.onPrintImgTimmer = setTimeout(()=>{
+                        this.cropPicture(true);
+                    },100);
                 }
             },
             // 拖动图片
@@ -811,6 +824,12 @@
             },
             dropImgOff: function () {
                 this.dropImg.active = false;
+                if(this.onPrintImgTimmer) {
+                    clearTimeout(this.onPrintImgTimmer);
+                }
+                this.onPrintImgTimmer = setTimeout(()=>{
+                    this.cropPicture(true);
+                },100);
             },
             dropImgMove: function (e) {
                 let _this = this;
@@ -846,6 +865,12 @@
                     _this.drawImg.width = (_this.drawImg.width - scale * 9) > widthLimit ? _this.drawImg.width - scale * 9 : widthLimit;
                     _this.drawImg.height = _this.drawImg.width / _this.scaleImg.rate;
                     _this.printImg();
+                    if(this.onPrintImgTimmer) {
+                        clearTimeout(this.onPrintImgTimmer);
+                    }
+                    this.onPrintImgTimmer = setTimeout(()=>{
+                        this.cropPicture(true);
+                    },100);
                 }
                 // let scrollTop = this.$refs['mask'].scrollTop;
                 // window.scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
@@ -965,15 +990,14 @@
                 }
                 e.stopPropagation();
             },
-            cropPicture: function () {
-                console.log(this.drawImg.img);
+            cropPicture: function (doNotReset) {
                 let _this = this;
                 if(this.drawImg.img) {
                     // get img
                     let canvas = this.$refs['canvas'];
 
                     // 文字水印
-                    if(this.WatermarkText) {
+                    if(this.WatermarkText && !doNotReset) {
                         let ctx2 = canvas.getContext("2d");
                         ctx2.font = this.WatermarkTextFont;
                         ctx2.fillStyle = this.WatermarkTextColor;
@@ -1057,13 +1081,22 @@
                                             }
                                         }
                                         newCanv.toBlob(function (blob) {
-                                            _this.handleClose();
-                                            _this.$emit('cutDown', {
-                                                fileName:_this.fileName,
-                                                blob: blob,
-                                                file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
-                                                dataURL: newCanv.toDataURL(),
-                                            })
+                                            if(!doNotReset) {
+                                                _this.handleClose();
+                                                _this.$emit('cutDown', {
+                                                    fileName:_this.fileName,
+                                                    blob: blob,
+                                                    file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
+                                                    dataURL: newCanv.toDataURL(),
+                                                })
+                                            } else {
+                                                _this.$emit('onPrintImg', {
+                                                    fileName:_this.fileName,
+                                                    blob: blob,
+                                                    file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
+                                                    dataURL: newCanv.toDataURL(),
+                                                })
+                                            }
                                         }, 'image/jpeg', 0.95);
                                     }
                                 }, 200);
@@ -1081,19 +1114,28 @@
                             } else {
                                 ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
                             }
-                            _this.handleClose();
-                            _this.$emit('cutDown', {
-                                fileName:_this.fileName,
-                                dataURL: newCanv.toDataURL(),
-                            })
+                            if(!doNotReset) {
+                                _this.handleClose();
+                                _this.$emit('cutDown', {
+                                    fileName:_this.fileName,
+                                    dataURL: newCanv.toDataURL(),
+                                })
+                            } else {
+                                _this.$emit('onPrintImg', {
+                                    fileName:_this.fileName,
+                                    dataURL: newCanv.toDataURL(),
+                                })
+                            }
                         }
                     });
                 } else {
-                    console.warn('No picture selected');
-                    _this.$emit('error',{
-                        err:1,
-                        msg:'No picture selected'
-                    });
+                    if(!doNotReset) {
+                        console.warn('No picture selected');
+                        _this.$emit('error',{
+                            err:1,
+                            msg:'No picture selected'
+                        });
+                    }
                 }
             },
             scrollBarControlMove: function (e) {
@@ -1265,6 +1307,7 @@
     position: relative;
     background: transparent;
     z-index:103;
+    pointer-events: none;
   }
   .controlBoxInnerLine {
     position: absolute;
@@ -1275,6 +1318,7 @@
     -moz-animation:zi-antBorder 0.8s linear 0s infinite normal;
     -webkit-animation:zi-antBorder 0.8s linear 0s infinite normal;
     animation:zi-antBorder 0.8s linear 0s infinite normal;
+    pointer-events: none;
   }
   .controlBoxInnerLineTop {
     height:1px;
@@ -1342,7 +1386,8 @@
     height: 100%;
     position: absolute;
     cursor: move;
-    z-index:-1;
+    z-index:1;
+    pointer-events: none;
   }
 
   .controlBtn {
@@ -1354,6 +1399,7 @@
     position: absolute;
     border-radius: 50%;
     z-index:999;
+    pointer-events: auto!important;
   }
 
   .leftUp {

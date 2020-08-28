@@ -128,8 +128,11 @@
               :WatermarkTextY="params.WatermarkTextY"
               :DoNotDisplayCopyright="false"
               toolBgc="params.toolBgc"
-              v-on:error="catchError"
-              v-on:cutDown="cutDown">
+              @onChooseImg="onChooseImg"
+              @onClearAll="onClearAll"
+              @onPrintImg="onPrintImg"
+              @error="catchError"
+              @cutDown="cutDown">
               <span slot="open"></span>
               <span slot="choose" v-if="params.isModal==false"></span>
               <span slot="cancel" v-if="params.isModal==false"></span>
@@ -176,7 +179,7 @@
                 <div class="btn btn-secondary btn-block" @click="forIe9">Crop remote pictures（For IE9+）</div>
               </div>
               <div class="form-group">
-                <button type="button" :disabled="params.isModal===true" class="btn btn-success btn-block" @click="pluginExe('cropPicture')">Confirm</button>
+                <button type="button" :disabled="params.isModal===true || loadImg===false" class="btn btn-success btn-block" @click="pluginExe('cropPicture')">Confirm</button>
               </div>
               <div class="form-group">
                 <button type="button" class="btn btn-light btn-block" :disabled="params.isModal===true" @click="pluginExe('clearAll')">Reset</button>
@@ -470,6 +473,8 @@
         imgSrc: null,
         refresh: true,
         isForIe9: false,
+        loadImg:false,
+          onPrintImgTimmer:null,
         params: {
           label: 'Crop local pictures',
           crossOrigin: true,
@@ -537,6 +542,17 @@
           this.refresh = true;
         })
       },
+        onClearAll:function(){ // 清空事件
+            this.loadImg = false;
+        },
+        onPrintImg:function(res){ // 预览图片
+            this.imgSrc = res.dataURL;
+        },
+        onChooseImg:function(res){ // 选择图片事件
+            if(res) {
+                this.loadImg = true;
+            }
+        },
       createCode: function () {
         this.code1 = '\n' +
           '<ImgCutter\n' +
