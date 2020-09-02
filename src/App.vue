@@ -525,6 +525,7 @@
     },
     methods: {
       cutDown: function (res) {
+        console.log('cutDown');
         console.log(res);
         this.imgSrc = res.dataURL;
       },

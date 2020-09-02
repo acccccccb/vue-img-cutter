@@ -177,7 +177,7 @@
                       <button type="button" class="btn btn-default">取消</button>
                     </slot>
                   </span>
-                  <span @click="cropPicture">
+                  <span @click="cropPicture(false)">
                     <slot name="confirm">
                       <button type="button" class="btn btn-primary" style="margin-left:15px;" :disabled="!drawImg.img">确定</button>
                     </slot>
