@@ -96,7 +96,7 @@ ForIE9:function(){
 ### Parameter description：
 ----
 | Attribute | Effect | Type  | Require | Default |
-|:----:|----|:----:|:----:|:----:|
+|:----:|:----:|:----:|:----:|:----:|
 |isModal|Is modal|Boolean|No|true|
 |showChooseBtn|Show select btn|Boolean|No|true|
 |lockScroll|Lock scroll when modal is show|Boolean|No|true|
@@ -122,7 +122,7 @@ ForIE9:function(){
 
 ### Hook function：
 | Attribute | Effect | Type  | Require | Return |
-|:----:|----|:----:|:----:|:----:|
+|:----:|:----:|:----:|:----:|:----:|
 |cutDown|Cut down image|Function|Yes|Object|
 |error|Throw error|Function|No|Error object|
 |onChooseImg|ChooseImg|Function|No|Object|

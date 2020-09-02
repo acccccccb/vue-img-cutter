@@ -94,7 +94,7 @@ forIe9:function(){
 ### 参数说明：
 ----
 | 属性名 | 作用 | 类型  | 必填 | 默认值 |
-|:----:|----|:----:|:----:|:----:|
+|:----:|:----:|:----:|:----:|:----:|
 |isModal|是否为弹窗模式|Boolean|否|true|
 |showChooseBtn|是否显示选择图片按钮|Boolean|否|true|
 |lockScroll|是否在Dialog出现时将body滚动锁定|Boolean|否|true|
@@ -120,7 +120,7 @@ forIe9:function(){
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 钩子函数：
-|:----:|----|:----:|:----:|:----:|
+|:----:|:----:|:----:|:----:|:----:|
 | 属性名 | 作用 | 类型  | 必填 | 返回值 |
 |cutDown|完成截图后要执行的方法|Function|是|Object|
 |error|错误回调|Function|否|Error object|
