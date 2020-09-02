@@ -120,8 +120,8 @@ forIe9:function(){
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 钩子函数：
-|:----:|:----:|:----:|:----:|:----:|
 | 属性名 | 作用 | 类型  | 必填 | 返回值 |
+|:----:|:----:|:----:|:----:|:----:|
 |cutDown|完成截图后要执行的方法|Function|是|Object|
 |error|错误回调|Function|否|Error object|
 |onChooseImg|选择图片后|Function|否|Object|
