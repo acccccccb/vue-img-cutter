@@ -118,6 +118,7 @@ ForIE9:function(){
 |WatermarkTextColor|Watermark font color|String|No|'#fff'|
 |WatermarkTextX|Watermark position x|Number|No|0.95|
 |WatermarkTextY|Watermark position y|Number|No|0.95|
+|smallToUpload|If choose image size less then defined Size,return file. sizeChange must be false|Boolean|No|false|
 
 ### Hook function：
 | Attribute | Effect | Type  | Require | Return |
@@ -165,6 +166,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.8
+- New features：smallToUpload, If choose image size less then defined Size,return file. sizeChange must be false. #20
 #### 2.1.7
 - Fix bug:#21 cropPicture() missed params
 #### 2.1.6

@@ -126,6 +126,7 @@
               :WatermarkTextColor="params.WatermarkTextColor"
               :WatermarkTextX="params.WatermarkTextX"
               :WatermarkTextY="params.WatermarkTextY"
+              :smallToUpload="params.smallToUpload"
               :DoNotDisplayCopyright="false"
               toolBgc="params.toolBgc"
               @onChooseImg="onChooseImg"
@@ -335,6 +336,15 @@
                 </div>
               </div>
               <div class="row">
+                  <div class="col">
+                      <div class="form-group custom-control">
+                          <label for="smallToUpload">smallToUpload（If choose image size less then defined Size,return file. sizeChange must be false ）：</label>
+                          <select @change="setData($event)" name="smallToUpload" class="custom-select">
+                              <option value="true">YES</option>
+                              <option value="false" selected>NO</option>
+                          </select>
+                      </div>
+                  </div>
                 <div class="col">
                   <div class="form-group custom-control">
                     <label for="WatermarkText">Watermark（WatermarkText）：</label>
@@ -494,9 +504,10 @@
           originalGraph: false,
           WatermarkText:'vue-img-cutter',
           WatermarkTextFont:'12px Sans-serif',
-          WatermarkTextColor:'#fff',
+          WatermarkTextColor:'#00ff00',
           WatermarkTextX:0.95,
           WatermarkTextY:0.95,
+          smallToUpload:true,
         },
         code1: "",
         code2: "\n" +
@@ -545,6 +556,7 @@
       },
         onClearAll:function(){ // 清空事件
             this.loadImg = false;
+            this.imgSrc = '';
         },
         onPrintImg:function(res){ // 预览图片
             this.imgSrc = res.dataURL;
@@ -578,6 +590,7 @@
           '   WatermarkTextColor="' + this.params.WatermarkTextColor + '"\n' +
           '   :WatermarkTextX="' + this.params.WatermarkTextX + '"\n' +
           '   :WatermarkTextY="' + this.params.WatermarkTextY + '"\n' +
+          '   :smallToUpload="' + this.params.smallToUpload + '"\n' +
           '   @cutDown="cutDown">\n' +
           '       <div class="btn btn-primary" slot="open">' + this.params.label + '</div>\n' +
           '</ImgCutter>'
@@ -600,9 +613,9 @@
         if (value == 'false') {
           value = false
         }
-        // if (isNumber(value) === true) {
-        //   value = parseInt(value);
-        // }
+        if (isNumber(value) === true) {
+          value = parseInt(value);
+        }
         this.params[$event.target.name] = value;
         this.doRefresh();
         this.createCode();

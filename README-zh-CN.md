@@ -116,6 +116,7 @@ forIe9:function(){
 |WatermarkTextColor|水印文字颜色|String|否|'#fff'|
 |WatermarkTextX|水印文字水平位置|Number|否|0.95|
 |WatermarkTextY|水印文字垂直位置|Number|否|0.95|
+|smallToUpload|如果裁剪尺寸固定且图片尺寸小于裁剪尺寸则不裁剪直接返回文件|Boolean|否|false|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 钩子函数：
@@ -162,6 +163,8 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.1.8
+- 新增参数：smallToUpload 如果裁剪尺寸固定且图片尺寸小于裁剪尺寸则不裁剪直接返回文件 #20
 #### 2.1.7
 - 修复bug:#21 cropPicture未传值导致裁剪功能失效
 #### 2.1.6

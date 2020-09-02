@@ -308,6 +308,11 @@
                 default:0.95,
                 required:false,
             },
+            smallToUpload: { // 选择的图片宽高均小于裁剪宽高度时候直接上传原图
+                type: Boolean,
+                default: false,
+                required: false,
+            },
             DoNotDisplayCopyright: {
                 type: Boolean,
                 default: false,
@@ -557,8 +562,17 @@
                         let timmer = setInterval(function () {
                             if (reader.readyState == 2) {
                                 clearInterval(timmer);
+                                if ( !_this.sizeChange && _this.smallToUpload && img.width <= _this.cutWidth && img.height <= _this.cutHeight) {
+                                    _this.handleClose();
+                                    _this.$emit('cutDown', {
+                                        filename: file.name,
+                                        file: file,
+                                    });
+                                    return;
+                                }
                                 let imgHeight = img.height;
                                 let imgWidth = img.width;
+
                                 let boxWidth = _this.boxWidth;
                                 let boxHeight = _this.boxHeight;
                                 let rate;
@@ -586,11 +600,10 @@
                                 drawImg.y = (boxHeight - drawImg.height) / 2;
                                 _this.$set(_this, 'drawImg', drawImg);
                                 _this.printImg();
+                                _this.putToolBox();
                             }
                         }, 200);
                     };
-
-                    this.putToolBox();
                     this.$emit('onChooseImg',file);
                 }
 
