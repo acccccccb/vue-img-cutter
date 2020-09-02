@@ -121,6 +121,7 @@ ForIE9:function(){
 
 ### Hook function：
 | Attribute | Effect | Type  | Require | Return |
+|:----:|----|:----:|:----:|:----:|
 |cutDown|Cut down image|Function|Yes|Object|
 |error|Throw error|Function|No|Error object|
 |onChooseImg|ChooseImg|Function|No|Object|
@@ -164,6 +165,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.7
+- Fix bug:#21 cropPicture() missed params
 #### 2.1.6
 - Add new hook function：onClearAll,onPrintImg,onChooseImg
 #### 2.1.5
