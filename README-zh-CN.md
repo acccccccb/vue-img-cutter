@@ -64,29 +64,28 @@ export default {
 ```
 5. 远程、跨域裁剪（兼容IE9）
 
-> 需要自己写一个方法来触发裁剪工具弹出
-> 在方法中先将图片上传至服务器，拿到返回的url后创建一个obj，然后将对象传入裁剪工具
+> ~~需要自己写一个方法来触发裁剪工具弹出~~
+
+> ~~在方法中先将图片上传至服务器，拿到返回的url后创建一个obj，然后将对象传入裁剪工具~~
+
+> 2.1.9版本后只需要传入图片url和图片名称
 ```javascript
 // 传入的obj必须包含这四个属性
 let obj = {
     name:'1.jpg',//远程图片名称
     src:'http://url/1.jpg',//远程图片url
-    width:200,//远程图片的原始宽度
-    height:200,//远程图片的原始高度
+    //width:200,//远程图片的原始宽度 2.1.9版本后不需要
+    //height:200,//远程图片的原始高度  2.1.9版本后不需要
 }
 ```
 
 ```javascript
 forIe9:function(){
-	// 此处需要先提交待裁剪的图片到服务器上，然后拿到图片name,src,width,height,这些参数必须传
-	uploadMethod(file).then((res)=>{
-		this.$refs.imgCutterModal.handleOpen({
-            name:res.name,
-            src:res.src,
-            width:res.width,
-            height:res.height,
-        });
-	});
+	// 传入name，src name中必须包含后缀名
+	this.$refs.imgCutterModal.handleOpen({
+        name:"image.jpg",
+        src:"http://imageServ.com/image.jpg",
+    });
 }
 ```
 
@@ -163,6 +162,8 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.1.9
+- 优化了远程裁剪的方法，只需要传入name和src两个参数
 #### 2.1.8
 - 新增参数：smallToUpload 如果裁剪尺寸固定且图片尺寸小于裁剪尺寸则不裁剪直接返回文件 #20
 #### 2.1.7

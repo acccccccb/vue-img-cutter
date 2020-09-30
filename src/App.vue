@@ -161,18 +161,6 @@
                        :value="cutImgSrc" placeholder="Remote pictures src">
               </div>
               <div class="form-group">
-                <label for="cutImgWidth"> Remote pictures width：</label>
-                <input type="number" name="cutImgWidth" class="form-control" @input="catchInput($event)"
-                       :value="cutImgWidth" placeholder="Remote pictures width">
-
-              </div>
-              <div class="form-group">
-                <label for="cutImgHeight"> Remote pictures height：</label>
-                <input type="number" name="cutImgHeight" class="form-control" @input="catchInput($event)"
-                       :value="cutImgHeight" placeholder="Remote pictures height">
-
-              </div>
-              <div class="form-group">
                 <div class="btn btn-primary btn-block" v-if="params.isModal===false" @click="pluginExe('chooseImg')">{{params.label}}</div>
                 <div class="btn btn-primary btn-block" v-if="params.isModal===true" @click="pluginExe('handleOpen')">{{params.label}}</div>
               </div>
@@ -516,8 +504,6 @@
         "   this.$refs.imgCutterModal.handleOpen({\n" +
         "       name:1.png,\n" +
         "       src:http://imgurl.com/1.png,\n" +
-        "       width:100,\n" +
-        "       height:100,\n" +
         "   });\n" +
         "}",
       }
@@ -544,8 +530,8 @@
         this.$refs.imgCutterModal.handleOpen({
           name: this.cutImgSrc,
           src: this.cutImgSrc,
-          width: this.cutImgWidth,
-          height: this.cutImgHeight,
+          // width: this.cutImgWidth,
+          // height: this.cutImgHeight,
         });
       },
       doRefresh: function () {

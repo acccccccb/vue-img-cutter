@@ -439,14 +439,14 @@
 
                 // 如果传入了图片
                 if(img && typeof img == 'object' && img.src ) {
-                    if( img.width && img.height && img.name) {
+                    if( img.name ) {
                         let $image = new Image();
                         if(this.crossOrigin===true) {
                             $image.crossOrigin = this.crossOriginHeader;
                         }
                         $image.name = img.name;
-                        $image.width = img.width;
-                        $image.height = img.height;
+                        // $image.width = img.width;
+                        // $image.height = img.height;
                         // $image.style.width = '1px';
                         // $image.style.height = '1px';
                         $image.style.position = 'fixed';
@@ -478,7 +478,7 @@
                         document.body.appendChild($image);
                         this.$emit('onChooseImg',img);
                     } else {
-                        throw new Error('传入参数必须包含：src,width,height,name');
+                        throw new Error('传入参数必须包含：src,name');
                     }
                 } else {
                     _this.visible = true;

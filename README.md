@@ -64,7 +64,9 @@ export default {
 ```
 5. This method to be compatible with IE9,it can also be used to crop cross domain images
 
-> - Create an object(name,src,width and height are required).
+> - Create an object(name,src,~~width and height~~ are
+required).
+
 > - this.$refs.imgCutterModal.handleOpen(The Object).
 
 ```javascript
@@ -72,23 +74,19 @@ export default {
 let obj = {
     name:'1.jpg',//Image name
     src:'http://url/1.jpg',// Image url
-    width:200,//Image width
-    height:200,//Image height
+    //width:200,//Image width  remove in 2.1.9+
+    //height:200,//Image height remove in 2.1.9+
 }
 ```
 
 ```javascript
 ForIE9:function(){
-	// First you need upload the image and return name,src,width,height.
+	// First you need create object have name,src.
 	// Then trigger handleOpen(obj) and deliver the obj.
-	uploadMethod(file).then((res)=>{
-		this.$refs.imgCutterModal.handleOpen({
-            name:res.name,
-            src:res.src,
-            width:res.width,
-            height:res.height,
-        });
-	});
+	this.$refs.imgCutterModal.handleOpen({
+        name:"image.jpg",
+        src:"http://imageServ.com/image.jpg",
+    });
 }
 ```
 
@@ -166,6 +164,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.9
+- Crop original image not need imageObj.width and imageObj.height
 #### 2.1.8
 - New features：smallToUpload, If choose image size less then defined Size,return file. sizeChange must be false. #20
 #### 2.1.7
