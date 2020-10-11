@@ -313,6 +313,16 @@
                 default: false,
                 required: false,
             },
+            saveCutPosition: { // 是否保存上一次裁剪位置
+                type: Boolean,
+                default:false,
+                required:false,
+            },
+            scaleAble: { // 是否允许缩放图片
+                type: Boolean,
+                default:true,
+                required:false,
+            },
             DoNotDisplayCopyright: {
                 type: Boolean,
                 default: false,
@@ -609,10 +619,14 @@
 
             },
             putToolBox:function(){
-                this.toolBox.width = this.cutWidth>this.boxWidth?this.boxWidth:this.cutWidth;
-                this.toolBox.height = this.cutHeight>this.boxHeight?this.boxHeight:this.cutHeight;
-                this.toolBox.x = this.boxWidth/2 - this.toolBox.width/2;
-                this.toolBox.y = this.boxHeight/2 - this.toolBox.height/2;
+                if((this.toolBox.width===this.boxWidth / 2 || this.toolBox.height===this.boxHeight / 2) || this.saveCutPosition===false) {
+                    this.toolBox.width = this.cutWidth>this.boxWidth?this.boxWidth:this.cutWidth;
+                    this.toolBox.height = this.cutHeight>this.boxHeight?this.boxHeight:this.cutHeight;
+                }
+                if((this.toolBox.x === 0 && this.toolBox.y === 0) || this.saveCutPosition===false) {
+                    this.toolBox.x = this.boxWidth/2 - this.toolBox.width/2;
+                    this.toolBox.y = this.boxHeight/2 - this.toolBox.height/2;
+                }
                 this.drawControlBox(this.toolBox.width, this.toolBox.height, this.toolBox.x, this.toolBox.y);
             },
             isSupportFileApi:function() {
@@ -645,10 +659,12 @@
                 let c1 = _this.$refs['canvasSelectBox'];
                 let ctx1 = c1.getContext("2d");
                 ctx1.clearRect(0, 0, c1.width, c1.height);
+                let sx = _this.drawImg.sx;
+                let sy = _this.drawImg.sy;
                 this.drawImg = {
                     img: null,//规定要使用的图像、画布或视频
-                    sx: 0,//开始剪切的 x 坐标位置
-                    sy: 0,//开始剪切的 y 坐标位置
+                    sx: sx,//开始剪切的 x 坐标位置
+                    sy: sy,//开始剪切的 y 坐标位置
                     swidth: 0,//被剪切图像的宽度
                     sheight: 0,//被剪切图像的高度
                     x: 0,//在画布上放置图像的 x 坐标位置
@@ -863,7 +879,7 @@
             },
             scaleImgWheel: function (e) {
                 let _this = this;
-                if (_this.drawImg.img) {
+                if (_this.drawImg.img && this.scaleAble===true) {
                     let scale;
                     // e是FF的事件。window.event是chrome/ie/opera的事件
                     let ee = e || window.event;

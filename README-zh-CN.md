@@ -116,6 +116,8 @@ forIe9:function(){
 |WatermarkTextX|水印文字水平位置|Number|否|0.95|
 |WatermarkTextY|水印文字垂直位置|Number|否|0.95|
 |smallToUpload|如果裁剪尺寸固定且图片尺寸小于裁剪尺寸则不裁剪直接返回文件|Boolean|否|false|
+|saveCutPosition|是否保存上一次裁剪位置及大小|Boolean|否|false|
+|scaleAble|是否允许滚轮缩放图片|Boolean|否|true|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 钩子函数：
@@ -162,6 +164,10 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.1.10
+- 新增两个参数:
+- 1.saveCutPosition:是否保存上一次裁剪位置及尺寸
+- 2.scaleAble:是否允许缩放图片
 #### 2.1.9
 - 优化了远程裁剪的方法，只需要传入name和src两个参数
 #### 2.1.8

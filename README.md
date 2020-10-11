@@ -117,6 +117,8 @@ ForIE9:function(){
 |WatermarkTextX|Watermark position x|Number|No|0.95|
 |WatermarkTextY|Watermark position y|Number|No|0.95|
 |smallToUpload|If choose image size less then defined Size,return file. sizeChange must be false|Boolean|No|false|
+|saveCutPosition|Save last cut position and size|Boolean|No|false|
+|scaleAble|Allow scale image|Boolean|No|true|
 
 ### Hook function：
 | Attribute | Effect | Type  | Require | Return |
@@ -164,6 +166,10 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.1.10
+- New features:
+- 1.saveCutPosition:Save last cut position and size
+- 2.scaleAble:Able/Disable scale image
 #### 2.1.9
 - Crop original image not need imageObj.width and imageObj.height
 #### 2.1.8

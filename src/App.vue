@@ -127,6 +127,8 @@
               :WatermarkTextX="params.WatermarkTextX"
               :WatermarkTextY="params.WatermarkTextY"
               :smallToUpload="params.smallToUpload"
+              :saveCutPosition="params.saveCutPosition"
+              :scaleAble="params.scaleAble"
               :DoNotDisplayCopyright="false"
               toolBgc="params.toolBgc"
               @onChooseImg="onChooseImg"
@@ -177,7 +179,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-10 offset-md-1">
+      <div class="col-md-10 offset-md-1" style="margin-top:20px;">
         <div class="card">
           <div class="card-header">Config tool</div>
           <div class="card-body">
@@ -319,6 +321,26 @@
                     <select @change="setData($event)" name="originalGraph" class="custom-select">
                       <option value="true">YES</option>
                       <option value="false" selected>NO</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="saveCutPosition">saveCutPosition（ Save cut position ）：</label>
+                    <select @change="setData($event)" name="saveCutPosition" class="custom-select">
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="scaleAble">scaleAble（ Allow scale image ）：</label>
+                    <select @change="setData($event)" name="scaleAble" class="custom-select">
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
                     </select>
                   </div>
                 </div>
@@ -481,6 +503,8 @@
           toolBgc: 'none',
           isModal: false,
           showChooseBtn: true,
+          saveCutPosition: true,
+          scaleAble: true,
           lockScroll: true,
           boxWidth: 500,
           boxHeight: 458,
@@ -577,6 +601,8 @@
           '   :WatermarkTextX="' + this.params.WatermarkTextX + '"\n' +
           '   :WatermarkTextY="' + this.params.WatermarkTextY + '"\n' +
           '   :smallToUpload="' + this.params.smallToUpload + '"\n' +
+          '   :saveCutPosition="' + this.params.saveCutPosition + '"\n' +
+          '   :scaleAble="' + this.params.scaleAble + '"\n' +
           '   @cutDown="cutDown">\n' +
           '       <div class="btn btn-primary" slot="open">' + this.params.label + '</div>\n' +
           '</ImgCutter>'
