@@ -159,8 +159,8 @@ forIe9:function(){
 
 ### 捐赠:
 
-![微信](https://www.ihtmlcss.com/wp-content/uploads/2020/01/weixinpay.png)
-![支付宝](http://www.ihtmlcss.com/wp-content/uploads/2020/01/alipay.png)
+![微信](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png)
+![支付宝](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
 
 ### 更新日志：
 ----
