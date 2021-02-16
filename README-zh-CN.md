@@ -24,7 +24,7 @@
 
 ### 演示地址：
 ----
-[https://ihtmlcss.com/demo/dist/#/croptool](https://ihtmlcss.com/demo/dist/#/croptool)
+[https://www.ihtmlcss.com/demo/dist/#/croptool](https://www.ihtmlcss.com/demo/dist/#/croptool)
 
 
 ### 项目地址：
@@ -119,6 +119,7 @@ forIe9:function(){
 |saveCutPosition|是否保存上一次裁剪位置及大小|Boolean|否|false|
 |scaleAble|是否允许滚轮缩放图片|Boolean|否|true|
 |index|自定义参数，将会同结果一起返回|Any|否|null|
+|previewMode|裁剪过程中是否返回裁剪结果，如果裁剪出现卡顿时将此项设置为false|Boolean|否|true|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 钩子函数：
@@ -161,8 +162,8 @@ forIe9:function(){
 
 ### 捐赠:
 
-![微信](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png)
-![支付宝](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
+![微信](https://www.ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png)
+![支付宝](https://www.ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
 
 ### 更新日志：
 ----

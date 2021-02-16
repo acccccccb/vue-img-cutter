@@ -277,6 +277,11 @@
                 default:true,
                 required:false
             },
+            previewMode: { // 裁剪过程中是否返回裁剪结果 裁剪原图卡顿时将此项设置为false
+                type: Boolean,
+                default: true,
+                required: false,
+            },
            CuttingOriginal: { // 是否裁剪原图
                 type: Boolean,
                 default: false,
@@ -322,6 +327,10 @@
                 type: Boolean,
                 default:true,
                 required:false,
+            },
+            index: {
+                default: null,
+                required: false,
             },
             DoNotDisplayCopyright: {
                 type: Boolean,
@@ -465,6 +474,7 @@
                         $image.onerror = function(e){
                             console.error('图片加载失败');
                             _this.$emit('error',{
+                                index: _this.index,
                                 event:e,
                                 msg:'图片加载失败'
                             });
@@ -486,7 +496,7 @@
                         $image.src = img.src;
                         this.cutImageObj = $image;
                         document.body.appendChild($image);
-                        this.$emit('onChooseImg',img);
+                        this.$emit('onChooseImg',img, this.index);
                     } else {
                         throw new Error('传入参数必须包含：src,name');
                     }
@@ -577,6 +587,7 @@
                                     _this.$emit('cutDown', {
                                         filename: file.name,
                                         file: file,
+                                        index: _this.index,
                                     });
                                     return;
                                 }
@@ -614,7 +625,7 @@
                             }
                         }, 200);
                     };
-                    this.$emit('onChooseImg',file);
+                    this.$emit('onChooseImg',file, this.index);
                 }
 
             },
@@ -679,7 +690,7 @@
                 this.drawImg.img = null;
                 this.turnReset();
                 this.clearCutImageObj();
-                this.$emit('onClearAll');
+                this.$emit('onClearAll', this.index);
             },
             clearCutImageObj:function(){
                 if(this.cutImageObj!==null && this.cutImageObj!==undefined) {
@@ -1113,18 +1124,22 @@
                                             if(!doNotReset) {
                                                 _this.handleClose();
                                                 _this.$emit('cutDown', {
+                                                    index: _this.index,
                                                     fileName:_this.fileName,
                                                     blob: blob,
                                                     file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
                                                     dataURL: newCanv.toDataURL(),
                                                 })
                                             } else {
-                                                _this.$emit('onPrintImg', {
-                                                    fileName:_this.fileName,
-                                                    blob: blob,
-                                                    file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
-                                                    dataURL: newCanv.toDataURL(),
-                                                })
+                                                if (_this.previewMode) {
+                                                    _this.$emit('onPrintImg', {
+                                                        index: _this.index,
+                                                        fileName:_this.fileName,
+                                                        blob: blob,
+                                                        file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
+                                                        dataURL: newCanv.toDataURL(),
+                                                    })
+                                                }
                                             }
                                         }, 'image/jpeg', 0.95);
                                     }

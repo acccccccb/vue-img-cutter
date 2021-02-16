@@ -110,6 +110,7 @@
               :crossOrigin="params.crossOrigin"
               :label="params.label"
               :rate="params.rate"
+              :index="params.index"
               :isModal="params.isModal"
               :showChooseBtn="params.showChooseBtn"
               :lockScroll="params.lockScroll"
@@ -121,6 +122,7 @@
               :moveAble="params.moveAble"
               :tool="params.tool"
               :originalGraph="params.originalGraph"
+              :previewMode="params.previewMode"
               :WatermarkText="params.WatermarkText"
               :WatermarkTextFont="params.WatermarkTextFont"
               :WatermarkTextColor="params.WatermarkTextColor"
@@ -346,15 +348,33 @@
                 </div>
               </div>
               <div class="row">
-                  <div class="col">
-                      <div class="form-group custom-control">
-                          <label for="smallToUpload">smallToUpload（If choose image size less then defined Size,return file. sizeChange must be false ）：</label>
-                          <select @change="setData($event)" name="smallToUpload" class="custom-select">
-                              <option value="true">YES</option>
-                              <option value="false" selected>NO</option>
-                          </select>
-                      </div>
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="index">index（Return result with index）：</label>
+                    <input @input="setData($event)" name="index" type="text" class="form-control"
+                           v-model="params.index">
                   </div>
+                </div>
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="smallToUpload">smallToUpload（If choose image size less then defined Size,return file. sizeChange must be false ）：</label>
+                    <select @change="setData($event)" name="smallToUpload" class="custom-select">
+                      <option value="true">YES</option>
+                      <option value="false" selected>NO</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group custom-control">
+                    <label for="previewMode">previewMode（Return results at any time）：</label>
+                    <select @change="setData($event)" name="previewMode" class="custom-select">
+                      <option value="true" selected>YES</option>
+                      <option value="false">NO</option>
+                    </select>
+                  </div>
+                </div>
                 <div class="col">
                   <div class="form-group custom-control">
                     <label for="WatermarkText">Watermark（WatermarkText）：</label>
@@ -520,6 +540,8 @@
           WatermarkTextX:0.95,
           WatermarkTextY:0.95,
           smallToUpload:true,
+          previewMode: true,
+          index: '',
         },
         code1: "",
         code2: "\n" +
@@ -603,6 +625,8 @@
           '   :smallToUpload="' + this.params.smallToUpload + '"\n' +
           '   :saveCutPosition="' + this.params.saveCutPosition + '"\n' +
           '   :scaleAble="' + this.params.scaleAble + '"\n' +
+          '   :previewMode="' + this.params.previewMode + '"\n' +
+          '   :index="' + this.params.index + '"\n' +
           '   @cutDown="cutDown">\n' +
           '       <div class="btn btn-primary" slot="open">' + this.params.label + '</div>\n' +
           '</ImgCutter>'

@@ -24,7 +24,7 @@ A image crop plug-in for Vue,you can use it to rotate、zoom images and cut any 
 
 ### Demo：
 ----
-[https://ihtmlcss.com/demo/dist/#/croptool](https://ihtmlcss.com/demo/dist/#/croptool)
+[https://www.ihtmlcss.com/demo/dist/#/croptool](https://www.ihtmlcss.com/demo/dist/#/croptool)
 
 
 ### Git：
@@ -120,6 +120,7 @@ ForIE9:function(){
 |saveCutPosition|Save last cut position and size|Boolean|No|false|
 |scaleAble|Allow scale image|Boolean|No|true|
 |index|Return with result|Any|No|null|
+|previewMode|Return results at any time,in case of performance problems, set this to false|Boolean|No|true|
 
 ### Hook function：
 | Attribute | Effect | Type  | Require | Return |
@@ -162,13 +163,14 @@ ForIE9:function(){
 
 ### Donation:
 
-![微信](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png)
-![支付宝](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
+![微信](https://www.ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png)
+![支付宝](https://www.ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
 
 ### Update log：
 ----
 #### 2.2.0
 - New prop( index )：Return result with index.
+- New prop( previewMode )：Return results at any time,in case of performance problems, set this to false.
 - Fix Bug：Update style.
 #### 2.1.10
 - New features:
