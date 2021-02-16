@@ -118,6 +118,7 @@ forIe9:function(){
 |smallToUpload|如果裁剪尺寸固定且图片尺寸小于裁剪尺寸则不裁剪直接返回文件|Boolean|否|false|
 |saveCutPosition|是否保存上一次裁剪位置及大小|Boolean|否|false|
 |scaleAble|是否允许滚轮缩放图片|Boolean|否|true|
+|index|自定义参数，将会同结果一起返回|Any|否|null|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 钩子函数：
@@ -152,6 +153,7 @@ forIe9:function(){
 |file|file类型的文件对象（IE部分版本可能不会返回）|
 |blob|blob类型的文件对象（IE部分版本可能不会返回）|
 |dataURL|dataURL|
+|index|Any|
 
 
 ### 开发中功能：
@@ -164,6 +166,9 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.2.0
+- 新增参数(index)：可添加任意参数，将会同结果一起返回，用来区分是那个组件的返回结果
+- 修复bug：避免底部选择图片按钮位置被外部text-align影响
 #### 2.1.10
 - 新增两个参数:
 - 1.saveCutPosition:是否保存上一次裁剪位置及尺寸

@@ -119,6 +119,7 @@ ForIE9:function(){
 |smallToUpload|If choose image size less then defined Size,return file. sizeChange must be false|Boolean|No|false|
 |saveCutPosition|Save last cut position and size|Boolean|No|false|
 |scaleAble|Allow scale image|Boolean|No|true|
+|index|Return with result|Any|No|null|
 
 ### Hook function：
 | Attribute | Effect | Type  | Require | Return |
@@ -166,6 +167,9 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.2.0
+- New prop( index )：Return result with index.
+- Fix Bug：Update style.
 #### 2.1.10
 - New features:
 - 1.saveCutPosition:Save last cut position and size
