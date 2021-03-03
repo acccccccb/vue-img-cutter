@@ -120,6 +120,7 @@ forIe9:function(){
 |scaleAble|是否允许滚轮缩放图片|Boolean|否|true|
 |index|自定义参数，将会同结果一起返回|Any|否|null|
 |previewMode|裁剪过程中是否返回裁剪结果，如果裁剪出现卡顿时将此项设置为false|Boolean|否|true|
+|fileType|返回的文件类型 ( png / jpeg / webp)|String|否|png|
 > 支持slot，在组件内部使用带有slot="open"属性的元素即可自定义打开组件的按钮
 
 ### 钩子函数：
@@ -167,6 +168,8 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.2.1
+- 新增参数(fileType)：返回的文件类型 默认 png
 #### 2.2.0
 - 新增参数(index)：可添加任意参数，将会同结果一起返回，用来区分是那个组件的返回结果
 - 修复bug：避免底部选择图片按钮位置被外部text-align影响

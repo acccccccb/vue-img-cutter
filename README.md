@@ -121,6 +121,7 @@ ForIE9:function(){
 |scaleAble|Allow scale image|Boolean|No|true|
 |index|Return with result|Any|No|null|
 |previewMode|Return results at any time,in case of performance problems, set this to false|Boolean|No|true|
+|fileType|Return file type ( png / jpeg / webp)|String|No|png|
 
 ### Hook function：
 | Attribute | Effect | Type  | Require | Return |
@@ -168,6 +169,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.2.1
+- New prop( fileType )：Return file type, default: png
 #### 2.2.0
 - New prop( index )：Return result with index.
 - New prop( previewMode )：Return results at any time,in case of performance problems, set this to false.

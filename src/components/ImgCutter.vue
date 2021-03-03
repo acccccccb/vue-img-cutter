@@ -1,211 +1,245 @@
 <template>
-  <div>
-    <div @click="handleOpen" v-if="showChooseBtn===true && isModal===true">
-      <slot name="openImgCutter"></slot>
-      <slot name="open"></slot>
-    </div>
-    <button type="button" v-if="!$slots.openImgCutter && !$slots.open && isModal===true" class="btn btn-primary" @click="handleOpen">{{label}}</button>
-    <transition name="fade">
-      <div v-if="visible"  :class="isModal===true?'mask vue-img-cutter':''" ref="mask">
-        <div :class="isModal===true?'dialogBoxModal':'dialogBox'" v-if="visible">
-          <transition
-                  name="fade"
-                  enter-class="fade-in-enter"
-                  enter-active-class="fade-in-active"
-                  leave-class="fade-out-enter"
-                  leave-active-class="fade-out-active">
-            <div ref="dialogMainModalRef" :class="isModal===true?'dialogMainModal':'dialogMain'" :style="'width:'+(isModal===true?boxWidth+32:boxWidth) + 'px'">
-              <div class="toolMain">
-                <div class="tool-title" v-if="isModal===true">
-                  图片裁剪
-                  <span class="closeIcon" @click="handleClose">×</span>
-                </div>
-                <div ref="toolBox"
-                     :style="'height:'+boxHeight+'px;width:'+boxWidth+'px'"
-                     v-on:mousemove="controlBtnMouseMove"
-                     v-on:mouseup="controlBtnMouseUp"
-                     v-on:mouseleave="controlBtnMouseUp"
-                     class="toolBox">
-                  <!--选取图片-->
-                  <div class="tips" v-show="!drawImg.img && showChooseBtn===true">
-                    <div class="btn btn-warning btn-xs" @click="chooseImg">{{label}}</div>
-                  </div>
-                  <!--工具栏-->
-                  <div v-if="tool==true" v-show="this.drawImg.img && dropImg.active!==true && controlBox.disable==true && toolBox.disable==true" class="dockMain" :style="'background:'+ this.toolBgc" @mouseenter="dropImgOff">
-                    <div class="dockBtn" v-if="rate">
-                      <slot name="ratio">
-                        Ratio:
-                      </slot>
-                      {{rate}}
-                    </div>
-                    <div class="dockBtn" @click="scaleReset">
-                      <slot name="scaleReset">
-                        Scale:
-                      </slot>
-                      {{drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-'}}
-                    </div>
-                    <div v-if="originalGraph===false" @click="turnImg(-90)" class="dockBtn">
-                      <slot name="turnLeft">
-                        ↳
-                      </slot>
-                    </div>
-                    <div v-if="originalGraph===false" @click="turnImg(90)" class="dockBtn">
-                      <slot name="turnRight">
-                        ↲
-                      </slot>
-                    </div>
-                    <div v-if="originalGraph===false" @click="turnReset()" class="dockBtn">
-                      <slot name="reset">
-                        ↻
-                      </slot>
-                    </div>
-                    <div v-if="originalGraph===false" class="dockBtnScrollBar">
-                      <div
-                              ref="dockBtnScrollControl"
-                              @mousemove="scrollBarControlMove"
-                              @mousedown="scrollBarControlOn"
-                              @mouseleave="scrollBarControlOff"
-                              @mouseup="scrollBarControlOff"
-                              :style="'left:'+ rotateControl.position + 'px'"
-                              class="scrollBarControl"></div>
-                      <div v-if="rotateControl.active == true" class="scrollBarText"
-                           :style="'left:'+ rotateControl.position + 'px'">
-                        {{rotateImg.angle.toFixed(0) + '°'}}
-                      </div>
-                    </div>
-                    <div v-if="originalGraph===false" @click="flipHorizontal" class="dockBtn">
-                      <slot name="flipHorizontal">
-                        ⇆
-                      </slot>
-                    </div>
-                    <div v-if="originalGraph===false" @click="flipVertically" class="dockBtn">
-                      <slot name="turnRight">
-                        ⇅
-                      </slot>
-                    </div>
-                  </div>
-                  <!--裁剪区域-->
-                  <div
-                          v-show="drawImg.img!=null"
-                          ref="toolBoxControl"
-                          v-on:mousedown="toolBoxMouseDown"
-                          v-on:mouseup="toolBoxMouseUp"
-                          v-on:mousemove="toolBoxMouseMove"
-                          v-on:mouseleave="toolBoxMouseLeave"
-                          class="toolBoxControl">
-                    <div class="toolBoxControlBox">
-                      <div class="controlBox">
-                        <!--蚂蚁线-->
-                        <div class="controlBoxInnerLine controlBoxInnerLineTop"></div>
-                        <div class="controlBoxInnerLine controlBoxInnerLineBottom"></div>
-                        <div class="controlBoxInnerLine controlBoxInnerLineLeft"></div>
-                        <div class="controlBoxInnerLine controlBoxInnerLineRight"></div>
-                        <!--工具栏提示-->
-                        <div class="selectArea" v-if="originalGraph===false">
-                          宽:{{toolBox.width}} 高:{{toolBox.height}}
-                          (x:{{toolBoxPosition.x}},y:{{toolBoxPosition.y}})
-                        </div>
-                        <!--如果是裁剪原图则显示实际大小-->
-                        <div class="selectArea" v-if="originalGraph===true">
-                          宽:{{(toolBox.width/(drawImg.width / drawImg.swidth)).toFixed(0)}} 高:{{(toolBox.height/(drawImg.width / drawImg.swidth)).toFixed(0)}}
-                          (x:{{toolBoxPosition.x}},y:{{toolBoxPosition.y}})
-                        </div>
-                        <!--操作杆-->
-                        <div data-name="leftUp"
-                             v-if="sizeChange===true"
-                             v-on:mousedown="controlBtnMouseDown($event,'leftUp')"
-                             class="leftUp controlBtn"></div>
-                        <div data-name="leftDown"
-                             v-if="sizeChange===true"
-                             v-on:mousedown="controlBtnMouseDown($event,'leftDown')"
-                             class="leftDown controlBtn"></div>
-                        <div data-name="rightUp"
-                             v-if="sizeChange===true"
-                             v-on:mousedown="controlBtnMouseDown($event,'rightUp')"
-                             class="rightUp controlBtn"></div>
-                        <div data-name="rightDown"
-                             v-if="sizeChange===true"
-                             v-on:mousedown="controlBtnMouseDown($event,'rightDown')"
-                             class="rightDown controlBtn"></div>
-
-                        <div data-name="topCenter"
-                             v-if="sizeChange===true && !rate && this.toolBox.width>20"
-                             v-on:mousedown="controlBtnMouseDown($event,'topCenter')"
-                             class="topCenter controlBtn"></div>
-                        <div data-name="downCenter"
-                             v-if="sizeChange===true && !rate && this.toolBox.width>20"
-                             v-on:mousedown="controlBtnMouseDown($event,'downCenter')"
-                             class="downCenter controlBtn"></div>
-                        <div data-name="leftCenter"
-                             v-if="sizeChange===true && !rate && this.toolBox.height>20"
-                             v-on:mousedown="controlBtnMouseDown($event,'leftCenter')"
-                             class="leftCenter controlBtn"></div>
-                        <div data-name="rightCenter"
-                             v-if="sizeChange===true && !rate && this.toolBox.height>20"
-                             v-on:mousedown="controlBtnMouseDown($event,'rightCenter')"
-                             class="rightCenter controlBtn"></div>
-                      </div>
-                      <div class="toolBoxControlLine toolBoxControlLineItem-1"></div>
-                      <div class="toolBoxControlLine toolBoxControlLineItem-2"></div>
-                      <div class="toolBoxControlLine toolBoxControlLineItem-3"></div>
-                      <div class="toolBoxControlLine toolBoxControlLineItem-4"></div>
-                    </div>
-                  </div>
-                  <div class="copyright">
-                    <a v-if="!DoNotDisplayCopyright" target="_blank" href="https://github.com/acccccccb/vue-img-cutter"
-                       rel="nofollow">vue-img-cutter {{version}}</a>
-                  </div>
-                  <!--画布-->
-                  <canvas class="canvasSelectBox" ref="canvasSelectBox" :width="boxWidth"
-                          @mousedown="dropImgOn"
-                          @mouseup="dropImgOff"
-                          @mousemove="dropImgMove"
-                          :height="boxHeight"></canvas>
-                  <canvas class="canvas" ref="canvas" :width="boxWidth" :height="boxHeight"></canvas>
-                </div>
-              </div>
-              <div class="i-dialog-footer">
-                <input @change="putImgToCanv" ref="inputFile" type="file" accept="image/gif, image/jpeg ,image/png" style="width:1px;height:1px;border:none;opacity: 0;">
-                <span @click="chooseImg">
-                  <slot name="choose">
-                    <div class="btn btn-primary btn-primary-plain" v-if="showChooseBtn===true">{{label}}</div>
-                  </slot>
-                </span>
-                <div class="btn-group fr">
-                  <span  @click="handleClose">
-                    <slot name="cancel">
-                      <button type="button" class="btn btn-default">取消</button>
-                    </slot>
-                  </span>
-                  <span @click="cropPicture(false)">
-                    <slot name="confirm">
-                      <button type="button" class="btn btn-primary" style="margin-left:15px;" :disabled="!drawImg.img">确定</button>
-                    </slot>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </transition>
-          <div style="clear:both;"></div>
+    <div>
+        <div @click="handleOpen" v-if="showChooseBtn===true && isModal===true">
+            <slot name="openImgCutter"></slot>
+            <slot name="open"></slot>
         </div>
-      </div>
-    </transition>
-  </div>
+        <button type="button" v-if="!$slots.openImgCutter && !$slots.open && isModal===true" class="btn btn-primary"
+                @click="handleOpen">{{label}}
+        </button>
+        <transition name="fade">
+            <div v-if="visible" :class="isModal===true?'mask vue-img-cutter':''" ref="mask">
+                <div :class="isModal===true?'dialogBoxModal':'dialogBox'" v-if="visible">
+                    <transition
+                        name="fade"
+                        enter-class="fade-in-enter"
+                        enter-active-class="fade-in-active"
+                        leave-class="fade-out-enter"
+                        leave-active-class="fade-out-active"
+                    >
+                        <div ref="dialogMainModalRef" :class="isModal===true?'dialogMainModal':'dialogMain'"
+                             :style="'width:'+(isModal===true?boxWidth+32:boxWidth) + 'px'">
+                            <div class="toolMain">
+                                <div class="tool-title" v-if="isModal===true">
+                                    图片裁剪
+                                    <span class="closeIcon" @click="handleClose">×</span>
+                                </div>
+                                <div ref="toolBox"
+                                     :style="'height:'+boxHeight+'px;width:'+boxWidth+'px'"
+                                     v-on:mousemove="controlBtnMouseMove"
+                                     v-on:mouseup="controlBtnMouseUp"
+                                     v-on:mouseleave="controlBtnMouseUp"
+                                     class="toolBox"
+                                >
+                                    <!--选取图片-->
+                                    <div class="tips" v-show="!drawImg.img && showChooseBtn===true">
+                                        <div class="btn btn-warning btn-xs" @click="chooseImg">{{label}}</div>
+                                    </div>
+                                    <!--工具栏-->
+                                    <div v-if="tool==true"
+                                         v-show="this.drawImg.img && dropImg.active!==true && controlBox.disable==true && toolBox.disable==true"
+                                         class="dockMain"
+                                         :style="'background:'+ this.toolBgc"
+                                         @mouseenter="dropImgOff"
+                                    >
+                                        <div class="dockBtn" v-if="rate">
+                                            <slot name="ratio">
+                                                Ratio:
+                                            </slot>
+                                            {{rate}}
+                                        </div>
+                                        <div class="dockBtn" @click="scaleReset">
+                                            <slot name="scaleReset">
+                                                Scale:
+                                            </slot>
+                                            {{drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-'}}
+                                        </div>
+                                        <div v-if="originalGraph===false" @click="turnImg(-90)" class="dockBtn">
+                                            <slot name="turnLeft">
+                                                ↳
+                                            </slot>
+                                        </div>
+                                        <div v-if="originalGraph===false" @click="turnImg(90)" class="dockBtn">
+                                            <slot name="turnRight">
+                                                ↲
+                                            </slot>
+                                        </div>
+                                        <div v-if="originalGraph===false" @click="turnReset()" class="dockBtn">
+                                            <slot name="reset">
+                                                ↻
+                                            </slot>
+                                        </div>
+                                        <div v-if="originalGraph===false" class="dockBtnScrollBar">
+                                            <div
+                                                ref="dockBtnScrollControl"
+                                                @mousemove="scrollBarControlMove"
+                                                @mousedown="scrollBarControlOn"
+                                                @mouseleave="scrollBarControlOff"
+                                                @mouseup="scrollBarControlOff"
+                                                :style="'left:'+ rotateControl.position + 'px'"
+                                                class="scrollBarControl"
+                                            ></div>
+                                            <div v-if="rotateControl.active == true" class="scrollBarText"
+                                                 :style="'left:'+ rotateControl.position + 'px'">
+                                                {{rotateImg.angle.toFixed(0) + '°'}}
+                                            </div>
+                                        </div>
+                                        <div v-if="originalGraph===false" @click="flipHorizontal" class="dockBtn">
+                                            <slot name="flipHorizontal">
+                                                ⇆
+                                            </slot>
+                                        </div>
+                                        <div v-if="originalGraph===false" @click="flipVertically" class="dockBtn">
+                                            <slot name="turnRight">
+                                                ⇅
+                                            </slot>
+                                        </div>
+                                    </div>
+                                    <!--裁剪区域-->
+                                    <div
+                                        v-show="drawImg.img!=null"
+                                        ref="toolBoxControl"
+                                        v-on:mousedown="toolBoxMouseDown"
+                                        v-on:mouseup="toolBoxMouseUp"
+                                        v-on:mousemove="toolBoxMouseMove"
+                                        v-on:mouseleave="toolBoxMouseLeave"
+                                        class="toolBoxControl"
+                                    >
+                                        <div class="toolBoxControlBox">
+                                            <div class="controlBox">
+                                                <!--蚂蚁线-->
+                                                <div class="controlBoxInnerLine controlBoxInnerLineTop"></div>
+                                                <div class="controlBoxInnerLine controlBoxInnerLineBottom"></div>
+                                                <div class="controlBoxInnerLine controlBoxInnerLineLeft"></div>
+                                                <div class="controlBoxInnerLine controlBoxInnerLineRight"></div>
+                                                <!--工具栏提示-->
+                                                <div class="selectArea" v-if="originalGraph===false">
+                                                    宽:{{toolBox.width}} 高:{{toolBox.height}}
+                                                    (x:{{toolBoxPosition.x}},y:{{toolBoxPosition.y}})
+                                                </div>
+                                                <!--如果是裁剪原图则显示实际大小-->
+                                                <div class="selectArea" v-if="originalGraph===true">
+                                                    宽:{{(toolBox.width/(drawImg.width / drawImg.swidth)).toFixed(0)}}
+                                                    高:{{(toolBox.height/(drawImg.width / drawImg.swidth)).toFixed(0)}}
+                                                    (x:{{toolBoxPosition.x}},y:{{toolBoxPosition.y}})
+                                                </div>
+                                                <!--操作杆-->
+                                                <div data-name="leftUp"
+                                                     v-if="sizeChange===true"
+                                                     v-on:mousedown="controlBtnMouseDown($event,'leftUp')"
+                                                     class="leftUp controlBtn"
+                                                ></div>
+                                                <div data-name="leftDown"
+                                                     v-if="sizeChange===true"
+                                                     v-on:mousedown="controlBtnMouseDown($event,'leftDown')"
+                                                     class="leftDown controlBtn"
+                                                ></div>
+                                                <div data-name="rightUp"
+                                                     v-if="sizeChange===true"
+                                                     v-on:mousedown="controlBtnMouseDown($event,'rightUp')"
+                                                     class="rightUp controlBtn"
+                                                ></div>
+                                                <div data-name="rightDown"
+                                                     v-if="sizeChange===true"
+                                                     v-on:mousedown="controlBtnMouseDown($event,'rightDown')"
+                                                     class="rightDown controlBtn"
+                                                ></div>
+
+                                                <div data-name="topCenter"
+                                                     v-if="sizeChange===true && !rate && this.toolBox.width>20"
+                                                     v-on:mousedown="controlBtnMouseDown($event,'topCenter')"
+                                                     class="topCenter controlBtn"
+                                                ></div>
+                                                <div data-name="downCenter"
+                                                     v-if="sizeChange===true && !rate && this.toolBox.width>20"
+                                                     v-on:mousedown="controlBtnMouseDown($event,'downCenter')"
+                                                     class="downCenter controlBtn"
+                                                ></div>
+                                                <div data-name="leftCenter"
+                                                     v-if="sizeChange===true && !rate && this.toolBox.height>20"
+                                                     v-on:mousedown="controlBtnMouseDown($event,'leftCenter')"
+                                                     class="leftCenter controlBtn"
+                                                ></div>
+                                                <div data-name="rightCenter"
+                                                     v-if="sizeChange===true && !rate && this.toolBox.height>20"
+                                                     v-on:mousedown="controlBtnMouseDown($event,'rightCenter')"
+                                                     class="rightCenter controlBtn"
+                                                ></div>
+                                            </div>
+                                            <div class="toolBoxControlLine toolBoxControlLineItem-1"></div>
+                                            <div class="toolBoxControlLine toolBoxControlLineItem-2"></div>
+                                            <div class="toolBoxControlLine toolBoxControlLineItem-3"></div>
+                                            <div class="toolBoxControlLine toolBoxControlLineItem-4"></div>
+                                        </div>
+                                    </div>
+                                    <div class="copyright">
+                                        <a
+                                            v-if="!DoNotDisplayCopyright"
+                                            target="_blank"
+                                            href="https://github.com/acccccccb/vue-img-cutter"
+                                             rel="nofollow"
+                                        >
+                                            vue-img-cutter {{version}}
+                                        </a>
+                                    </div>
+                                    <!--画布-->
+                                    <canvas
+                                        class="canvasSelectBox"
+                                        ref="canvasSelectBox"
+                                        :width="boxWidth"
+                                        @mousedown="dropImgOn"
+                                        @mouseup="dropImgOff"
+                                        @mousemove="dropImgMove"
+                                        :height="boxHeight"
+                                    ></canvas>
+                                    <canvas class="canvas" ref="canvas" :width="boxWidth" :height="boxHeight"></canvas>
+                                </div>
+                            </div>
+                            <div class="i-dialog-footer">
+                                <input @change="putImgToCanv" ref="inputFile" type="file"
+                                       accept="image/gif, image/jpeg ,image/png"
+                                       style="width:1px;height:1px;border:none;opacity: 0;">
+                                <span @click="chooseImg">
+                                    <slot name="choose">
+                                        <div class="btn btn-primary btn-primary-plain" v-if="showChooseBtn===true">{{label}}</div>
+                                    </slot>
+                                </span>
+                                <div class="btn-group fr">
+                                    <span @click="handleClose">
+                                        <slot name="cancel">
+                                            <button type="button" class="btn btn-default">取消</button>
+                                        </slot>
+                                    </span>
+                                    <span @click="cropPicture(false)">
+                                        <slot name="confirm">
+                                            <button type="button" class="btn btn-primary" style="margin-left:15px;" :disabled="!drawImg.img">确定</button>
+                                        </slot>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </transition>
+    </div>
 </template>
 <script>
     import config from '../../package.json'
+
     export default {
         name: 'ImgCutter',
         props: {
-            crossOrigin:{// 是否设置图片跨域
-                type:Boolean,
-                default:false,
-                required:false,
+            crossOrigin: {// 是否设置图片跨域
+                type: Boolean,
+                default: false,
+                required: false,
             },
-            crossOriginHeader:{// 是否设置图片跨域
-                type:String,
-                default:'*',
-                required:false,
+            crossOriginHeader: {// 是否设置图片跨域
+                type: String,
+                default: '*',
+                required: false,
             },
             label: { // 按钮文字
                 type: String,
@@ -252,66 +286,66 @@
                 default: null,
                 required: false,
             },
-            tool:{ // 是否显示工具栏
-                type:Boolean,
-                default:true,
-                required:false
+            tool: { // 是否显示工具栏
+                type: Boolean,
+                default: true,
+                required: false
             },
-            toolBgc:{// 工具栏背景色
+            toolBgc: {// 工具栏背景色
                 type: String,
                 default: '#fff',
                 required: false,
             },
-            sizeChange:{ // 能否调整裁剪尺寸
-                type:Boolean,
-                default:true,
-                required:false
+            sizeChange: { // 能否调整裁剪尺寸
+                type: Boolean,
+                default: true,
+                required: false
             },
-            originalGraph:{ // 是否为原图裁剪
-                type:Boolean,
-                default:false,
-                required:false
+            originalGraph: { // 是否为原图裁剪
+                type: Boolean,
+                default: false,
+                required: false
             },
-            moveAble:{ // 能否调整裁剪区域位置
-                type:Boolean,
-                default:true,
-                required:false
+            moveAble: { // 能否调整裁剪区域位置
+                type: Boolean,
+                default: true,
+                required: false
             },
             previewMode: { // 裁剪过程中是否返回裁剪结果 裁剪原图卡顿时将此项设置为false
                 type: Boolean,
                 default: true,
                 required: false,
             },
-           CuttingOriginal: { // 是否裁剪原图
+            CuttingOriginal: { // 是否裁剪原图
                 type: Boolean,
                 default: false,
                 required: false,
             },
             // 水印文字
-            WatermarkText:{
-                type:String,
-                default:'',
-                required:false,
+            WatermarkText: {
+                type: String,
+                default: '',
+                required: false,
             },
-            WatermarkTextFont:{
-                type:String,
-                default:'12px Sans-serif',
-                required:false,
+            WatermarkTextFont: {
+                type: String,
+                default: '12px Sans-serif',
+                required: false,
             },
-            WatermarkTextColor:{
-                type:String,
-                default:'#fff',
-                required:false,
+            WatermarkTextColor: {
+                type: String,
+                default: '#fff',
+                required: false,
             },
-            WatermarkTextX:{
-                type:Number,
-                default:0.95,
-                required:false,
+            WatermarkTextX: {
+                type: Number,
+                default: 0.95,
+                required: false,
             },
-            WatermarkTextY:{
-                type:Number,
-                default:0.95,
-                required:false,
+            WatermarkTextY: {
+                type: Number,
+                default: 0.95,
+                required: false,
             },
             smallToUpload: { // 选择的图片宽高均小于裁剪宽高度时候直接上传原图
                 type: Boolean,
@@ -320,17 +354,22 @@
             },
             saveCutPosition: { // 是否保存上一次裁剪位置
                 type: Boolean,
-                default:false,
-                required:false,
+                default: false,
+                required: false,
             },
             scaleAble: { // 是否允许缩放图片
                 type: Boolean,
-                default:true,
-                required:false,
+                default: true,
+                required: false,
             },
             index: {
                 default: null,
                 required: false,
+            },
+            fileType: {
+                default: 'png',
+                required: false,
+                type: String
             },
             DoNotDisplayCopyright: {
                 type: Boolean,
@@ -338,20 +377,20 @@
                 required: false,
             }
         },
-        model: ['label', 'boxWidth', 'boxHeight', 'rate','tool', 'DoNotDisplayCopyright'],
+        model: ['label', 'boxWidth', 'boxHeight', 'rate', 'tool', 'DoNotDisplayCopyright'],
         data() {
             let toolBoxWidth, toolBoxHeight;
             toolBoxWidth = this.boxWidth / 2;
             toolBoxHeight = this.boxHeight / 2;
             return {
-                version:'',
+                version: '',
                 visible: false,
-                fileName:'',
-                cutImageObj:null,
-                onPrintImgTimmer:null,
-                toolBoxPosition:{
-                  x:0,
-                  y:0
+                fileName: '',
+                cutImageObj: null,
+                onPrintImgTimmer: null,
+                toolBoxPosition: {
+                    x: 0,
+                    y: 0
                 },
                 drawImg: {
                     img: null,//规定要使用的图像、画布或视频
@@ -416,16 +455,16 @@
                 },
                 selectBox: false,
                 selectBoxColor: 'rgba(0,0,0,0.6)',
-                isFlipHorizontal:false,//是否水平翻转
-                isFlipVertically:false,// 是否垂直翻转
+                isFlipHorizontal: false,//是否水平翻转
+                isFlipVertically: false,// 是否垂直翻转
             }
         },
-        mounted(){
+        mounted() {
             this.version = config.version;
             // 是否为弹窗模式
-            if(this.isModal===false) {
+            if (this.isModal === false) {
                 this.visible = true;
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
                     this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
                 })
@@ -434,33 +473,33 @@
         methods: {
             handleOpen: function (img) {
                 let _this = this;
-                let init = (callback)=>{
+                let init = (callback) => {
                     _this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
                     _this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
                     // 判断下窗口高度
-                    if(_this.isModal===true) {
-                        if(_this.lockScroll===true) {
-                            document.body.style.overflowY="hidden";
+                    if (_this.isModal === true) {
+                        if (_this.lockScroll === true) {
+                            document.body.style.overflowY = "hidden";
                         }
                         let dialogBoxHeight = _this.$refs['dialogMainModalRef'].offsetHeight + 200;
                         let windowHeight = window.innerHeight;
                         let mask = _this.$refs['mask'];
-                        if(dialogBoxHeight>windowHeight) {
+                        if (dialogBoxHeight > windowHeight) {
                             mask.style.overflowY = 'scroll';
                         } else {
                             mask.style.overflowY = 'hidden';
                         }
                     }
-                    if(callback && typeof callback === 'function') {
+                    if (callback && typeof callback === 'function') {
                         callback();
                     }
                 };
 
                 // 如果传入了图片
-                if(img && typeof img == 'object' && img.src ) {
-                    if( img.name ) {
+                if (img && typeof img == 'object' && img.src) {
+                    if (img.name) {
                         let $image = new Image();
-                        if(this.crossOrigin===true) {
+                        if (this.crossOrigin === true) {
                             $image.crossOrigin = this.crossOriginHeader;
                         }
                         $image.name = img.name;
@@ -471,20 +510,20 @@
                         $image.style.position = 'fixed';
                         $image.style.top = -5000;
                         $image.style.opacity = 0;
-                        $image.onerror = function(e){
+                        $image.onerror = function (e) {
                             console.error('图片加载失败');
-                            _this.$emit('error',{
+                            _this.$emit('error', {
                                 index: _this.index,
-                                event:e,
-                                msg:'图片加载失败'
+                                event: e,
+                                msg: '图片加载失败'
                             });
                             _this.clearCutImageObj();
                         };
-                        $image.onload = function(){
-                            if($image.complete===true) {
+                        $image.onload = function () {
+                            if ($image.complete === true) {
                                 _this.visible = true;
                                 _this.$nextTick(() => {
-                                    init(()=>{
+                                    init(() => {
                                         _this.importImgToCanv($image)
                                     });
                                 });
@@ -496,22 +535,22 @@
                         $image.src = img.src;
                         this.cutImageObj = $image;
                         document.body.appendChild($image);
-                        this.$emit('onChooseImg',img, this.index);
+                        this.$emit('onChooseImg', img, this.index);
                     } else {
                         throw new Error('传入参数必须包含：src,name');
                     }
                 } else {
                     _this.visible = true;
-                    _this.$nextTick(()=>{
+                    _this.$nextTick(() => {
                         init();
                     });
                 }
             },
             handleClose: function () {
                 this.clearAll();
-                if(this.isModal===true) {
-                    if(this.lockScroll===true) {
-                        document.body.style.overflowY="scroll";
+                if (this.isModal === true) {
+                    if (this.lockScroll === true) {
+                        document.body.style.overflowY = "scroll";
                     }
                     this.$nextTick(() => {
                         this.visible = false;
@@ -522,7 +561,7 @@
             chooseImg: function () {
                 this.$refs['inputFile'].click();
             },
-            importImgToCanv:function(img){
+            importImgToCanv: function (img) {
                 let _this = this;
                 _this.fileName = img.name;
                 let imgHeight = img.height;
@@ -561,7 +600,7 @@
             putImgToCanv: function (e) {
                 let _this = this;
                 let file;
-                if(e.target.files) {
+                if (e.target.files) {
                     file = e.target.files[0] || null;
                 } else {
                     // 如果是IE9及以下
@@ -582,10 +621,11 @@
                         let timmer = setInterval(function () {
                             if (reader.readyState == 2) {
                                 clearInterval(timmer);
-                                if ( !_this.sizeChange && _this.smallToUpload && img.width <= _this.cutWidth && img.height <= _this.cutHeight) {
+                                if (!_this.sizeChange && _this.smallToUpload && img.width <= _this.cutWidth && img.height <= _this.cutHeight) {
                                     _this.handleClose();
+                                    file.name = _this.changeFileName(file.name, _this.fileType);
                                     _this.$emit('cutDown', {
-                                        filename: file.name,
+                                        filename: _this.changeFileName(file.name, _this.fileType),
                                         file: file,
                                         index: _this.index,
                                     });
@@ -625,37 +665,37 @@
                             }
                         }, 200);
                     };
-                    this.$emit('onChooseImg',file, this.index);
+                    this.$emit('onChooseImg', file, this.index);
                 }
 
             },
-            putToolBox:function(){
-                if((this.toolBox.width===this.boxWidth / 2 || this.toolBox.height===this.boxHeight / 2) || this.saveCutPosition===false) {
-                    this.toolBox.width = this.cutWidth>this.boxWidth?this.boxWidth:this.cutWidth;
-                    this.toolBox.height = this.cutHeight>this.boxHeight?this.boxHeight:this.cutHeight;
+            putToolBox: function () {
+                if ((this.toolBox.width === this.boxWidth / 2 || this.toolBox.height === this.boxHeight / 2) || this.saveCutPosition === false) {
+                    this.toolBox.width = this.cutWidth > this.boxWidth ? this.boxWidth : this.cutWidth;
+                    this.toolBox.height = this.cutHeight > this.boxHeight ? this.boxHeight : this.cutHeight;
                 }
-                if((this.toolBox.x === 0 && this.toolBox.y === 0) || this.saveCutPosition===false) {
-                    this.toolBox.x = this.boxWidth/2 - this.toolBox.width/2;
-                    this.toolBox.y = this.boxHeight/2 - this.toolBox.height/2;
+                if ((this.toolBox.x === 0 && this.toolBox.y === 0) || this.saveCutPosition === false) {
+                    this.toolBox.x = this.boxWidth / 2 - this.toolBox.width / 2;
+                    this.toolBox.y = this.boxHeight / 2 - this.toolBox.height / 2;
                 }
                 this.drawControlBox(this.toolBox.width, this.toolBox.height, this.toolBox.x, this.toolBox.y);
             },
-            isSupportFileApi:function() {
-                if(window.File && window.FileList && window.FileReader && window.Blob && navigator.userAgent.indexOf("Edge") === -1 && navigator.userAgent.indexOf("MSIE") === -1 && navigator.userAgent.indexOf("Trident") === -1) {
+            isSupportFileApi: function () {
+                if (window.File && window.FileList && window.FileReader && window.Blob && navigator.userAgent.indexOf("Edge") === -1 && navigator.userAgent.indexOf("MSIE") === -1 && navigator.userAgent.indexOf("Trident") === -1) {
                     return true;
                 } else {
                     return false;
                 }
             },
-            dataURLtoFile:function(dataurl, filename){//将图片转换为Base64
+            dataURLtoFile: function (dataurl, filename) {//将图片转换为Base64
                 let arr = dataurl.split(','),
                     mime = arr[0].match(/:(.*?);/)[1],
                     bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-                while(n--){
+                while (n--) {
                     u8arr[n] = bstr.charCodeAt(n);
                 }
-                if(this.isSupportFileApi()) {
-                    let file = new File([u8arr], filename, {type:mime});
+                if (this.isSupportFileApi()) {
+                    let file = new File([u8arr], filename, {type: mime});
                     return file;
                 } else {
                     return '不支持File对象';
@@ -692,9 +732,9 @@
                 this.clearCutImageObj();
                 this.$emit('onClearAll', this.index);
             },
-            clearCutImageObj:function(){
-                if(this.cutImageObj!==null && this.cutImageObj!==undefined) {
-                    if(typeof this.cutImageObj.remove === 'function') {
+            clearCutImageObj: function () {
+                if (this.cutImageObj !== null && this.cutImageObj !== undefined) {
+                    if (typeof this.cutImageObj.remove === 'function') {
                         this.cutImageObj.remove();
                     } else {
                         this.cutImageObj.removeNode();
@@ -705,10 +745,18 @@
             // draw control
             drawControlBox: function (width, height, x, y) {
 
-                if(width > this.boxWidth) { width = this.boxWidth }
-                if(height > this.boxHeight) { height = this.boxHeight }
-                if (x < 0) { x = 0 }
-                if (y < 0) { y = 0 }
+                if (width > this.boxWidth) {
+                    width = this.boxWidth
+                }
+                if (height > this.boxHeight) {
+                    height = this.boxHeight
+                }
+                if (x < 0) {
+                    x = 0
+                }
+                if (y < 0) {
+                    y = 0
+                }
 
                 let $toolBoxControl = this.$refs['toolBoxControl'];
 
@@ -718,10 +766,10 @@
                 ctx.clearRect(0, 0, c.width, c.height);
                 ctx.fillRect(0, 0, c.width, c.height);
 
-                let toolBoxControlWidth,toolBoxControlHeight;
+                let toolBoxControlWidth, toolBoxControlHeight;
                 if (this.rate && this.rate !== '') {
                     let p = this.rate.split(':')[0] / this.rate.split(':')[1];
-                    if(p>=1) {
+                    if (p >= 1) {
                         toolBoxControlWidth = width;
                         toolBoxControlHeight = width / p;
                     } else {
@@ -738,53 +786,53 @@
                 $toolBoxControl.style.width = Math.abs(toolBoxControlWidth) + 'px';
                 $toolBoxControl.style.height = Math.abs(toolBoxControlHeight) + 'px';
 
-              this.toolBox.boxMove.moveTo.x = x;
-              this.toolBox.boxMove.moveTo.y = y;
+                this.toolBox.boxMove.moveTo.x = x;
+                this.toolBox.boxMove.moveTo.y = y;
 
-              if(toolBoxControlWidth<0) {
-                x = x+toolBoxControlWidth;
-              }
-              if(toolBoxControlHeight<0) {
-                y = y+toolBoxControlHeight;
-              }
-              if (x + this.toolBox.width > this.boxWidth) {
-                x = this.boxWidth - this.toolBox.width;
-              }
-              if(x<0) {
-                x = 0
-              }
-              if (y + this.toolBox.height > this.boxHeight) {
-                y = this.boxHeight - this.toolBox.height;
-              }
-              if(y<0) {
-                y = 0
-              }
-              this.toolBoxPosition.x = x;
-              this.toolBoxPosition.y = y;
+                if (toolBoxControlWidth < 0) {
+                    x = x + toolBoxControlWidth;
+                }
+                if (toolBoxControlHeight < 0) {
+                    y = y + toolBoxControlHeight;
+                }
+                if (x + this.toolBox.width > this.boxWidth) {
+                    x = this.boxWidth - this.toolBox.width;
+                }
+                if (x < 0) {
+                    x = 0
+                }
+                if (y + this.toolBox.height > this.boxHeight) {
+                    y = this.boxHeight - this.toolBox.height;
+                }
+                if (y < 0) {
+                    y = 0
+                }
+                this.toolBoxPosition.x = x;
+                this.toolBoxPosition.y = y;
 
-              $toolBoxControl.style.left = x + 'px';
-              $toolBoxControl.style.top = y + 'px';
+                $toolBoxControl.style.left = x + 'px';
+                $toolBoxControl.style.top = y + 'px';
 
-              ctx.clearRect(x, y, Math.abs(toolBoxControlWidth), Math.abs(toolBoxControlHeight));
-                if(this.onPrintImgTimmer) {
+                ctx.clearRect(x, y, Math.abs(toolBoxControlWidth), Math.abs(toolBoxControlHeight));
+                if (this.onPrintImgTimmer) {
                     clearTimeout(this.onPrintImgTimmer);
                 }
-                this.onPrintImgTimmer = setTimeout(()=>{
+                this.onPrintImgTimmer = setTimeout(() => {
                     this.cropPicture(true);
-                },100);
+                }, 100);
             },
 
-            resetToolBox:function(){
-              if(this.toolBox.width<0) {
-                this.toolBox.boxMove.moveTo.x = this.toolBox.x - this.toolBox.width;
-              }
-              if(this.toolBox.height<0) {
-                this.toolBox.boxMove.moveTo.y = this.toolBox.y - this.toolBox.height;
-              }
-              this.toolBox.width = Math.abs(this.toolBox.width);
-              this.toolBox.height = Math.abs(this.toolBox.height);
+            resetToolBox: function () {
+                if (this.toolBox.width < 0) {
+                    this.toolBox.boxMove.moveTo.x = this.toolBox.x - this.toolBox.width;
+                }
+                if (this.toolBox.height < 0) {
+                    this.toolBox.boxMove.moveTo.y = this.toolBox.y - this.toolBox.height;
+                }
+                this.toolBox.width = Math.abs(this.toolBox.width);
+                this.toolBox.height = Math.abs(this.toolBox.height);
             },
-          // toolBoxMouseDown
+            // toolBoxMouseDown
             toolBoxMouseDown: function (e) {
                 let $toolBox = this.$refs['toolBoxControl'];
                 this.toolBox.x = parseInt($toolBox.style.left.split('px')[0]);
@@ -800,7 +848,7 @@
                 if (this.dropImg.active) {
                     this.dropImgMove(e);
                 }
-                if (this.toolBox.disable === false && this.moveAble===true) {
+                if (this.toolBox.disable === false && this.moveAble === true) {
                     let offsetX = e.pageX - this.toolBox.boxMove.start.x;
                     let offsetY = e.pageY - this.toolBox.boxMove.start.y;
                     let x = this.toolBox.x + offsetX;
@@ -810,12 +858,12 @@
             },
             toolBoxMouseLeave: function () {
                 this.toolBox.disable = true;
-                if(this.onPrintImgTimmer) {
+                if (this.onPrintImgTimmer) {
                     clearTimeout(this.onPrintImgTimmer);
                 }
-                this.onPrintImgTimmer = setTimeout(()=>{
+                this.onPrintImgTimmer = setTimeout(() => {
                     this.cropPicture(true);
-                },100);
+                }, 100);
                 this.resetToolBox();
             },
             toolBoxMouseUp: function (e) {
@@ -842,17 +890,17 @@
                     ctx.rotate((this.rotateImg.angle) * Math.PI / 180);
                     ctx.translate(-(this.drawImg.x + this.drawImg.width / 2), -(this.drawImg.y + this.drawImg.height / 2));
                     ctx.translate(this.drawImg.x, this.drawImg.y);
-                    ctx.scale(this.isFlipHorizontal?-1:1,this.isFlipVertically?-1:1);
-                    ctx.drawImage(this.drawImg.img, this.drawImg.sx, this.drawImg.sy, this.drawImg.swidth, this.drawImg.sheight, this.isFlipHorizontal?-this.drawImg.width:0, this.isFlipVertically?-this.drawImg.height:0, this.drawImg.width, this.drawImg.height);
-                    ctx.translate(-this.drawImg.x,this.drawImg.y);
+                    ctx.scale(this.isFlipHorizontal ? -1 : 1, this.isFlipVertically ? -1 : 1);
+                    ctx.drawImage(this.drawImg.img, this.drawImg.sx, this.drawImg.sy, this.drawImg.swidth, this.drawImg.sheight, this.isFlipHorizontal ? -this.drawImg.width : 0, this.isFlipVertically ? -this.drawImg.height : 0, this.drawImg.width, this.drawImg.height);
+                    ctx.translate(-this.drawImg.x, this.drawImg.y);
 
                     ctx.restore();
-                    if(this.onPrintImgTimmer) {
+                    if (this.onPrintImgTimmer) {
                         clearTimeout(this.onPrintImgTimmer);
                     }
-                    this.onPrintImgTimmer = setTimeout(()=>{
+                    this.onPrintImgTimmer = setTimeout(() => {
                         this.cropPicture(true);
-                    },100);
+                    }, 100);
                 }
             },
             // 拖动图片
@@ -864,12 +912,12 @@
             },
             dropImgOff: function () {
                 this.dropImg.active = false;
-                if(this.onPrintImgTimmer) {
+                if (this.onPrintImgTimmer) {
                     clearTimeout(this.onPrintImgTimmer);
                 }
-                this.onPrintImgTimmer = setTimeout(()=>{
+                this.onPrintImgTimmer = setTimeout(() => {
                     this.cropPicture(true);
-                },100);
+                }, 100);
             },
             dropImgMove: function (e) {
                 let _this = this;
@@ -890,7 +938,7 @@
             },
             scaleImgWheel: function (e) {
                 let _this = this;
-                if (_this.drawImg.img && this.scaleAble===true) {
+                if (_this.drawImg.img && this.scaleAble === true) {
                     let scale;
                     // e是FF的事件。window.event是chrome/ie/opera的事件
                     let ee = e || window.event;
@@ -905,12 +953,12 @@
                     _this.drawImg.width = (_this.drawImg.width - scale * 9) > widthLimit ? _this.drawImg.width - scale * 9 : widthLimit;
                     _this.drawImg.height = _this.drawImg.width / _this.scaleImg.rate;
                     _this.printImg();
-                    if(this.onPrintImgTimmer) {
+                    if (this.onPrintImgTimmer) {
                         clearTimeout(this.onPrintImgTimmer);
                     }
-                    this.onPrintImgTimmer = setTimeout(()=>{
+                    this.onPrintImgTimmer = setTimeout(() => {
                         this.cropPicture(true);
-                    },100);
+                    }, 100);
                 }
                 // let scrollTop = this.$refs['mask'].scrollTop;
                 // window.scrollTo(this.$refs['mask'].scrollLeft,scrollTop);
@@ -919,9 +967,9 @@
                 return false;
             },
             // 水平翻转
-            flipHorizontal:function(){
+            flipHorizontal: function () {
                 if (this.drawImg.img) {
-                    if(this.isFlipHorizontal==false) {
+                    if (this.isFlipHorizontal == false) {
                         this.isFlipHorizontal = true;
                     } else {
                         this.isFlipHorizontal = false;
@@ -930,9 +978,9 @@
                 }
             },
             // 垂直翻转
-            flipVertically:function(){
+            flipVertically: function () {
                 if (this.drawImg.img) {
-                    if(this.isFlipVertically==false) {
+                    if (this.isFlipVertically == false) {
                         this.isFlipVertically = true;
                     } else {
                         this.isFlipVertically = false;
@@ -956,7 +1004,7 @@
                 this.printImg('rotate');
             },
             // control box
-            controlBtnMouseDown: function (e,btnName) {
+            controlBtnMouseDown: function (e, btnName) {
                 this.controlBox.disable = false;
                 this.controlBox.btnName = btnName;
                 this.controlBox.start.x = e.clientX;
@@ -966,7 +1014,7 @@
                 e.stopPropagation();
             },
             controlBtnMouseUp: function (e) {
-              this.controlBox.disable = true;
+                this.controlBox.disable = true;
                 this.dropImgOff();
                 this.resetToolBox();
                 this.toolBoxMouseUp();
@@ -977,7 +1025,7 @@
                 if (this.controlBox.disable === false) {
                     let offsetX = e.clientX - this.controlBox.start.x;
                     let offsetY = e.clientY - this.controlBox.start.y;
-                    let x,y;
+                    let x, y;
                     if (this.controlBox.btnName == 'leftUp') {
                         x = this.toolBox.x + offsetX;
                         y = this.toolBox.y + offsetY;
@@ -1030,49 +1078,53 @@
                 }
                 e.stopPropagation();
             },
+            changeFileName(fileName, type) {
+                let index = fileName.lastIndexOf(".");
+                return fileName.substr(0, index+1) + (type === 'jpeg' ? 'jpg' : type);
+            },
             cropPicture: function (doNotReset) {
                 let _this = this;
-                if(this.drawImg.img) {
+                if (this.drawImg.img) {
                     // get img
                     let canvas = this.$refs['canvas'];
 
                     // 文字水印
-                    if(this.WatermarkText && !doNotReset) {
+                    if (this.WatermarkText && !doNotReset) {
                         let ctx2 = canvas.getContext("2d");
                         ctx2.font = this.WatermarkTextFont;
                         ctx2.fillStyle = this.WatermarkTextColor;
                         ctx2.textAlign = "right";
                         ctx2.textBaseline = "bottom";
-                        ctx2.fillText(this.WatermarkText, this.toolBox.x+(this.toolBox.width*this.WatermarkTextX),this.toolBox.y+(this.toolBox.height*this.WatermarkTextY));
+                        ctx2.fillText(this.WatermarkText, this.toolBox.x + (this.toolBox.width * this.WatermarkTextX), this.toolBox.y + (this.toolBox.height * this.WatermarkTextY));
                     }
 
                     let tempImg = new Image();
-                    if(this.crossOrigin===true) {
+                    if (this.crossOrigin === true) {
                         tempImg.crossOrigin = this.crossOriginHeader;
                     }
-                    tempImg.src = canvas.toDataURL();
+                    tempImg.src = canvas.toDataURL(`image/${this.fileType}`);
 
                     if (!HTMLCanvasElement.prototype.toBlob) {
                         Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
                             value: function (callback, type, quality) {
                                 // callback(1,2,3);
-                                if(window.atob) {
+                                if (window.atob) {
                                     setTimeout(function () {
                                         let binStr = atob(canvas.toDataURL(type, quality).split(',')[1]);
                                         let len = binStr.length, arr = new Uint8Array(len);
                                         for (var i = 0; i < len; i++) {
                                             arr[i] = binStr.charCodeAt(i);
                                         }
-                                        callback(new Blob([arr], {type: type || 'image/png'}));
-                                    },200);
+                                        callback(new Blob([arr], {type: `image/${_this.fileType}`}));
+                                    }, 200);
                                 } else {
-                                    callback(false,{type:'image/png'});
+                                    callback(false, {type: `image/${_this.fileType}`});
                                 }
                             }
                         });
                     }
                     canvas.toBlob((blob) => {
-                        if(blob) {
+                        if (blob) {
                             let reader = new FileReader();
                             reader.readAsDataURL(blob);
                             reader.onload = function () {
@@ -1083,17 +1135,17 @@
                                         let ctx = newCanv.getContext("2d");
 
                                         // 原图裁剪 originalGraph
-                                        if(_this.originalGraph==true) {
+                                        if (_this.originalGraph == true) {
                                             let scale = _this.drawImg.width / _this.drawImg.swidth;
 
                                             // 计算实际图像大小
-                                            let transWidth = _this.toolBox.width/scale;
-                                            let transHeight = _this.toolBox.height/scale;
+                                            let transWidth = _this.toolBox.width / scale;
+                                            let transHeight = _this.toolBox.height / scale;
                                             newCanv.width = transWidth;
                                             newCanv.height = transHeight;
                                             // 重新计算裁剪坐标
-                                            let sx = (_this.toolBox.x-_this.drawImg.x)/scale;
-                                            let sy = (_this.toolBox.y-_this.drawImg.y)/scale;
+                                            let sx = (_this.toolBox.x - _this.drawImg.x) / scale;
+                                            let sy = (_this.toolBox.y - _this.drawImg.y) / scale;
 
                                             let swidth = _this.drawImg.swidth;
                                             let sheight = _this.drawImg.sheight;
@@ -1111,7 +1163,7 @@
                                                 let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
                                                 let m = _this.rate.split(':')[0];
                                                 let n = _this.rate.split(':')[1];
-                                                if(m>=n) {
+                                                if (m >= n) {
                                                     ctx.drawImage(tempImg, params.x, params.y, params.width, params.width * p, 0, 0, params.width, params.width * p);
                                                 } else {
                                                     ctx.drawImage(tempImg, params.x, params.y, params.width, params.width / p, 0, 0, params.width, params.width / p);
@@ -1121,27 +1173,28 @@
                                             }
                                         }
                                         newCanv.toBlob(function (blob) {
-                                            if(!doNotReset) {
+                                            let fileName = _this.changeFileName(_this.fileName, _this.fileType);
+                                            if (!doNotReset) {
                                                 _this.handleClose();
                                                 _this.$emit('cutDown', {
                                                     index: _this.index,
-                                                    fileName:_this.fileName,
+                                                    fileName,
                                                     blob: blob,
-                                                    file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
-                                                    dataURL: newCanv.toDataURL(),
+                                                    file: _this.dataURLtoFile(newCanv.toDataURL(`image/${_this.fileType}`), fileName),
+                                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`),
                                                 })
                                             } else {
                                                 if (_this.previewMode) {
                                                     _this.$emit('onPrintImg', {
                                                         index: _this.index,
-                                                        fileName:_this.fileName,
+                                                        fileName,
                                                         blob: blob,
-                                                        file:_this.dataURLtoFile(newCanv.toDataURL(),_this.fileName),
-                                                        dataURL: newCanv.toDataURL(),
+                                                        file: _this.dataURLtoFile(newCanv.toDataURL(`image/${_this.fileType}`), fileName),
+                                                        dataURL: newCanv.toDataURL(`image/${_this.fileType}`),
                                                     })
                                                 }
                                             }
-                                        }, 'image/jpeg', 0.95);
+                                        }, `image/${_this.fileType}`, 0.95);
                                     }
                                 }, 200);
                             };
@@ -1158,26 +1211,27 @@
                             } else {
                                 ctx.drawImage(tempImg, params.x, params.y, params.width, params.height, 0, 0, params.width, params.height);
                             }
-                            if(!doNotReset) {
+                            let fileName = _this.changeFileName(_this.fileName, _this.fileType);
+                            if (!doNotReset) {
                                 _this.handleClose();
                                 _this.$emit('cutDown', {
-                                    fileName:_this.fileName,
-                                    dataURL: newCanv.toDataURL(),
+                                    fileName,
+                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`),
                                 })
                             } else {
                                 _this.$emit('onPrintImg', {
-                                    fileName:_this.fileName,
-                                    dataURL: newCanv.toDataURL(),
+                                    fileName,
+                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`),
                                 })
                             }
                         }
-                    });
+                    }), `image/${_this.fileType}`;
                 } else {
-                    if(!doNotReset) {
+                    if (!doNotReset) {
                         console.warn('No picture selected');
-                        _this.$emit('error',{
-                            err:1,
-                            msg:'No picture selected'
+                        _this.$emit('error', {
+                            err: 1,
+                            msg: 'No picture selected'
                         });
                     }
                 }
@@ -1211,610 +1265,627 @@
     }
 </script>
 <style scoped>
-  .vue-img-cutter {
-    font-size:12px;
-    line-height:130%;
-  }
-  .fl {
-    float: left;
-  }
-
-  .fr {
-    float: right;
-  }
-
-  .i-dialog-footer {
-    display: block;
-    width: 100%;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    text-align: left;
-  }
-
-  .mask {
-    background: rgba(0, 0, 0, 0.6);
-    position: fixed;
-    overflow-y:scroll;
-    overflow-x:hidden;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 999;
-  }
-  .dialogBox {
-    clear:both;
-  }
-  .dialogBoxModal {
-    position:relative;
-    padding-top:100px;
-    padding-bottom:100px;
-    clear:both;
-  }
-  .dialogMainModal {
-    line-height:125%;
-    font-size:16px;
-    position: absolute;
-    top: 100px;
-    left: 50%;
-    margin-bottom:100px;
-    transform: translateX(-50%);
-    border: 1px solid rgba(0, 0, 0, 0.8);
-    border-radius: 3px;
-    box-sizing: border-box;
-    padding: 15px 15px 0 15px;
-    background: #fff;
-    z-index: 1000;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Chrome/Safari/Opera */
-    -khtml-user-select: none; /* Konqueror */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently*/
-    animation: dialogShow .3s;
-  }
-  .dialogMain {
-    line-height:125%;
-    font-size:16px;
-    box-sizing: border-box;
-    background: #fff;
-    z-index: 1000;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Chrome/Safari/Opera */
-    -khtml-user-select: none; /* Konqueror */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently*/
-  }
-  @keyframes dialogShow {
-    from {
-      margin-top:-50px;
-      opacity: 0;
+    .vue-img-cutter {
+        font-size: 12px;
+        line-height: 130%;
     }
-    to {
-      margin-top:0;
-      opacity: 1;
+
+    .fl {
+        float: left;
     }
-  }
-  .toolMain {
-    box-sizing: border-box;
-  }
 
-  .toolBox {
-    border: 1px solid #dedede;
-    background-image: linear-gradient(45deg, rgba(0, 0, 0, .25) 25%, transparent 0, transparent 75%, rgba(0, 0, 0, .25) 0),
-    linear-gradient(45deg, rgba(0, 0, 0, .25) 25%, transparent 0, transparent 75%, rgba(0, 0, 0, .25) 0);
-    background-color: #eee;
-    background-size: 30px 30px;
-    background-position: 0 0, 15px 15px;
-    position: relative;
-  }
-
-  .tool-title {
-    margin-bottom: 10px;
-  }
-
-  .canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 98;
-  }
-
-  .canvasSelectBox {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 99;
-  }
-  @keyframes zi-antBorder {
-    0% {
-      background-position: 0px 0px;
+    .fr {
+        float: right;
     }
-    50% {
-      background-position: 0px 5px;
+
+    .i-dialog-footer {
+        display: block;
+        width: 100%;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        text-align: left;
     }
-    100% {
-      background-position: 0px 10px;
+
+    .mask {
+        background: rgba(0, 0, 0, 0.6);
+        position: fixed;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
     }
-  }
-  .toolBoxControl {
-    background: rgba(255,255,255,0);
-    /*background:#fff;*/
-    position: absolute;
-    z-index: 101;
-    box-sizing: border-box;
-    /*border: 1px dotted #409EFF;*/
-  }
-  .toolBoxControlBox {
-    width:100%;
-    height:100%;
-    position: relative;
-    background: transparent;
-    z-index:103;
-    pointer-events: none;
-  }
-  .controlBoxInnerLine {
-    position: absolute;
-    z-index:1;
-    background-size:10px 10px;
-    background-image:linear-gradient(-45deg,rgba(64,158,255,1) 25%,rgba(64,158,255,0) 25%,rgba(64,158,255,0) 50%,rgba(64,158,255,1) 50%,rgba(64,158,255,1) 75%,rgba(64,158,255,0) 75%,rgba(64,158,255,0));
-    -ms-animation:zi-antBorder 0.8s linear 0s infinite normal;
-    -moz-animation:zi-antBorder 0.8s linear 0s infinite normal;
-    -webkit-animation:zi-antBorder 0.8s linear 0s infinite normal;
-    animation:zi-antBorder 0.8s linear 0s infinite normal;
-    pointer-events: none;
-  }
-  .controlBoxInnerLineTop {
-    height:1px;
-    width:100%;
-    top:-1px;
-  }
-  .controlBoxInnerLineBottom {
-    height:1px;
-    width:100%;
-    bottom:-1px;
-  }
-  .controlBoxInnerLineLeft {
-    height:100%;
-    width:1px;
-    left:-1px;
-    top:0;
-  }
-  .controlBoxInnerLineRight {
-    height:100%;
-    width:1px;
-    right:-1px;
-    top:0;
-  }
-  .toolBoxControlLine {
 
-    position: absolute;
-    z-index:1;
-    background:transparent;
-  }
+    .dialogBox {
+        clear: both;
+    }
 
-  .toolBoxControlLineItem-1 {
-    top: 33%;
-    width: 100%;
-    height: 1px;
-    box-sizing: border-box;
-    border-bottom: 1px dashed #409EFF;
-  }
+    .dialogBoxModal {
+        position: relative;
+        padding-top: 100px;
+        padding-bottom: 100px;
+        clear: both;
+    }
 
-  .toolBoxControlLineItem-2 {
-    top: 66%;
-    width: 100%;
-    height: 1px;
-    box-sizing: border-box;
-    border-bottom: 1px dashed #409EFF;
-  }
+    .dialogMainModal {
+        line-height: 125%;
+        font-size: 16px;
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        margin-bottom: 100px;
+        transform: translateX(-50%);
+        border: 1px solid rgba(0, 0, 0, 0.8);
+        border-radius: 3px;
+        box-sizing: border-box;
+        padding: 15px 15px 0 15px;
+        background: #fff;
+        z-index: 1000;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Chrome/Safari/Opera */
+        -khtml-user-select: none; /* Konqueror */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently*/
+        animation: dialogShow .3s;
+    }
 
-  .toolBoxControlLineItem-3 {
-    left: 33%;
-    border-right: 1px dashed #409EFF;
-    height: 100%;
-    width: 1px;
-    box-sizing: border-box;
-  }
+    .dialogMain {
+        line-height: 125%;
+        font-size: 16px;
+        box-sizing: border-box;
+        background: #fff;
+        z-index: 1000;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Chrome/Safari/Opera */
+        -khtml-user-select: none; /* Konqueror */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently*/
+    }
 
-  .toolBoxControlLineItem-4 {
-    left: 66%;
-    border-right: 1px dashed #409EFF;
-    height: 100%;
-    width: 1px;
-    box-sizing: border-box;
-  }
+    @keyframes dialogShow {
+        from {
+            margin-top: -50px;
+            opacity: 0;
+        }
+        to {
+            margin-top: 0;
+            opacity: 1;
+        }
+    }
 
-  .controlBox {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    cursor: move;
-    z-index:1;
-    pointer-events: none;
-  }
+    .toolMain {
+        box-sizing: border-box;
+    }
 
-  .controlBtn {
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-sizing: border-box;
-    width: 6px;
-    height: 6px;
-    background: #409EFF;
-    position: absolute;
-    border-radius: 50%;
-    z-index:999;
-    pointer-events: auto!important;
-  }
+    .toolBox {
+        border: 1px solid #dedede;
+        background-image: linear-gradient(45deg, rgba(0, 0, 0, .25) 25%, transparent 0, transparent 75%, rgba(0, 0, 0, .25) 0),
+        linear-gradient(45deg, rgba(0, 0, 0, .25) 25%, transparent 0, transparent 75%, rgba(0, 0, 0, .25) 0);
+        background-color: #eee;
+        background-size: 30px 30px;
+        background-position: 0 0, 15px 15px;
+        position: relative;
+    }
 
-  .leftUp {
-    top: 0;
-    left: 0;
-    margin-left: -3px;
-    margin-top: -3px;
-    cursor: se-resize;
-  }
+    .tool-title {
+        margin-bottom: 10px;
+    }
 
-  .leftDown {
-    bottom: 0;
-    left: 0;
-    margin-left: -3px;
-    margin-bottom: -3px;
-    cursor: sw-resize;
-  }
+    .canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 98;
+    }
 
-  .rightUp {
-    top: 0;
-    right: 0;
-    margin-right: -3px;
-    margin-top: -3px;
-    cursor: sw-resize;
-  }
+    .canvasSelectBox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
 
-  .rightDown {
-    bottom: 0;
-    right: 0;
-    margin-right: -3px;
-    margin-bottom: -3px;
-    cursor: se-resize;
-  }
+    @keyframes zi-antBorder {
+        0% {
+            background-position: 0px 0px;
+        }
+        50% {
+            background-position: 0px 5px;
+        }
+        100% {
+            background-position: 0px 10px;
+        }
+    }
 
-  .topCenter {
-    top: 0;
-    right: 50%;
-    margin-right: -3px;
-    margin-top: -3px;
-    cursor: s-resize;
-  }
+    .toolBoxControl {
+        background: rgba(255, 255, 255, 0);
+        /*background:#fff;*/
+        position: absolute;
+        z-index: 101;
+        box-sizing: border-box;
+        /*border: 1px dotted #409EFF;*/
+    }
 
-  .downCenter {
-    bottom: 0;
-    right: 50%;
-    margin-right: -3px;
-    margin-bottom: -3px;
-    cursor: s-resize;
-  }
+    .toolBoxControlBox {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background: transparent;
+        z-index: 103;
+        pointer-events: none;
+    }
 
-  .leftCenter {
-    top: 50%;
-    left: 0;
-    margin-left: -3px;
-    margin-top: -3px;
-    cursor: e-resize;
-  }
+    .controlBoxInnerLine {
+        position: absolute;
+        z-index: 1;
+        background-size: 10px 10px;
+        background-image: linear-gradient(-45deg, rgba(64, 158, 255, 1) 25%, rgba(64, 158, 255, 0) 25%, rgba(64, 158, 255, 0) 50%, rgba(64, 158, 255, 1) 50%, rgba(64, 158, 255, 1) 75%, rgba(64, 158, 255, 0) 75%, rgba(64, 158, 255, 0));
+        -ms-animation: zi-antBorder 0.8s linear 0s infinite normal;
+        -moz-animation: zi-antBorder 0.8s linear 0s infinite normal;
+        -webkit-animation: zi-antBorder 0.8s linear 0s infinite normal;
+        animation: zi-antBorder 0.8s linear 0s infinite normal;
+        pointer-events: none;
+    }
 
-  .rightCenter {
-    top: 50%;
-    right: 0;
-    margin-right: -3px;
-    margin-top: -3px;
-    cursor: e-resize;
-  }
+    .controlBoxInnerLineTop {
+        height: 1px;
+        width: 100%;
+        top: -1px;
+    }
 
-  .toolBar {
-    margin-top: 10px;
-  }
+    .controlBoxInnerLineBottom {
+        height: 1px;
+        width: 100%;
+        bottom: -1px;
+    }
 
-  .selectArea {
-    display: block;
-    width: 260px;
-    text-align: right;
-    color: #fff;
-    position: absolute;
-    top: -20px;
-    right: 0;
-    font-size: 10px;
-    user-select: none;
-  }
+    .controlBoxInnerLineLeft {
+        height: 100%;
+        width: 1px;
+        left: -1px;
+        top: 0;
+    }
 
-  .tips {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    color: red;
-    z-index: 101;
-    transform: translate(-50%, -50%);
-  }
+    .controlBoxInnerLineRight {
+        height: 100%;
+        width: 1px;
+        right: -1px;
+        top: 0;
+    }
 
-  .btn {
-    display:inline-block;
-    text-align: center;
-    background: #dedede;
-    height: 40px;
-    line-height: 40px;
-    padding: 0 20px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    cursor: pointer;
-    border: 1px solid;
-    font-size:14px;
-    transition: background .3s, color .3s;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Chrome/Safari/Opera */
-    -khtml-user-select: none; /* Konqueror */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently*/
-  }
+    .toolBoxControlLine {
 
-  .btn[disabled] {
-    opacity: 0.6;
-    color: #333;
-    border-color: #dedede !important;
-    background-color: #fff !important;
-    cursor: default;
-  }
+        position: absolute;
+        z-index: 1;
+        background: transparent;
+    }
 
-  .btn[disabled]:hover {
-    opacity: 0.6;
-    color: #333 !important;
-    border-color: #dedede !important;
-    background-color: #fff !important;
-  }
+    .toolBoxControlLineItem-1 {
+        top: 33%;
+        width: 100%;
+        height: 1px;
+        box-sizing: border-box;
+        border-bottom: 1px dashed #409EFF;
+    }
 
-  .btn-default {
-    color: #333;
-    border-color: #DCDFE6;
-    background-color: #fff;
-    transition: background .3s, color .3s;
-  }
+    .toolBoxControlLineItem-2 {
+        top: 66%;
+        width: 100%;
+        height: 1px;
+        box-sizing: border-box;
+        border-bottom: 1px dashed #409EFF;
+    }
 
-  .btn-default:hover {
-    color: #409EFF;
-    border-color: #c6e2ff;
-    background-color: #ecf5ff;
-  }
+    .toolBoxControlLineItem-3 {
+        left: 33%;
+        border-right: 1px dashed #409EFF;
+        height: 100%;
+        width: 1px;
+        box-sizing: border-box;
+    }
 
-  .btn-primary {
-    color: #fff;
-    background-color: #409EFF;
-    border-color: #409EFF;
-    transition: background .3s, color .3s;
-  }
+    .toolBoxControlLineItem-4 {
+        left: 66%;
+        border-right: 1px dashed #409EFF;
+        height: 100%;
+        width: 1px;
+        box-sizing: border-box;
+    }
 
-  .btn-primary:hover {
-    background: #66b1ff;
-    border-color: #66b1ff;
-    color: #FFF;
-  }
+    .controlBox {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        cursor: move;
+        z-index: 1;
+        pointer-events: none;
+    }
 
-  .btn-warning {
-    color: #fff;
-    background-color: #e6a23c;
-    border-color: #e6a23c;
-  }
+    .controlBtn {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-sizing: border-box;
+        width: 6px;
+        height: 6px;
+        background: #409EFF;
+        position: absolute;
+        border-radius: 50%;
+        z-index: 999;
+        pointer-events: auto !important;
+    }
 
-  .btn-warning:hover {
-    color: #fff;
-    background-color: #eeba6c;
-    border-color: #e6a23c;
-    transition: background .3s, color .3s;
-  }
+    .leftUp {
+        top: 0;
+        left: 0;
+        margin-left: -3px;
+        margin-top: -3px;
+        cursor: se-resize;
+    }
 
-  .btn-primary-plain {
-    color: #409EFF;
-    border-color: #c6e2ff;
-    background-color: #ecf5ff;
-    transition: background .3s, color .3s;
-  }
+    .leftDown {
+        bottom: 0;
+        left: 0;
+        margin-left: -3px;
+        margin-bottom: -3px;
+        cursor: sw-resize;
+    }
 
-  .btn-primary-plain:hover {
-    background: #66b1ff;
-    border-color: #66b1ff;
-    color: #FFF;
-  }
+    .rightUp {
+        top: 0;
+        right: 0;
+        margin-right: -3px;
+        margin-top: -3px;
+        cursor: sw-resize;
+    }
 
-  .btn-xs {
-    height: 26px;
-    line-height: 26px;
-    padding: 0 10px;
-    font-size:12px;
-  }
+    .rightDown {
+        bottom: 0;
+        right: 0;
+        margin-right: -3px;
+        margin-bottom: -3px;
+        cursor: se-resize;
+    }
 
-  .dialog-footer {
-    float: right;
-  }
+    .topCenter {
+        top: 0;
+        right: 50%;
+        margin-right: -3px;
+        margin-top: -3px;
+        cursor: s-resize;
+    }
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.3s;
-  }
+    .downCenter {
+        bottom: 0;
+        right: 50%;
+        margin-right: -3px;
+        margin-bottom: -3px;
+        cursor: s-resize;
+    }
 
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
-  }
+    .leftCenter {
+        top: 50%;
+        left: 0;
+        margin-left: -3px;
+        margin-top: -3px;
+        cursor: e-resize;
+    }
 
-  .fade-in-enter {
-    margin-top: -50px;
-    opacity: 0;
-    transition: margin-top 0.2s, opacity 0.2s;
-  }
+    .rightCenter {
+        top: 50%;
+        right: 0;
+        margin-right: -3px;
+        margin-top: -3px;
+        cursor: e-resize;
+    }
 
-  .fade-out-enter {
-    transition: margin-top 0.2s, opacity 0.2s;
-  }
+    .toolBar {
+        margin-top: 10px;
+    }
 
-  .fade-in-active {
-    transition: margin-top 0.2s, opacity 0.2s;
-  }
+    .selectArea {
+        display: block;
+        width: 260px;
+        text-align: right;
+        color: #fff;
+        position: absolute;
+        top: -20px;
+        right: 0;
+        font-size: 10px;
+        user-select: none;
+    }
 
-  .fade-out-active {
-    margin-top: -50px;
-    opacity: 0;
-    transition: margin-top 0.2s, opacity 0.2s;
-  }
+    .tips {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color: red;
+        z-index: 101;
+        transform: translate(-50%, -50%);
+    }
 
-  .file-input {
-    height: 40px;
-    line-height: 40px;
-    padding: 0 10px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border: 1px solid #dedede;
-  }
+    .btn {
+        display: inline-block;
+        text-align: center;
+        background: #dedede;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 20px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        cursor: pointer;
+        border: 1px solid;
+        font-size: 14px;
+        transition: background .3s, color .3s;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Chrome/Safari/Opera */
+        -khtml-user-select: none; /* Konqueror */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently*/
+    }
 
-  .file-input::placeholder {
-    color: #C0C4CC;
-  }
+    .btn[disabled] {
+        opacity: 0.6;
+        color: #333;
+        border-color: #dedede !important;
+        background-color: #fff !important;
+        cursor: default;
+    }
 
-  .toolbar-item {
-    display: inline-block;
-  }
+    .btn[disabled]:hover {
+        opacity: 0.6;
+        color: #333 !important;
+        border-color: #dedede !important;
+        background-color: #fff !important;
+    }
 
-  .closeIcon {
-    float: right;
-    cursor: pointer;
-    display:inline-block;
-    background:#c6e2ff;
-    color: #fff;
-    width:18px;
-    height:18px;
-    line-height:18px;
-    text-align:center;
-    border-radius: 50%;
-    margin:0;
-    padding:0;
-    transition: transform 0.3s,background 0.3s;
-    /*transform: rotate(90deg);*/
-  }
-  .closeIcon:hover {
-    background:#409eff;
-    transform: rotate(180deg);
-  }
+    .btn-default {
+        color: #333;
+        border-color: #DCDFE6;
+        background-color: #fff;
+        transition: background .3s, color .3s;
+    }
 
-  .copyright {
-    font-size: 10px !important;
-    clear: both !important;
-    width: 100% !important;
-    text-align: right !important;
-    display: block !important;
-    opacity: 0.5 !important;
-    position: absolute!important;
-    bottom:0!important;
-    right:0!important;
-    line-height:100%!important;
-    z-index:100!important;
-  }
+    .btn-default:hover {
+        color: #409EFF;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
+    }
 
-  .copyright a {
-    color: #fff !important;
-    text-decoration: none !important;
-    position: relative !important;
-    opacity: 1 !important;
-    display:inline-block!important;
-    padding:2px!important;
-    background:rgba(0,0,0,0.4);
-  }
+    .btn-primary {
+        color: #fff;
+        background-color: #409EFF;
+        border-color: #409EFF;
+        transition: background .3s, color .3s;
+    }
 
-  /*工具栏*/
-  .dockMain {
-    position: absolute;
-    z-index: 1002;
-    bottom: 5px;
-    left: 5px;
-    /*transform: translateX(-50%);*/
-    opacity: 0.5;
-    transition: opacity 0.5s;
-    /*width: 98%;*/
-    box-sizing: border-box;
-    padding: 5px 5px;
-    border-radius: 5px;
-  }
+    .btn-primary:hover {
+        background: #66b1ff;
+        border-color: #66b1ff;
+        color: #FFF;
+    }
 
-  .dockMain:hover {
-    opacity: 1;
-  }
+    .btn-warning {
+        color: #fff;
+        background-color: #e6a23c;
+        border-color: #e6a23c;
+    }
 
-  .dockBtn {
-    font-size: 10px;
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 4px;
-    color: #409EFF;
-    border: 1px solid #c6e2ff;
-    background-color: #ecf5ff;
-    padding: 1px 4px;
-    border-radius: 3px;
-    height:20px;
-    line-height:16px;
-    transition: background 0.2s, color 0.2s;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Chrome/Safari/Opera */
-    -khtml-user-select: none; /* Konqueror */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently*/
-  }
+    .btn-warning:hover {
+        color: #fff;
+        background-color: #eeba6c;
+        border-color: #e6a23c;
+        transition: background .3s, color .3s;
+    }
 
-  .dockBtn:hover {
-    color: #fff;
-    background-color: #409EFF;
-    border-color: #409EFF;
-  }
+    .btn-primary-plain {
+        color: #409EFF;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
+        transition: background .3s, color .3s;
+    }
 
-  /* 旋转进度条 */
-  .dockBtnScrollBar {
-    display: inline-block;
-    margin-right: 4px;
-    margin-left: 10px;
-    background: #409EFF;
-    width: 200px;
-    height: 10px;
-    border-radius: 5px;
-    position: relative;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Chrome/Safari/Opera */
-    -khtml-user-select: none; /* Konqueror */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently*/
-  }
+    .btn-primary-plain:hover {
+        background: #66b1ff;
+        border-color: #66b1ff;
+        color: #FFF;
+    }
 
-  .scrollBarControl {
-    position: absolute;
-    cursor: pointer;
-    background: #fff;
-    border: 2px solid #409EFF;
-    box-sizing: border-box;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 3px #1f5184;
-  }
+    .btn-xs {
+        height: 26px;
+        line-height: 26px;
+        padding: 0 10px;
+        font-size: 12px;
+    }
 
-  .scrollBarText {
-    position: absolute;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 2px;
-    color: #fff;
-    top: -16px;
-    height: 14px;
-    line-height: 14px;
-    text-align: center;
-    font-size: 10px;
-    border-radius: 3px;
-    transform: translate(-50%, -50%);
-  }
+    .dialog-footer {
+        float: right;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.3s;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+
+    .fade-in-enter {
+        margin-top: -50px;
+        opacity: 0;
+        transition: margin-top 0.2s, opacity 0.2s;
+    }
+
+    .fade-out-enter {
+        transition: margin-top 0.2s, opacity 0.2s;
+    }
+
+    .fade-in-active {
+        transition: margin-top 0.2s, opacity 0.2s;
+    }
+
+    .fade-out-active {
+        margin-top: -50px;
+        opacity: 0;
+        transition: margin-top 0.2s, opacity 0.2s;
+    }
+
+    .file-input {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 10px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        border: 1px solid #dedede;
+    }
+
+    .file-input::placeholder {
+        color: #C0C4CC;
+    }
+
+    .toolbar-item {
+        display: inline-block;
+    }
+
+    .closeIcon {
+        float: right;
+        cursor: pointer;
+        display: inline-block;
+        background: #c6e2ff;
+        color: #fff;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        text-align: center;
+        border-radius: 50%;
+        margin: 0;
+        padding: 0;
+        transition: transform 0.3s, background 0.3s;
+        /*transform: rotate(90deg);*/
+    }
+
+    .closeIcon:hover {
+        background: #409eff;
+        transform: rotate(180deg);
+    }
+
+    .copyright {
+        font-size: 10px !important;
+        clear: both !important;
+        width: 100% !important;
+        text-align: right !important;
+        display: block !important;
+        opacity: 0.5 !important;
+        position: absolute !important;
+        bottom: 0 !important;
+        right: 0 !important;
+        line-height: 100% !important;
+        z-index: 100 !important;
+    }
+
+    .copyright a {
+        color: #fff !important;
+        text-decoration: none !important;
+        position: relative !important;
+        opacity: 1 !important;
+        display: inline-block !important;
+        padding: 2px !important;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    /*工具栏*/
+    .dockMain {
+        position: absolute;
+        z-index: 1002;
+        bottom: 5px;
+        left: 5px;
+        /*transform: translateX(-50%);*/
+        opacity: 0.5;
+        transition: opacity 0.5s;
+        /*width: 98%;*/
+        box-sizing: border-box;
+        padding: 5px 5px;
+        border-radius: 5px;
+    }
+
+    .dockMain:hover {
+        opacity: 1;
+    }
+
+    .dockBtn {
+        font-size: 10px;
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 4px;
+        color: #409EFF;
+        border: 1px solid #c6e2ff;
+        background-color: #ecf5ff;
+        padding: 1px 4px;
+        border-radius: 3px;
+        height: 20px;
+        line-height: 16px;
+        transition: background 0.2s, color 0.2s;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Chrome/Safari/Opera */
+        -khtml-user-select: none; /* Konqueror */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently*/
+    }
+
+    .dockBtn:hover {
+        color: #fff;
+        background-color: #409EFF;
+        border-color: #409EFF;
+    }
+
+    /* 旋转进度条 */
+    .dockBtnScrollBar {
+        display: inline-block;
+        margin-right: 4px;
+        margin-left: 10px;
+        background: #409EFF;
+        width: 200px;
+        height: 10px;
+        border-radius: 5px;
+        position: relative;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Chrome/Safari/Opera */
+        -khtml-user-select: none; /* Konqueror */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently*/
+    }
+
+    .scrollBarControl {
+        position: absolute;
+        cursor: pointer;
+        background: #fff;
+        border: 2px solid #409EFF;
+        box-sizing: border-box;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 3px #1f5184;
+    }
+
+    .scrollBarText {
+        position: absolute;
+        cursor: pointer;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 2px;
+        color: #fff;
+        top: -16px;
+        height: 14px;
+        line-height: 14px;
+        text-align: center;
+        font-size: 10px;
+        border-radius: 3px;
+        transform: translate(-50%, -50%);
+    }
 </style>
