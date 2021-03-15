@@ -106,6 +106,7 @@ forIe9:function(){
 |toolBgc|工具栏背景色|String(例: "#fff")|否|#fff|
 |sizeChange|是否能够调整裁剪框大小|Boolean|否|true|
 |moveAble|能否调整裁剪区域位置|Boolean|否|true|
+|imgMove|能否拖动图片|Boolean|否|true|
 |originalGraph|是否直接裁剪原图|Boolean|否|false|
 |crossOrigin|是否设置跨域，需要服务器做相应更改|Boolean|否|false|
 |crossOriginHeader|设置跨域信息crossOrigin为true时才生效|String|否|''|
@@ -168,6 +169,8 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.2.2
+- 新增参数(imgMove)：能否拖动图片 默认 true
 #### 2.2.1
 - 新增参数(fileType)：返回的文件类型 默认 png
 #### 2.2.0

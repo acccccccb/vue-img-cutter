@@ -119,6 +119,7 @@ ForIE9:function(){
 |smallToUpload|If choose image size less then defined Size,return file. sizeChange must be false|Boolean|No|false|
 |saveCutPosition|Save last cut position and size|Boolean|No|false|
 |scaleAble|Allow scale image|Boolean|No|true|
+|imgMove|Allow move image|Boolean|No|true|
 |index|Return with result|Any|No|null|
 |previewMode|Return results at any time,in case of performance problems, set this to false|Boolean|No|true|
 |fileType|Return file type ( png / jpeg / webp)|String|No|png|
@@ -169,6 +170,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.2.2
+- New prop( imgMove ): Allow move img, default: true
 #### 2.2.1
 - New prop( fileType )：Return file type, default: png
 #### 2.2.0
