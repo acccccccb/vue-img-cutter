@@ -296,6 +296,12 @@
                 default: '#fff',
                 required: false,
             },
+            // 能否拖动图片
+            imgMove: {
+                type: Boolean,
+                default: true,
+                required: false
+            },
             sizeChange: { // 能否调整裁剪尺寸
                 type: Boolean,
                 default: true,
@@ -905,10 +911,12 @@
             },
             // 拖动图片
             dropImgOn: function (e) {
-                this.dropImg.active = true;
-                this.dropImg.params = {...this.drawImg};
-                this.dropImg.pageX = e.pageX;
-                this.dropImg.pageY = e.pageY;
+                if(this.imgMove === true) {
+                    this.dropImg.active = true;
+                    this.dropImg.params = {...this.drawImg};
+                    this.dropImg.pageX = e.pageX;
+                    this.dropImg.pageY = e.pageY;
+                }
             },
             dropImgOff: function () {
                 this.dropImg.active = false;

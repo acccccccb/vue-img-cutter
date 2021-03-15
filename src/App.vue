@@ -141,6 +141,7 @@
                             :cutHeight="params.cutHeight"
                             :sizeChange="params.sizeChange"
                             :moveAble="params.moveAble"
+                            :imgMove="params.imgMove"
                             :tool="params.tool"
                             :fileType="params.fileType"
                             :originalGraph="params.originalGraph"
@@ -384,6 +385,15 @@
                                         </select>
                                     </div>
                                 </div>
+                              <div class="col">
+                                    <div class="form-group custom-control">
+                                        <label for="imgMove">imgMove（ Allow move image ）：</label>
+                                        <select @change="setData($event)" name="imgMove" class="custom-select">
+                                            <option value="true" selected>YES</option>
+                                            <option value="false">NO</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
                                         <label for="fileType">fileType（ Return file type ）：</label>
@@ -586,6 +596,7 @@
                     cutHeight: 250,
                     sizeChange: true,
                     moveAble: true,
+                    imgMove: true,
                     tool: true,
                     originalGraph: false,
                     WatermarkText: 'vue-img-cutter',
@@ -672,6 +683,7 @@
                     '   :cutHeight="' + this.params.cutHeight + '"\n' +
                     '   :sizeChange="' + this.params.sizeChange + '"\n' +
                     '   :moveAble="' + this.params.moveAble + '"\n' +
+                    '   :imgMove="' + this.params.imgMove + '"\n' +
                     '   :originalGraph="' + this.params.originalGraph + '"\n' +
                     '   WatermarkText="' + this.params.WatermarkText + '"\n' +
                     '   WatermarkTextFont="' + this.params.WatermarkTextFont + '"\n' +
