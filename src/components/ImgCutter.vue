@@ -1035,14 +1035,36 @@
                     let offsetY = e.clientY - this.controlBox.start.y;
                     let x, y;
                     if (this.controlBox.btnName == 'leftUp') {
-                        x = this.toolBox.x + offsetX;
-                        y = this.toolBox.y + offsetY;
+                        if(!this.rate) {
+                            x = this.toolBox.x + offsetX;
+                            y = this.toolBox.y + offsetY;
+                        } else {
+                            let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                            if(p >= 1) {
+                                x = this.toolBox.x + offsetX;
+                                y = this.toolBox.y + (offsetX / p);
+                            } else {
+                                x = this.toolBox.x + (offsetY * p);
+                                y = this.toolBox.y + offsetY;
+                            }
+                        }
                         this.toolBox.width = this.controlBox.start.width - offsetX;
                         this.toolBox.height = this.controlBox.start.height - offsetY;
                     }
                     if (this.controlBox.btnName == 'rightUp') {
-                        x = this.toolBox.x;
-                        y = this.toolBox.y + offsetY;
+                        if(!this.rate) {
+                            x = this.toolBox.x;
+                            y = this.toolBox.y + offsetY;
+                        } else {
+                            let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                            if(p >= 1) {
+                                x = this.toolBox.x;
+                                y = this.toolBox.y - (offsetX / p);
+                            } else {
+                                x = this.toolBox.x;
+                                y = this.toolBox.y + offsetY;
+                            }
+                        }
                         this.toolBox.width = this.controlBox.start.width + offsetX;
                         this.toolBox.height = this.controlBox.start.height - offsetY;
                     }
@@ -1053,8 +1075,19 @@
                         this.toolBox.height = this.controlBox.start.height + offsetY;
                     }
                     if (this.controlBox.btnName == 'leftDown') {
-                        x = this.toolBox.x + offsetX;
-                        y = this.toolBox.y;
+                        if(!this.rate) {
+                            x = this.toolBox.x + offsetX;
+                            y = this.toolBox.y;
+                        } else {
+                            let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                            if(p >= 1) {
+                                x = this.toolBox.x + offsetX;
+                                y = this.toolBox.y;
+                            } else {
+                                x = this.toolBox.x + (-offsetY * p);
+                                y = this.toolBox.y;
+                            }
+                        }
                         this.toolBox.width = this.controlBox.start.width - offsetX;
                         this.toolBox.height = this.controlBox.start.height + offsetY;
                     }

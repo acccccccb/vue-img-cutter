@@ -169,6 +169,8 @@ forIe9:function(){
 
 ### 更新日志：
 ----
+#### 2.2.3
+- bug：等比例缩放时，左上角和右上角调整尺寸时的计算优化 [#I3OXMW](https://gitee.com/GLUESTICK/vue-img-cutter/issues/I3OXMW)
 #### 2.2.2
 - 新增参数(imgMove)：能否拖动图片 默认 true
 #### 2.2.1

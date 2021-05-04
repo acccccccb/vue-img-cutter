@@ -170,6 +170,8 @@ ForIE9:function(){
 
 ### Update log：
 ----
+#### 2.2.3
+- Bug fix: When you set rate,the control-box didn't reach the expected position [#I3OXMW](https://gitee.com/GLUESTICK/vue-img-cutter/issues/I3OXMW)
 #### 2.2.2
 - New prop( imgMove ): Allow move img, default: true
 #### 2.2.1
