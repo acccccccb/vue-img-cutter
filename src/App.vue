@@ -518,11 +518,11 @@
             </div>
             <div class="col-md-10 offset-md-1" style="margin-top:20px;">
                 <div class="alipay">
-                    <div><img src="https://www.ihtmlcss.com/wp-content/uploads/2020/01/weixinpay.png" alt="捐赠"></div>
+                    <div><img src="https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png" alt="捐赠"></div>
                     <div class="text-center">微信 Wechat</div>
                 </div>
                 <div class="alipay">
-                    <div><img src="http://www.ihtmlcss.com/wp-content/uploads/2020/01/alipay.png" alt="捐赠"></div>
+                    <div><img src="https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png" alt="捐赠"></div>
                     <div class="text-center">支付宝 Alipay</div>
                 </div>
             </div>
