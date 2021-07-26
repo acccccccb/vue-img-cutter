@@ -32,9 +32,7 @@
                         <a class="nav-link" :href="download">download</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" :href="homepage"
-                            >Author Home page</a
-                        >
+                        <a class="nav-link" :href="homepage">Author Home page</a>
                     </li>
                 </ul>
             </div>
@@ -46,49 +44,31 @@
                     <span class="badge badge-light">{{ version }}</span>
                 </h1>
                 <p>
-                    <a
-                        href="https://github.com/acccccccb/vue-img-cutter/stargazers"
-                    >
+                    <a href="https://github.com/acccccccb/vue-img-cutter/stargazers">
                         <img
                             alt="GitHub stars"
                             src="https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge"
                         />
                     </a>
-                    <a
-                        href="https://github.com/acccccccb/vue-img-cutter/network"
-                    >
+                    <a href="https://github.com/acccccccb/vue-img-cutter/network">
                         <img
                             alt="GitHub forks"
                             src="https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge"
                         />
                     </a>
                     <a href="https://www.npmjs.com/package/vue-img-cutter">
-                        <img
-                            alt="npm"
-                            src="https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge"
-                        />
+                        <img alt="npm" src="https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge" />
                     </a>
                     <a href="https://www.npmjs.com/package/vue-img-cutter">
-                        <img
-                            alt="npm"
-                            src="https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge"
-                        />
+                        <img alt="npm" src="https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge" />
                     </a>
                 </p>
                 <p>{{ description }}</p>
                 <p>
-                    <a
-                        class="btn btn-success btn-lg"
-                        :href="download"
-                        target="_blank"
-                        role="button"
+                    <a class="btn btn-success btn-lg" :href="download" target="_blank" role="button"
                         ><i class="fa fa-download"></i> Download</a
                     >
-                    <a
-                        class="btn btn-light btn-lg"
-                        :href="github"
-                        target="_blank"
-                        role="button"
+                    <a class="btn btn-light btn-lg" :href="github" target="_blank" role="button"
                         ><i class="fa fa-link"></i> Github</a
                     >
                     <a
@@ -116,24 +96,9 @@
                     />
                 </defs>
                 <g class="parallax">
-                    <use
-                        xlink:href="#gentle-wave"
-                        x="48"
-                        y="0"
-                        fill="rgba(255,255,255,0.7"
-                    />
-                    <use
-                        xlink:href="#gentle-wave"
-                        x="48"
-                        y="3"
-                        fill="rgba(255,255,255,0.5)"
-                    />
-                    <use
-                        xlink:href="#gentle-wave"
-                        x="48"
-                        y="5"
-                        fill="rgba(255,255,255,0.3)"
-                    />
+                    <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
                     <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
                 </g>
             </svg>
@@ -152,24 +117,16 @@
                         <pre>1.Install: npm i vue-img-cutter --save-dev</pre>
                     </code>
                     <code class="language-html">
-                        <pre>
-2.Import: import ImgCutter from 'vue-img-cutter';</pre
-                        >
+                        <pre>2.Import: import ImgCutter from 'vue-img-cutter';</pre>
                     </code>
                     <code class="language-html">
-                        <pre>
-3.Register components: components: { ImgCutter }</pre
-                        >
+                        <pre>3.Register components: components: { ImgCutter }</pre>
                     </code>
                     <code class="language-html">
-                        <pre>
-4.Code: &lt;ImgCutter @cutDown="cutDown"&gt;&lt;/ImgCutter&gt;</pre
-                        >
+                        <pre>4.Code: &lt;ImgCutter @cutDown="cutDown"&gt;&lt;/ImgCutter&gt;</pre>
                     </code>
                     <code class="language-html">
-                        <pre class="mb-0">
-5.Return: cutDown:function(res){ ...Do something }</pre
-                        >
+                        <pre class="mb-0">5.Return: cutDown:function(res){ ...Do something }</pre>
                     </code>
                 </div>
             </div>
@@ -184,26 +141,16 @@
                     Use this tool to preview and generate code。
                 </p>
                 <div class="row" style="margin-top:40px;">
-                    <div
-                        class="col-md-6"
-                        ref="imgCutterBox"
-                        style="height:458px;overflow:hidden;"
-                    >
+                    <div class="col-md-6" ref="imgCutterBox" style="height:458px;overflow:hidden;">
                         <div
                             v-if="params.isModal"
                             style="width:100%;height:458px;background:#dedede;box-sizing:border-box;border:1px solid #dedede;"
                         >
                             <div style="width:50%;margin:180px auto auto auto;">
-                                <div
-                                    class="btn btn-primary btn-block"
-                                    @click="pluginExe('handleOpen')"
-                                >
+                                <div class="btn btn-primary btn-block" @click="pluginExe('handleOpen')">
                                     {{ params.label }}
                                 </div>
-                                <div
-                                    class="btn btn-secondary btn-block"
-                                    @click="forIe9"
-                                >
+                                <div class="btn btn-secondary btn-block" @click="forIe9">
                                     Crop remote pictures（For IE9+）
                                 </div>
                             </div>
@@ -229,6 +176,7 @@
                             :fileType="params.fileType"
                             :originalGraph="params.originalGraph"
                             :previewMode="params.previewMode"
+                            :toolBoxOverflow="params.toolBoxOverflow"
                             :WatermarkText="params.WatermarkText"
                             :WatermarkTextFont="params.WatermarkTextFont"
                             :WatermarkTextColor="params.WatermarkTextColor"
@@ -246,35 +194,21 @@
                             @cutDown="cutDown"
                         >
                             <span slot="open"></span>
-                            <span
-                                slot="choose"
-                                v-if="params.isModal == false"
-                            ></span>
-                            <span
-                                slot="cancel"
-                                v-if="params.isModal == false"
-                            ></span>
-                            <span
-                                slot="confirm"
-                                v-if="params.isModal == false"
-                            ></span>
+                            <span slot="choose" v-if="params.isModal == false"></span>
+                            <span slot="cancel" v-if="params.isModal == false"></span>
+                            <span slot="confirm" v-if="params.isModal == false"></span>
                         </ImgCutter>
                     </div>
                     <div class="col-md-3">
                         <div class="imgCutDownBox" :style="'height:458px;'">
                             <div class="imgCutDownBoxContainer">
                                 <img :src="imgSrc" v-if="!!imgSrc" alt="" />
-                                <span v-else class="imgCutDownTips"
-                                    >Cut it out and show it here</span
-                                >
+                                <span v-else class="imgCutDownTips">Cut it out and show it here</span>
                             </div>
 
                             <div class="text-center">
                                 <a
-                                    :class="
-                                        'btn btn-light' +
-                                            (imgSrc ? '' : ' disabled')
-                                    "
+                                    :class="'btn btn-light' + (imgSrc ? '' : ' disabled')"
                                     :disabled="!imgSrc"
                                     :href="imgSrc"
                                     :download="downloadName || 'image.jpg'"
@@ -287,9 +221,7 @@
                     <div class="col-md-3">
                         <form>
                             <div class="form-group">
-                                <label for="cutImgSrc">
-                                    Remote pictures src：</label
-                                >
+                                <label for="cutImgSrc"> Remote pictures src：</label>
                                 <input
                                     type="text"
                                     name="cutImgSrc"
@@ -316,20 +248,14 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div
-                                    class="btn btn-secondary btn-block"
-                                    @click="forIe9"
-                                >
+                                <div class="btn btn-secondary btn-block" @click="forIe9">
                                     Crop remote pictures（For IE9+）
                                 </div>
                             </div>
                             <div class="form-group">
                                 <button
                                     type="button"
-                                    :disabled="
-                                        params.isModal === true ||
-                                            loadImg === false
-                                    "
+                                    :disabled="params.isModal === true || loadImg === false"
                                     class="btn btn-success btn-block"
                                     @click="pluginExe('cropPicture')"
                                 >
@@ -358,9 +284,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="label"
-                                            >Button text（label）：</label
-                                        >
+                                        <label for="label">Button text（label）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="label"
@@ -372,9 +296,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="boxWidth"
-                                            >Tool width（boxWidth）：</label
-                                        >
+                                        <label for="boxWidth">Tool width（boxWidth）：</label>
                                         <input
                                             @input="setData($event)"
                                             :readonly="params.isModal == false"
@@ -387,9 +309,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="boxHeight"
-                                            >Tool height（boxHeight）：</label
-                                        >
+                                        <label for="boxHeight">Tool height（boxHeight）：</label>
                                         <input
                                             @input="setData($event)"
                                             :readonly="params.isModal == false"
@@ -402,10 +322,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="cutWidth"
-                                            >Selection box
-                                            width（cutWidth）：</label
-                                        >
+                                        <label for="cutWidth">Selection box width（cutWidth）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="cutWidth"
@@ -419,10 +336,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="cutHeight"
-                                            >Selection box
-                                            height（cutHeight）：</label
-                                        >
+                                        <label for="cutHeight">Selection box height（cutHeight）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="cutHeight"
@@ -434,9 +348,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="rate"
-                                            >Length-width ratio（rate）：</label
-                                        >
+                                        <label for="rate">Length-width ratio（rate）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="rate"
@@ -449,10 +361,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="toolBgc"
-                                            >Toolbar background
-                                            color（toolBgc）：</label
-                                        >
+                                        <label for="toolBgc">Toolbar background color（toolBgc）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="toolBgc"
@@ -465,8 +374,7 @@
                                 <div class="col">
                                     <div class="form-group custom-control">
                                         <label for="crossOriginHeader"
-                                            >Cross origin
-                                            header（crossOriginHeader）：</label
+                                            >Cross origin header（crossOriginHeader）：</label
                                         >
                                         <input
                                             @input="setData($event)"
@@ -481,70 +389,36 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="crossOrigin"
-                                            >Is cross
-                                            origin（crossOrigin）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="crossOrigin"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="crossOrigin">Is cross origin（crossOrigin）：</label>
+                                        <select @change="setData($event)" name="crossOrigin" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="isModal"
-                                            >Is modal（isModal）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="isModal"
-                                            class="custom-select"
-                                        >
+                                        <label for="isModal">Is modal（isModal）：</label>
+                                        <select @change="setData($event)" name="isModal" class="custom-select">
                                             <option value="true">YES</option>
-                                            <option value="false" selected
-                                                >NO</option
-                                            >
+                                            <option value="false" selected>NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="showChooseBtn"
-                                            >Show select
-                                            button（showChooseBtn）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="showChooseBtn"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="showChooseBtn">Show select button（showChooseBtn）：</label>
+                                        <select @change="setData($event)" name="showChooseBtn" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="lockScroll"
-                                            >Lock scroll（lockScroll）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="lockScroll"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="lockScroll">Lock scroll（lockScroll）：</label>
+                                        <select @change="setData($event)" name="lockScroll" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
@@ -553,71 +427,37 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="sizeChange"
-                                            >Allow to change
-                                            size（sizeChange）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="sizeChange"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="sizeChange">Allow to change size（sizeChange）：</label>
+                                        <select @change="setData($event)" name="sizeChange" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="moveAble"
-                                            >Allow to move（moveAble）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="moveAble"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="moveAble">Allow to move（moveAble）：</label>
+                                        <select @change="setData($event)" name="moveAble" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="tool"
-                                            >Show toolbar（tool）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="tool"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="tool">Show toolbar（tool）：</label>
+                                        <select @change="setData($event)" name="tool" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="originalGraph"
-                                            >Crop original
-                                            image（originalGraph）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="originalGraph"
-                                            class="custom-select"
-                                        >
+                                        <label for="originalGraph">Crop original image（originalGraph）：</label>
+                                        <select @change="setData($event)" name="originalGraph" class="custom-select">
                                             <option value="true">YES</option>
-                                            <option value="false" selected
-                                                >NO</option
-                                            >
+                                            <option value="false" selected>NO</option>
                                         </select>
                                     </div>
                                 </div>
@@ -625,64 +465,34 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="saveCutPosition"
-                                            >saveCutPosition（ Save cut position
-                                            ）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="saveCutPosition"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="saveCutPosition">saveCutPosition（ Save cut position ）：</label>
+                                        <select @change="setData($event)" name="saveCutPosition" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="scaleAble"
-                                            >scaleAble（ Allow scale image
-                                            ）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="scaleAble"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="scaleAble">scaleAble（ Allow scale image ）：</label>
+                                        <select @change="setData($event)" name="scaleAble" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="imgMove"
-                                            >imgMove（ Allow move image
-                                            ）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="imgMove"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="imgMove">imgMove（ Allow move image ）：</label>
+                                        <select @change="setData($event)" name="imgMove" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="fileType"
-                                            >fileType（ Return file type
-                                            ）：</label
-                                        >
+                                        <label for="fileType">fileType（ Return file type ）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="fileType"
@@ -696,10 +506,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="index"
-                                            >index（Return result with
-                                            index）：</label
-                                        >
+                                        <label for="index">index（Return result with index）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="index"
@@ -712,19 +519,12 @@
                                 <div class="col">
                                     <div class="form-group custom-control">
                                         <label for="smallToUpload"
-                                            >smallToUpload（If choose image size
-                                            less then defined Size,return file.
+                                            >smallToUpload（If choose image size less then defined Size,return file.
                                             sizeChange must be false ）：</label
                                         >
-                                        <select
-                                            @change="setData($event)"
-                                            name="smallToUpload"
-                                            class="custom-select"
-                                        >
+                                        <select @change="setData($event)" name="smallToUpload" class="custom-select">
                                             <option value="true">YES</option>
-                                            <option value="false" selected
-                                                >NO</option
-                                            >
+                                            <option value="false" selected>NO</option>
                                         </select>
                                     </div>
                                 </div>
@@ -732,27 +532,27 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="previewMode"
-                                            >previewMode（Return results at any
-                                            time）：</label
-                                        >
-                                        <select
-                                            @change="setData($event)"
-                                            name="previewMode"
-                                            class="custom-select"
-                                        >
-                                            <option value="true" selected
-                                                >YES</option
-                                            >
+                                        <label for="toolBoxOverflow">
+                                            toolBoxOverflow（Allow tool box out of picture range）：
+                                        </label>
+                                        <select @change="setData($event)" name="toolBoxOverflow" class="custom-select">
+                                            <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkText"
-                                            >Watermark（WatermarkText）：</label
-                                        >
+                                        <label for="previewMode">previewMode（Return results at any time）：</label>
+                                        <select @change="setData($event)" name="previewMode" class="custom-select">
+                                            <option value="true" selected>YES</option>
+                                            <option value="false">NO</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group custom-control">
+                                        <label for="WatermarkText">Watermark（WatermarkText）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkText"
@@ -766,10 +566,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkTextFont"
-                                            >Font
-                                            size（WatermarkTextFont）：</label
-                                        >
+                                        <label for="WatermarkTextFont">Font size（WatermarkTextFont）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkTextFont"
@@ -781,10 +578,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkTextColor"
-                                            >Font
-                                            color（WatermarkTextColor）：</label
-                                        >
+                                        <label for="WatermarkTextColor">Font color（WatermarkTextColor）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkTextColor"
@@ -796,10 +590,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkTextX"
-                                            >Position
-                                            x（WatermarkTextX）：</label
-                                        >
+                                        <label for="WatermarkTextX">Position x（WatermarkTextX）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkTextX"
@@ -811,10 +602,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkTextY"
-                                            >Position
-                                            y（WatermarkTextY）：</label
-                                        >
+                                        <label for="WatermarkTextY">Position y（WatermarkTextY）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkTextY"
@@ -860,9 +648,7 @@
             <div class="col-md-10 offset-md-1">
                 <h1 class="bd-title">
                     <i class="fa fa-magic"></i> Donation
-                    <small class="text-muted"
-                        >Donate in support of the author</small
-                    >
+                    <small class="text-muted">Donate in support of the author</small>
                 </h1>
                 <p class="lead">
                     Can you buy me a cup of coffee :)
@@ -871,19 +657,13 @@
             <div class="col-md-10 offset-md-1" style="margin-top:20px;">
                 <div class="alipay">
                     <div>
-                        <img
-                            src="https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png"
-                            alt="捐赠"
-                        />
+                        <img src="https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png" alt="捐赠" />
                     </div>
                     <div class="text-center">微信 Wechat</div>
                 </div>
                 <div class="alipay">
                     <div>
-                        <img
-                            src="https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png"
-                            alt="捐赠"
-                        />
+                        <img src="https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png" alt="捐赠" />
                     </div>
                     <div class="text-center">支付宝 Alipay</div>
                 </div>
@@ -900,9 +680,7 @@
                     </p>
                     <footer>
                         <small>
-                            <a :href="homepage" class="font-weight-lighter"
-                                >Author Home page</a
-                            >
+                            <a :href="homepage" class="font-weight-lighter">Author Home page</a>
                         </small>
                     </footer>
                 </blockquote>
@@ -929,13 +707,10 @@ export default {
             banner: 'https://i.picsum.photos/id/743/1920/500.jpg',
             github: 'https://github.com/acccccccb/vue-img-cutter',
             gitee: 'https://gitee.com/GLUESTICK/vue-img-cutter',
-            download:
-                'https://github.com/acccccccb/vue-img-cutter/archive/master.zip',
-            cutImgSrc:
-                'https://phpcrm-oss.oss-cn-chengdu.aliyuncs.com/weixinpay.png',
+            download: 'https://github.com/acccccccb/vue-img-cutter/archive/master.zip',
+            cutImgSrc: 'https://phpcrm-oss.oss-cn-chengdu.aliyuncs.com/weixinpay.png',
             homepage: 'https://www.ihtmlcss.com',
-            docs:
-                'https://github.com/acccccccb/vue-img-cutter/blob/master/README.md',
+            docs: 'https://github.com/acccccccb/vue-img-cutter/blob/master/README.md',
             npm: 'https://www.npmjs.com/package/vue-img-cutter',
             cutImgWidth: 250,
             cutImgHeight: 250,
@@ -957,6 +732,7 @@ export default {
                 saveCutPosition: true,
                 scaleAble: true,
                 lockScroll: true,
+                toolBoxOverflow: true,
                 boxWidth: 500,
                 boxHeight: 458,
                 cutWidth: 250,
@@ -1118,6 +894,9 @@ export default {
                 '   :previewMode="' +
                 this.params.previewMode +
                 '"\n' +
+                '   :toolBoxOverflow="' +
+                this.params.toolBoxOverflow +
+                '"\n' +
                 '   :index="' +
                 this.params.index +
                 '"\n' +
@@ -1221,11 +1000,7 @@ export default {
 
 .jumbotron {
     border-radius: 0;
-    background: linear-gradient(
-        60deg,
-        rgba(84, 58, 183, 1) 0%,
-        rgba(0, 172, 193, 1) 100%
-    ) !important;
+    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%) !important;
     padding: 4rem 0 0 0;
     color: #fff;
     text-align: center;

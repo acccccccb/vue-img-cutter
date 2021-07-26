@@ -357,8 +357,8 @@ export default {
             default: '#fff',
             required: false,
         },
-        // 能否拖动图片
         imgMove: {
+            // 能否拖动图片
             type: Boolean,
             default: true,
             required: false,
@@ -393,28 +393,32 @@ export default {
             default: false,
             required: false,
         },
-        // 水印文字
         WatermarkText: {
+            // 水印文字
             type: String,
             default: '',
             required: false,
         },
         WatermarkTextFont: {
+            // 水印文字样式
             type: String,
             default: '12px Sans-serif',
             required: false,
         },
         WatermarkTextColor: {
+            // 水印文字颜色
             type: String,
             default: '#fff',
             required: false,
         },
         WatermarkTextX: {
+            // 水印横向位置
             type: Number,
             default: 0.95,
             required: false,
         },
         WatermarkTextY: {
+            // 水印纵向位置
             type: Number,
             default: 0.95,
             required: false,
@@ -438,13 +442,21 @@ export default {
             required: false,
         },
         index: {
+            // 自定义参数 返回结果时会带入此值
             default: null,
             required: false,
         },
         fileType: {
+            // 文件类型
             default: 'png',
             required: false,
             type: String,
+        },
+        toolBoxOverflow: {
+            // 是否允许裁剪框超出图片
+            type: Boolean,
+            default: true,
+            required: false,
         },
         DoNotDisplayCopyright: {
             type: Boolean,
@@ -771,17 +783,26 @@ export default {
             }
         },
         putToolBox() {
-            if (
-                this.toolBox.width === this.boxWidth / 2 ||
-                this.toolBox.height === this.boxHeight / 2 ||
-                this.saveCutPosition === false
-            ) {
-                this.toolBox.width = this.cutWidth > this.boxWidth ? this.boxWidth : this.cutWidth;
-                this.toolBox.height = this.cutHeight > this.boxHeight ? this.boxHeight : this.cutHeight;
-            }
-            if ((this.toolBox.x === 0 && this.toolBox.y === 0) || this.saveCutPosition === false) {
-                this.toolBox.x = this.boxWidth / 2 - this.toolBox.width / 2;
-                this.toolBox.y = this.boxHeight / 2 - this.toolBox.height / 2;
+            // 裁剪框是否能够超出图片
+            if (this.toolBoxOverflow) {
+                if (
+                    this.toolBox.width === this.boxWidth / 2 ||
+                    this.toolBox.height === this.boxHeight / 2 ||
+                    this.saveCutPosition === false
+                ) {
+                    this.toolBox.width = this.cutWidth > this.boxWidth ? this.boxWidth : this.cutWidth;
+                    this.toolBox.height = this.cutHeight > this.boxHeight ? this.boxHeight : this.cutHeight;
+                }
+                if ((this.toolBox.x === 0 && this.toolBox.y === 0) || this.saveCutPosition === false) {
+                    this.toolBox.x = this.boxWidth / 2 - this.toolBox.width / 2;
+                    this.toolBox.y = this.boxHeight / 2 - this.toolBox.height / 2;
+                }
+            } else {
+                // 如果裁剪框不能超出图片 则默认裁剪框位置等于图片位置
+                this.toolBox.x = this.drawImg.x;
+                this.toolBox.y = this.drawImg.y;
+                this.toolBox.width = this.drawImg.width;
+                this.toolBox.height = this.drawImg.height;
             }
             this.drawControlBox(this.toolBox.width, this.toolBox.height, this.toolBox.x, this.toolBox.y);
         },
@@ -867,17 +888,40 @@ export default {
         },
         // draw control
         drawControlBox(width, height, x, y) {
-            if (width > this.boxWidth) {
-                width = this.boxWidth;
-            }
-            if (height > this.boxHeight) {
-                height = this.boxHeight;
-            }
-            if (x < 0) {
-                x = 0;
-            }
-            if (y < 0) {
-                y = 0;
+            // 裁剪框是否能够超出图片
+            if (this.toolBoxOverflow) {
+                if (width > this.boxWidth) {
+                    width = this.boxWidth;
+                }
+                if (height > this.boxHeight) {
+                    height = this.boxHeight;
+                }
+                if (x < 0) {
+                    x = 0;
+                }
+                if (y < 0) {
+                    y = 0;
+                }
+            } else {
+                if (width > this.drawImg.width) {
+                    width = this.drawImg.width;
+                }
+                if (height > this.drawImg.height) {
+                    height = this.drawImg.height;
+                }
+                if (x < this.drawImg.x) {
+                    x = this.drawImg.x;
+                }
+                if (y < this.drawImg.y) {
+                    y = this.drawImg.y;
+                }
+
+                if (x > this.drawImg.x + this.drawImg.width - width) {
+                    x = this.drawImg.x + this.drawImg.width - width;
+                }
+                if (y > this.drawImg.y + this.drawImg.height - height) {
+                    y = this.drawImg.y + this.drawImg.height - height;
+                }
             }
 
             let $toolBoxControl = this.$refs['toolBoxControl'];
@@ -933,6 +977,7 @@ export default {
             if (y < 0) {
                 y = 0;
             }
+
             this.toolBoxPosition.x = x;
             this.toolBoxPosition.y = y;
 
@@ -1069,9 +1114,24 @@ export default {
         dropImgMove(e) {
             if (this.dropImg.active && this.drawImg.img) {
                 let drawImg = { ...this.drawImg };
-
                 drawImg.x = this.dropImg.params.x - (this.dropImg.pageX - e.pageX);
                 drawImg.y = this.dropImg.params.y - (this.dropImg.pageY - e.pageY);
+                // 裁剪框是否能够超出图片
+                if (!this.toolBoxOverflow) {
+                    if (drawImg.x > this.toolBox.x) {
+                        drawImg.x = this.toolBox.x;
+                    }
+                    if (drawImg.x < this.toolBox.x + this.toolBox.width - drawImg.width) {
+                        drawImg.x = this.toolBox.x + this.toolBox.width - drawImg.width;
+                    }
+
+                    if (drawImg.y > this.toolBox.y) {
+                        drawImg.y = this.toolBox.y;
+                    }
+                    if (drawImg.y < this.toolBox.y + this.toolBox.height - drawImg.height) {
+                        drawImg.y = this.toolBox.y + this.toolBox.height - drawImg.height;
+                    }
+                }
                 this.$set(this, 'drawImg', drawImg);
                 this.printImg();
                 e.stopPropagation();
@@ -1097,15 +1157,43 @@ export default {
                     //Firefox
                     scale = ee.detail;
                 }
-                let widthLimit = 50;
 
-                this.drawImg.x =
-                    this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.x + scale * 3 : this.drawImg.x;
-                this.drawImg.y =
-                    this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.y + scale * 3 : this.drawImg.y;
-                this.drawImg.width =
-                    this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.width - scale * 9 : widthLimit;
-                this.drawImg.height = this.drawImg.width / this.scaleImg.rate;
+                // 裁剪框是否能够超出图片
+                if (this.toolBoxOverflow) {
+                    let widthLimit = 50;
+                    this.drawImg.x =
+                        this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.x + scale * 3 : this.drawImg.x;
+                    this.drawImg.y =
+                        this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.y + scale * 3 : this.drawImg.y;
+                    this.drawImg.width =
+                        this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.width - scale * 9 : widthLimit;
+                    this.drawImg.height = this.drawImg.width / this.scaleImg.rate;
+                } else {
+                    let widthLimit = this.toolBox.width;
+                    this.drawImg.x =
+                        this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.x + scale * 3 : this.drawImg.x;
+
+                    this.drawImg.y =
+                        this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.y + scale * 3 : this.drawImg.y;
+
+                    if (
+                        this.drawImg.x > this.toolBox.x ||
+                        this.drawImg.x + this.drawImg.width < this.toolBox.x + this.toolBox.width ||
+                        this.drawImg.width <= this.toolBox.width
+                    ) {
+                        this.drawImg.x = this.toolBox.x;
+                    }
+                    if (
+                        this.drawImg.y > this.toolBox.y ||
+                        this.drawImg.y + this.drawImg.height < this.toolBox.y + this.toolBox.height
+                    ) {
+                        this.drawImg.y = this.toolBox.y;
+                    }
+                    this.drawImg.width =
+                        this.drawImg.width - scale * 9 > widthLimit ? this.drawImg.width - scale * 9 : widthLimit;
+                    this.drawImg.height = this.drawImg.width / this.scaleImg.rate;
+                }
+
                 this.printImg();
                 if (this.onPrintImgTimmer) {
                     clearTimeout(this.onPrintImgTimmer);
