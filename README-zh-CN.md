@@ -195,6 +195,10 @@ forIe9:function(){
 
 ---
 
+#### 2.2.5
+
+-   Bugfix：移除 template 中的 this
+
 #### 2.2.4
 
 -   新增参数( toolBoxOverflow ): 是否允许裁剪框超出图片范围 默认值：true

@@ -194,6 +194,10 @@ ForIE9:function(){
 
 ---
 
+#### 2.2.5
+
+-   Bugfix：remove this in template
+
 #### 2.2.4
 
 -   New prop( toolBoxOverflow ): Allow tool box out of picture range, default: true
