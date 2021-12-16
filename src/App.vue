@@ -112,7 +112,11 @@
                 <p class="lead">You can use it in a few simple steps</p>
                 <div class="alert alert-light" style="margin-top: 40px">
                     <code class="language-html">
-                        <pre>1.Install: npm i vue-img-cutter --save-dev</pre>
+                        <pre>
+1.Install:
+    npm i vue-img-cutter@2 -S # For vue2
+    npm i vue-img-cutter@3 -S # For vue3
+                        </pre>
                     </code>
                     <code class="language-html">
                         <pre>2.Import: import ImgCutter from 'vue-img-cutter';</pre>
