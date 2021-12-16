@@ -677,7 +677,8 @@
                 drawImg.height = imgHeight * rate;
                 drawImg.x = (boxWidth - drawImg.width) / 2;
                 drawImg.y = (boxHeight - drawImg.height) / 2;
-                this.$set(this, 'drawImg', drawImg);
+                // this.$set(this, 'drawImg', drawImg);
+                this.drawImg = drawImg;
                 this.printImg();
                 this.putToolBox();
             },
@@ -757,7 +758,8 @@
                                 drawImg.height = imgHeight * rate;
                                 drawImg.x = (boxWidth - drawImg.width) / 2;
                                 drawImg.y = (boxHeight - drawImg.height) / 2;
-                                this.$set(this, 'drawImg', drawImg);
+                                // this.$set(this, 'drawImg', drawImg);
+                                this.drawImg = drawImg;
                                 this.printImg();
                                 this.putToolBox();
                             }
@@ -1119,7 +1121,8 @@
                             drawImg.y = this.toolBox.y + this.toolBox.height - drawImg.height;
                         }
                     }
-                    this.$set(this, 'drawImg', drawImg);
+                    // this.$set(this, 'drawImg', drawImg);
+                    this.drawImg = drawImg;
                     this.printImg();
                     e.stopPropagation();
                 }
