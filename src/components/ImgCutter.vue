@@ -120,9 +120,10 @@
                                                 <div class="controlBoxInnerLine controlBoxInnerLineRight"></div>
                                                 <!--工具栏提示-->
                                                 <div class="selectArea" v-if="originalGraph === false">
-                                                    宽:{{ toolBox.width }} 高:{{ toolBox.height }} (x:{{
-                                                        toolBoxPosition.x
-                                                    }},y:{{ toolBoxPosition.y }})
+                                                    宽:{{ toolBox.width.toFixed(0) }} 高:{{
+                                                        toolBox.height.toFixed(0)
+                                                    }}
+                                                    (x:{{ toolBoxPosition.x }},y:{{ toolBoxPosition.y }})
                                                 </div>
                                                 <!--如果是裁剪原图则显示实际大小-->
                                                 <div class="selectArea" v-if="originalGraph === true">
