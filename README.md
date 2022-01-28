@@ -195,6 +195,14 @@ ForIE9:function(){
 
 ### Update log：
 
+#### 3.0.1
+
+-   bugfix：[#I4SDOE](https://gitee.com/GLUESTICK/vue-img-cutter/issues/I4SDOE)
+
+-   bugfix: dialog-footer default height 40px
+
+-   bugfix: width height x and y convert to int
+
 #### 3.0.0
 
 -   chore：Build tool changed to vue3

@@ -198,6 +198,14 @@ forIe9:function(){
 
 ---
 
+#### 3.0.1
+
+-   bugfix：[#I4SDOE](https://gitee.com/GLUESTICK/vue-img-cutter/issues/I4SDOE)
+
+-   bugfix: dialog-footer 默认高度 40px
+
+-   bugfix: 显示宽高及坐标移除小数点
+
 #### 3.0.0
 
 -   chore：构建工具改为 vue3
