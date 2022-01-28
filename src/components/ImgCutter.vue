@@ -589,7 +589,7 @@
                         // $image.style.width = '1px';
                         // $image.style.height = '1px';
                         $image.style.position = 'fixed';
-                        $image.style.top = -5000;
+                        $image.style.top = -5000 + 'px';
                         $image.style.opacity = 0;
                         $image.onerror = (e) => {
                             console.error('图片加载失败');
