@@ -1,6 +1,6 @@
 {
     "name": "vue-img-cutter",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "description": "A image crop plug-in for Vue,you can use it to rotate、zoom images and cut any size",
     "author": "acccccccb <tabzhang@foxmail.com>",
     "private": false,
@@ -11,7 +11,8 @@
     },
     "dependencies": {
         "core-js": "^3.20.3",
-        "vue": "^3.2.29"
+        "vue": "^3.2.29",
+        "vue-i18n": "^9.1.10"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "~4.5.15",

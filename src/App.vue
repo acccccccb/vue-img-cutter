@@ -1,7 +1,7 @@
 <template>
     <div>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <span class="navbar-brand mb-0 h1">{{ name }}</span>
+            <span class="navbar-brand mb-0 h1">{{ name }} {{ version }}</span>
             <button
                 class="navbar-toggler"
                 type="button"
@@ -17,22 +17,38 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" :href="docs">Docs</a>
+                        <a class="nav-link" :href="docs">{{ $t('introduce.docs') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" :href="gitee">Gitee</a>
+                        <a class="nav-link" :href="gitee">{{ $t('introduce.gitee') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" :href="github">Github</a>
+                        <a class="nav-link" :href="github">{{ $t('introduce.github') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" :href="npm">Npm</a>
+                        <a class="nav-link" :href="npm">{{ $t('introduce.npm') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" :href="download">download</a>
+                        <a class="nav-link" :href="download">{{ $t('introduce.download') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" :href="homepage">Author Home page</a>
+                        <a class="nav-link" :href="homepage">{{ $t('introduce.homepage') }}</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="navbarScrollingDropdown2"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            语言(Language)
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown2">
+                            <li><a class="dropdown-item" href="#" @click="i18n.global.locale = 'zh-CN'">中文</a></li>
+                            <li><a class="dropdown-item" href="#" @click="i18n.global.locale = 'en-US'">English</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -43,34 +59,40 @@
                     {{ name }}
                     <span class="badge badge-light">{{ version }}</span>
                 </h1>
-                <p>
-                    <a href="https://github.com/acccccccb/vue-img-cutter/stargazers">
+                <p style="display: flex; justify-content: center">
+                    <a href="https://github.com/acccccccb/vue-img-cutter/stargazers" style="margin: 0 5px">
                         <img
                             alt="GitHub stars"
                             src="https://img.shields.io/github/stars/acccccccb/vue-img-cutter?style=for-the-badge"
                         />
                     </a>
-                    <a href="https://github.com/acccccccb/vue-img-cutter/network">
+                    <a href="https://github.com/acccccccb/vue-img-cutter/network" style="margin: 0 5px">
                         <img
                             alt="GitHub forks"
                             src="https://img.shields.io/github/forks/acccccccb/vue-img-cutter?style=for-the-badge"
                         />
                     </a>
-                    <a href="https://www.npmjs.com/package/vue-img-cutter">
+                    <a href="https://www.npmjs.com/package/vue-img-cutter" style="margin: 0 5px">
                         <img alt="npm" src="https://img.shields.io/npm/v/vue-img-cutter?style=for-the-badge" />
                     </a>
-                    <a href="https://www.npmjs.com/package/vue-img-cutter">
+                    <a href="https://www.npmjs.com/package/vue-img-cutter" style="margin: 0 5px">
                         <img alt="npm" src="https://img.shields.io/npm/dt/vue-img-cutter?style=for-the-badge" />
                     </a>
                 </p>
-                <p>{{ description }}</p>
+                <p>{{ $t('banner.description') }}</p>
                 <p>
-                    <a class="btn btn-success btn-lg" :href="download" target="_blank" role="button"
-                        ><i class="fa fa-download"></i> Download</a
+                    <a
+                        class="btn btn-success btn-lg"
+                        :href="download"
+                        target="_blank"
+                        role="button"
+                        style="margin: 0 5px"
                     >
-                    <a class="btn btn-light btn-lg" :href="github" target="_blank" role="button"
-                        ><i class="fa fa-link"></i> Github</a
-                    >
+                        <i class="fa fa-download"></i> {{ $t('banner.download') }}
+                    </a>
+                    <a class="btn btn-light btn-lg" :href="github" target="_blank" role="button">
+                        <i class="fa fa-link"></i> Github
+                    </a>
                     <a
                         class="btn btn-link"
                         style="color: #fff; text-decoration: underline"
@@ -106,29 +128,29 @@
         <div class="row bg" style="padding-top: 0">
             <div class="col-md-10 offset-md-1">
                 <h1 class="bd-title">
-                    <i class="fa fa-plane"></i> Easy to use
-                    <small class="text-muted">Increase of efficiency</small>
+                    <i class="fa fa-plane"></i> {{ $t('block1.title1') }}
+                    <small class="text-muted">{{ $t('block1.title2') }}</small>
                 </h1>
-                <p class="lead">You can use it in a few simple steps</p>
+                <p class="lead">{{ $t('block1.title3') }}</p>
                 <div class="alert alert-light" style="margin-top: 40px">
                     <code class="language-html">
                         <pre>
-1.Install:
+1.{{ $t('block1.title4') }}:
     npm i vue-img-cutter@2 -S # For vue2
     npm i vue-img-cutter@3 -S # For vue3
                         </pre>
                     </code>
                     <code class="language-html">
-                        <pre>2.Import: import ImgCutter from 'vue-img-cutter';</pre>
+                        <pre>2.{{ $t('block1.title5') }}: import ImgCutter from 'vue-img-cutter';</pre>
                     </code>
                     <code class="language-html">
-                        <pre>3.Register components: components: { ImgCutter }</pre>
+                        <pre>3.{{ $t('block1.title6') }} components: components: { ImgCutter }</pre>
                     </code>
                     <code class="language-html">
-                        <pre>4.Code: &lt;ImgCutter @cutDown="cutDown"&gt;&lt;/ImgCutter&gt;</pre>
+                        <pre>4.{{ $t('block1.title7') }}: &lt;ImgCutter @cutDown="cutDown"&gt;&lt;/ImgCutter&gt;</pre>
                     </code>
                     <code class="language-html">
-                        <pre class="mb-0">5.Return: cutDown:function(res){ ...Do something }</pre>
+                        <pre class="mb-0">5.{{ $t('block1.title8') }}: cutDown:(res) => { ...Do something }</pre>
                     </code>
                 </div>
             </div>
@@ -136,10 +158,10 @@
         <div class="row bg grayBg" style="padding-bottom: 60px">
             <div class="col-md-10 offset-md-1">
                 <h1 class="bd-title">
-                    <i class="fa fa-cog"></i> Online configuration
-                    <small class="text-muted">Preview and generate code</small>
+                    <i class="fa fa-cog"></i> {{ $t('block2.title1') }}
+                    <small class="text-muted">{{ $t('block2.title2') }}</small>
                 </h1>
-                <p class="lead">Use this tool to preview and generate code。</p>
+                <p class="lead">{{ $t('block2.title3') }}</p>
                 <div class="row" style="margin-top: 40px">
                     <div class="col-md-6" ref="imgCutterBox" style="height: 458px; overflow: hidden">
                         <div
@@ -209,7 +231,7 @@
                         <div class="imgCutDownBox" :style="'height:458px;'">
                             <div class="imgCutDownBoxContainer">
                                 <img :src="imgSrc" v-if="!!imgSrc" alt="" />
-                                <span v-else class="imgCutDownTips">Cut it out and show it here</span>
+                                <span v-else class="imgCutDownTips">{{ $t('block3.title8') }}</span>
                             </div>
 
                             <div class="text-center">
@@ -219,7 +241,7 @@
                                     :href="imgSrc"
                                     :download="downloadName || 'image.jpg'"
                                     role="button"
-                                    >Download</a
+                                    >{{ $t('block3.title7') }}</a
                                 >
                             </div>
                         </div>
@@ -227,7 +249,7 @@
                     <div class="col-md-3">
                         <form>
                             <div class="form-group">
-                                <label for="cutImgSrc"> Remote pictures src：</label>
+                                <label for="cutImgSrc"> {{ $t('block3.title1') }}：</label>
                                 <input
                                     type="text"
                                     name="cutImgSrc"
@@ -255,7 +277,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="btn btn-secondary btn-block" @click="forIe9">
-                                    Crop remote pictures（For IE9+）
+                                    {{ $t('block3.title3') }}
                                 </div>
                             </div>
                             <div class="form-group">
@@ -265,7 +287,7 @@
                                     class="btn btn-success btn-block"
                                     @click="pluginExe('cropPicture')"
                                 >
-                                    Confirm
+                                    {{ $t('block3.title5') }}
                                 </button>
                             </div>
                             <div class="form-group">
@@ -275,7 +297,7 @@
                                     :disabled="params.isModal === true"
                                     @click="pluginExe('clearAll')"
                                 >
-                                    Reset
+                                    {{ $t('block3.title6') }}
                                 </button>
                             </div>
                         </form>
@@ -284,13 +306,13 @@
             </div>
             <div class="col-md-10 offset-md-1" style="margin-top: 20px">
                 <div class="card">
-                    <div class="card-header">Config tool</div>
+                    <div class="card-header">{{ $t('config.title') }}</div>
                     <div class="card-body">
                         <form autocomplete="off">
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="label">Button text（label）：</label>
+                                        <label for="label">{{ $t('config.label') }}（label）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="label"
@@ -302,7 +324,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="boxWidth">Tool width（boxWidth）：</label>
+                                        <label for="boxWidth">{{ $t('config.boxWidth') }}（boxWidth）：</label>
                                         <input
                                             @input="setData($event)"
                                             :readonly="params.isModal == false"
@@ -315,7 +337,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="boxHeight">Tool height（boxHeight）：</label>
+                                        <label for="boxHeight">{{ $t('config.boxHeight') }}（boxHeight）：</label>
                                         <input
                                             @input="setData($event)"
                                             :readonly="params.isModal == false"
@@ -328,7 +350,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="cutWidth">Selection box width（cutWidth）：</label>
+                                        <label for="cutWidth">{{ $t('config.cutWidth') }}（cutWidth）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="cutWidth"
@@ -342,7 +364,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="cutHeight">Selection box height（cutHeight）：</label>
+                                        <label for="cutHeight">{{ $t('config.cutHeight') }}（cutHeight）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="cutHeight"
@@ -354,7 +376,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="rate">Length-width ratio（rate）：</label>
+                                        <label for="rate">{{ $t('config.rate') }}（rate）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="rate"
@@ -367,7 +389,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="toolBgc">Toolbar background color（toolBgc）：</label>
+                                        <label for="toolBgc">{{ $t('config.toolBgc') }}（toolBgc）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="toolBgc"
@@ -379,8 +401,8 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="crossOriginHeader"
-                                            >Cross origin header（crossOriginHeader）：</label
+                                        <label for="crossOriginHeader">
+                                            {{ $t('config.crossOriginHeader') }}（crossOriginHeader）：</label
                                         >
                                         <input
                                             @input="setData($event)"
@@ -395,7 +417,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="crossOrigin">Is cross origin（crossOrigin）：</label>
+                                        <label for="crossOrigin">{{ $t('config.crossOrigin') }}（crossOrigin）：</label>
                                         <select @change="setData($event)" name="crossOrigin" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -404,7 +426,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="isModal">Is modal（isModal）：</label>
+                                        <label for="isModal">{{ $t('config.isModal') }}（isModal）：</label>
                                         <select @change="setData($event)" name="isModal" class="custom-select">
                                             <option value="true">YES</option>
                                             <option value="false" selected>NO</option>
@@ -413,7 +435,9 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="showChooseBtn">Show select button（showChooseBtn）：</label>
+                                        <label for="showChooseBtn">
+                                            {{ $t('config.showChooseBtn') }}（showChooseBtn）：
+                                        </label>
                                         <select @change="setData($event)" name="showChooseBtn" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -422,7 +446,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="lockScroll">Lock scroll（lockScroll）：</label>
+                                        <label for="lockScroll">{{ $t('config.lockScroll') }}（lockScroll）：</label>
                                         <select @change="setData($event)" name="lockScroll" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -433,7 +457,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="sizeChange">Allow to change size（sizeChange）：</label>
+                                        <label for="sizeChange">{{ $t('config.sizeChange') }}（sizeChange）：</label>
                                         <select @change="setData($event)" name="sizeChange" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -442,7 +466,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="moveAble">Allow to move（moveAble）：</label>
+                                        <label for="moveAble">{{ $t('config.moveAble') }}（moveAble）：</label>
                                         <select @change="setData($event)" name="moveAble" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -451,7 +475,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="tool">Show toolbar（tool）：</label>
+                                        <label for="tool">{{ $t('config.tool') }}（tool）：</label>
                                         <select @change="setData($event)" name="tool" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -460,7 +484,9 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="originalGraph">Crop original image（originalGraph）：</label>
+                                        <label for="originalGraph"
+                                            >{{ $t('config.originalGraph') }}（originalGraph）：</label
+                                        >
                                         <select @change="setData($event)" name="originalGraph" class="custom-select">
                                             <option value="true">YES</option>
                                             <option value="false" selected>NO</option>
@@ -471,7 +497,9 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="saveCutPosition">saveCutPosition（ Save cut position ）：</label>
+                                        <label for="saveCutPosition"
+                                            >{{ $t('config.saveCutPosition') }}（ saveCutPosition ）：</label
+                                        >
                                         <select @change="setData($event)" name="saveCutPosition" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -480,7 +508,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="scaleAble">scaleAble（ Allow scale image ）：</label>
+                                        <label for="scaleAble">{{ $t('config.scaleAble') }}（ scaleAble ）：</label>
                                         <select @change="setData($event)" name="scaleAble" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -489,7 +517,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="imgMove">imgMove（ Allow move image ）：</label>
+                                        <label for="imgMove">{{ $t('config.imgMove') }}（ imgMove ）：</label>
                                         <select @change="setData($event)" name="imgMove" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -498,7 +526,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="fileType">fileType（ Return file type ）：</label>
+                                        <label for="fileType">{{ $t('config.fileType') }}（ fileType ）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="fileType"
@@ -512,7 +540,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="index">index（Return result with index）：</label>
+                                        <label for="index">{{ $t('config.index') }}（index）：</label>
                                         <input
                                             @input="setData($event)"
                                             name="index"
@@ -524,9 +552,8 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="smallToUpload"
-                                            >smallToUpload（If choose image size less then defined Size,return file.
-                                            sizeChange must be false ）：</label
+                                        <label for="smallToUpload">
+                                            {{ $t('config.smallToUpload') }} （smallToUpload ）：</label
                                         >
                                         <select @change="setData($event)" name="smallToUpload" class="custom-select">
                                             <option value="true">YES</option>
@@ -539,7 +566,7 @@
                                 <div class="col">
                                     <div class="form-group custom-control">
                                         <label for="toolBoxOverflow">
-                                            toolBoxOverflow（Allow tool box out of picture range）：
+                                            {{ $t('config.toolBoxOverflow') }}（toolBoxOverflow）：
                                         </label>
                                         <select @change="setData($event)" name="toolBoxOverflow" class="custom-select">
                                             <option value="true" selected>YES</option>
@@ -549,7 +576,7 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="previewMode">previewMode（Return results at any time）：</label>
+                                        <label for="previewMode">{{ $t('config.previewMode') }}（previewMode）：</label>
                                         <select @change="setData($event)" name="previewMode" class="custom-select">
                                             <option value="true" selected>YES</option>
                                             <option value="false">NO</option>
@@ -558,7 +585,9 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkText">Watermark（WatermarkText）：</label>
+                                        <label for="WatermarkText"
+                                            >{{ $t('config.WatermarkText') }}（WatermarkText）：</label
+                                        >
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkText"
@@ -572,7 +601,9 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkTextFont">Font size（WatermarkTextFont）：</label>
+                                        <label for="WatermarkTextFont"
+                                            >{{ $t('config.WatermarkTextFont') }}（WatermarkTextFont）：</label
+                                        >
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkTextFont"
@@ -584,7 +615,9 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkTextColor">Font color（WatermarkTextColor）：</label>
+                                        <label for="WatermarkTextColor"
+                                            >{{ $t('config.WatermarkTextColor') }}（WatermarkTextColor）：</label
+                                        >
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkTextColor"
@@ -596,7 +629,9 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkTextX">Position x（WatermarkTextX）：</label>
+                                        <label for="WatermarkTextX"
+                                            >{{ $t('config.WatermarkTextX') }}（WatermarkTextX）：</label
+                                        >
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkTextX"
@@ -608,13 +643,29 @@
                                 </div>
                                 <div class="col">
                                     <div class="form-group custom-control">
-                                        <label for="WatermarkTextY">Position y（WatermarkTextY）：</label>
+                                        <label for="WatermarkTextY"
+                                            >{{ $t('config.WatermarkTextY') }}（WatermarkTextY）：</label
+                                        >
                                         <input
                                             @input="setData($event)"
                                             name="WatermarkTextY"
                                             type="text"
                                             class="form-control"
                                             v-model="params.WatermarkTextY"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group custom-control">
+                                        <label for="quality">{{ $t('config.quality') }}（quality）：</label>
+                                        <input
+                                            @input="setData($event)"
+                                            name="WatermarkTextFont"
+                                            type="text"
+                                            class="form-control"
+                                            v-model="params.quality"
                                         />
                                     </div>
                                 </div>
@@ -649,10 +700,10 @@
         <div class="row bg">
             <div class="col-md-10 offset-md-1">
                 <h1 class="bd-title">
-                    <i class="fa fa-magic"></i> Donation
-                    <small class="text-muted">Donate in support of the author</small>
+                    <i class="fa fa-magic"></i> {{ $t('donation.title1') }}
+                    <small class="text-muted">{{ $t('donation.title2') }}</small>
                 </h1>
-                <p class="lead">Can you buy me a cup of coffee :)</p>
+                <p class="lead">{{ $t('donation.title3') }}</p>
             </div>
             <div class="col-md-10 offset-md-1" style="margin-top: 20px">
                 <div class="alipay">
@@ -674,13 +725,17 @@
                 <blockquote class="blockquote text-center">
                     <p class="mb-0">
                         {{ name }} {{ version }}
-                        <a :href="github" class="font-weight-lighter">Github</a>
-                        <a :href="gitee" class="font-weight-lighter">Gitee</a>
-                        <a :href="npm" class="font-weight-lighter">Npm</a>
+                        <a :href="github" class="font-weight-lighter" style="margin: 0 5px">{{
+                            $t('introduce.github')
+                        }}</a>
+                        <a :href="gitee" class="font-weight-lighter" style="margin: 0 5px">{{
+                            $t('introduce.gitee')
+                        }}</a>
+                        <a :href="npm" class="font-weight-lighter" style="margin: 0 5px">{{ $t('introduce.npm') }}</a>
                     </p>
                     <footer>
                         <small>
-                            <a :href="homepage" class="font-weight-lighter">Author Home page</a>
+                            <a :href="homepage" class="font-weight-lighter">{{ $t('introduce.homepage') }}</a>
                         </small>
                     </footer>
                 </blockquote>
@@ -721,7 +776,7 @@
                 loadImg: false,
                 onPrintImgTimmer: null,
                 params: {
-                    label: 'Crop local pictures',
+                    label: this.$t('block3.title9'),
                     fileType: 'jpeg',
                     crossOrigin: true,
                     crossOriginHeader: '*',
@@ -733,6 +788,7 @@
                     scaleAble: true,
                     lockScroll: true,
                     toolBoxOverflow: true,
+                    quality: 1,
                     boxWidth: 500,
                     boxHeight: 458,
                     cutWidth: 250,
@@ -754,8 +810,10 @@
                 code1: '',
                 code2:
                     '\n' +
-                    '// Crop remote pictures（For IE9）\n' +
-                    'forIe9:function(){\n' +
+                    '// ' +
+                    this.$t('block3.title4') +
+                    '\n' +
+                    'forIe9:() => {\n' +
                     '   this.$refs.imgCutterModal.handleOpen({\n' +
                     '       name:1.png,\n' +
                     '       src:http://imgurl.com/1.png,\n' +
@@ -893,6 +951,9 @@
                     '"\n' +
                     '   :previewMode="' +
                     this.params.previewMode +
+                    '"\n' +
+                    '   :quality="' +
+                    this.params.quality +
                     '"\n' +
                     '   :toolBoxOverflow="' +
                     this.params.toolBoxOverflow +

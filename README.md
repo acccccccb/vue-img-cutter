@@ -144,6 +144,7 @@ ForIE9:function(){
 |       index        |                                Return with result                                 |        Any         |   No    |       null        |
 |    previewMode     |   Return results at any time,in case of performance problems, set this to false   |      Boolean       |   No    |       true        |
 |      fileType      |                       Return file type ( png / jpeg / webp)                       |       String       |   No    |        png        |
+|      quality       |                                   image quality                                   |       Number       |   No    |         1         |
 
 ### Hook function：
 
@@ -194,6 +195,14 @@ ForIE9:function(){
 ![支付宝](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
 
 ### Update log：
+
+#### 3.0.2
+
+-   bugfix：[#note_11139264](https://gitee.com/GLUESTICK/vue-img-cutter#note_11139264)
+
+-   bugfix：[#64](https://github.com/acccccccb/vue-img-cutter/issues/64)
+
+-   New prop( quality ) : A Number between 0 and 1 indicating the image quality
 
 #### 3.0.1
 

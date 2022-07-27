@@ -98,7 +98,7 @@
                                             <slot name="flipHorizontal"> ⇆ </slot>
                                         </div>
                                         <div v-if="originalGraph === false" @click="flipVertically" class="dockBtn">
-                                            <slot name="turnRight"> ⇅ </slot>
+                                            <slot name="flipVertically"> ⇅ </slot>
                                         </div>
                                     </div>
                                     <!--裁剪区域-->
@@ -435,6 +435,12 @@
             DoNotDisplayCopyright: {
                 type: Boolean,
                 default: false,
+                required: false,
+            },
+            // 裁剪后的图片质量
+            quality: {
+                type: Number,
+                default: 1,
                 required: false,
             },
         },
@@ -1397,7 +1403,7 @@
                     if (this.crossOrigin === true) {
                         tempImg.crossOrigin = this.crossOriginHeader;
                     }
-                    tempImg.src = canvas.toDataURL(`image/${this.fileType}`);
+                    tempImg.src = canvas.toDataURL(`image/${this.fileType}`, _this.quality);
 
                     if (!HTMLCanvasElement.prototype.toBlob) {
                         Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -1548,10 +1554,13 @@
                                                         fileName,
                                                         blob: newBlob,
                                                         file: _this.dataURLtoFile(
-                                                            newCanv.toDataURL(`image/${_this.fileType}`),
+                                                            newCanv.toDataURL(`image/${_this.fileType}`, _this.quality),
                                                             fileName
                                                         ),
-                                                        dataURL: newCanv.toDataURL(`image/${_this.fileType}`),
+                                                        dataURL: newCanv.toDataURL(
+                                                            `image/${_this.fileType}`,
+                                                            _this.quality
+                                                        ),
                                                     });
                                                 } else {
                                                     if (_this.previewMode) {
@@ -1560,16 +1569,22 @@
                                                             fileName,
                                                             blob: newBlob,
                                                             file: _this.dataURLtoFile(
-                                                                newCanv.toDataURL(`image/${_this.fileType}`),
+                                                                newCanv.toDataURL(
+                                                                    `image/${_this.fileType}`,
+                                                                    _this.quality
+                                                                ),
                                                                 fileName
                                                             ),
-                                                            dataURL: newCanv.toDataURL(`image/${_this.fileType}`),
+                                                            dataURL: newCanv.toDataURL(
+                                                                `image/${_this.fileType}`,
+                                                                _this.quality
+                                                            ),
                                                         });
                                                     }
                                                 }
                                             },
                                             `image/${_this.fileType}`,
-                                            0.95
+                                            _this.quality
                                         );
                                     }
                                 }, 200);
@@ -1617,17 +1632,18 @@
                                 _this.handleClose();
                                 _this.$emit('cutDown', {
                                     fileName,
-                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`),
+                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`, _this.quality),
                                 });
                             } else {
                                 _this.$emit('onPrintImg', {
                                     fileName,
-                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`),
+                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`, _this.quality),
                                 });
                             }
                         }
                     }),
-                        `image/${_this.fileType}`;
+                        `image/${_this.fileType}`,
+                        _this.quality;
                 } else {
                     if (!doNotReset) {
                         console.warn('No picture selected');
@@ -2328,13 +2344,14 @@
         position: absolute;
         cursor: pointer;
         background: rgba(0, 0, 0, 0.7);
-        padding: 2px;
         color: #fff;
         top: -16px;
-        height: 14px;
-        line-height: 14px;
+        height: 16px;
+        line-height: 16px;
         text-align: center;
         font-size: 10px;
+        white-space: nowrap;
+        min-width: 50px;
         border-radius: 3px;
         transform: translate(-50%, -50%);
     }

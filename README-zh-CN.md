@@ -144,6 +144,7 @@ forIe9:function(){
 |       index        |                  自定义参数，将会同结果一起返回                  |        Any         |  否  |       null        |
 |    previewMode     | 裁剪过程中是否返回裁剪结果，如果裁剪出现卡顿时将此项设置为 false |      Boolean       |  否  |       true        |
 |      fileType      |               返回的文件类型 ( png / jpeg / webp)                |       String       |  否  |        png        |
+|      quality       |                             图像质量                             |       Number       |  No  |         1         |
 
 > 支持 slot，在组件内部使用带有 slot="open"属性的元素即可自定义打开组件的按钮
 
@@ -195,6 +196,16 @@ forIe9:function(){
 ![支付宝](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
 
 ### 更新日志：
+
+---
+
+#### 3.0.2
+
+-   bugfix：[#note_11139264](https://gitee.com/GLUESTICK/vue-img-cutter#note_11139264)
+
+-   bugfix：[#64](https://github.com/acccccccb/vue-img-cutter/issues/64)
+
+-   新增参数（quality）: 裁剪图片质量，0 到 1 之间，默认 1
 
 ---
 
