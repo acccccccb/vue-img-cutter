@@ -110,6 +110,9 @@
                                         @mousemove="toolBoxMouseMove"
                                         @mouseleave="toolBoxMouseLeave"
                                         class="toolBoxControl"
+                                        :style="{
+                                            pointerEvents: moveAble ? 'auto' : 'none',
+                                        }"
                                     >
                                         <div class="toolBoxControlBox">
                                             <div class="controlBox">

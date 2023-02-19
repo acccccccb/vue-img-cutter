@@ -194,6 +194,12 @@ ForIE9:function(){
 
 ---
 
+[#### 2.2.6
+
+-   bugfix：[#固定裁剪框位置时图片拖动优化建议 #74](https://github.com/acccccccb/vue-img-cutter/issues/74)]()
+
+---
+
 #### 2.2.5
 
 -   Bugfix：remove this in template
