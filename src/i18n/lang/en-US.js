@@ -47,7 +47,7 @@ export default {
     'config.showChooseBtn': 'Show select button',
     'config.lockScroll': 'Lock scroll',
     'config.sizeChange': 'Allow to change size',
-    'config.moveAble': 'Allow to change size',
+    'config.moveAble': 'Allow to remove crop box',
     'config.tool': 'Show toolbar',
     'config.originalGraph': 'Crop original image',
     'config.saveCutPosition': 'Save cut position',

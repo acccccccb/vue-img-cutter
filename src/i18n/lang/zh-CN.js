@@ -48,7 +48,7 @@ export default {
     'config.showChooseBtn': '显示选择图片按钮',
     'config.lockScroll': '锁定滚动',
     'config.sizeChange': '允许改变大小',
-    'config.moveAble': '允许拖动图片',
+    'config.moveAble': '允许拖动裁剪框',
     'config.tool': '显示工具栏',
     'config.originalGraph': '原图裁剪',
     'config.saveCutPosition': '保存裁剪框位置',
