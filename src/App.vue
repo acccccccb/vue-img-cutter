@@ -186,6 +186,7 @@
                             :saveCutPosition="params.saveCutPosition"
                             :scaleAble="params.scaleAble"
                             :DoNotDisplayCopyright="false"
+                            :accept="params.accept"
                             toolBgc="params.toolBgc"
                             @onChooseImg="onChooseImg"
                             @onClearAll="onClearAll"
@@ -611,6 +612,16 @@
                                             v-model="params.WatermarkTextY"
                                         />
                                     </div>
+                                    <div class="form-group custom-control">
+                                        <label for="accept">accept：</label>
+                                        <input
+                                            @input="setData($event)"
+                                            name="accept"
+                                            type="text"
+                                            class="form-control"
+                                            v-model="params.accept"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -750,6 +761,7 @@ export default {
                 smallToUpload: true,
                 previewMode: true,
                 index: '',
+                accept: 'image/gif, image/jpeg ,image/png',
             },
             code1: '',
             code2:
@@ -899,6 +911,9 @@ export default {
                 '"\n' +
                 '   :index="' +
                 this.params.index +
+                '"\n' +
+                '   :accept="' +
+                this.params.accept +
                 '"\n' +
                 '   @cutDown="cutDown">\n' +
                 '       <div class="btn btn-primary" slot="open">' +

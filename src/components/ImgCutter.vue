@@ -222,7 +222,7 @@
                                     @change="putImgToCanv"
                                     ref="inputFile"
                                     type="file"
-                                    accept="image/gif, image/jpeg ,image/png"
+                                    :accept="accept"
                                     style="width: 1px; height: 1px; border: none; opacity: 0"
                                 />
                                 <span @click="chooseImg">
@@ -448,6 +448,11 @@
             DoNotDisplayCopyright: {
                 type: Boolean,
                 default: false,
+                required: false,
+            },
+            accept: {
+                type: String,
+                default: 'image/gif, image/jpeg ,image/png',
                 required: false,
             },
         },

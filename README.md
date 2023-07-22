@@ -49,7 +49,8 @@ Github：[https://github.com/acccccccb/vue-img-cutter](https://github.com/accccc
 1. Install
 
 ```shell
-npm install vue-img-cutter --save-dev
+npm install vue-img-cutter@2 --save-dev # for vue2
+npm install vue-img-cutter@3 --save-dev # for vue3
 ```
 
 2. Import ImgCutter.vue：
@@ -74,7 +75,9 @@ export default {
 
 ```html
 <ImgCutter v-on:cutDown="cutDown">
-    <button slot="open">Select image</button>
+    <template #open>
+        <button>Choose image</button>
+    </template>
 </ImgCutter>
 ```
 
@@ -111,7 +114,7 @@ ForIE9:function(){
 ---
 
 |     Attribute      |                                      Effect                                       |        Type        | Require |      Default      |
-| :----------------: | :-------------------------------------------------------------------------------: | :----------------: | :-----: | :---------------: |
+|:------------------:|:---------------------------------------------------------------------------------:|:------------------:| :-----: | :---------------: |
 |      isModal       |                                     Is modal                                      |      Boolean       |   No    |       true        |
 |   showChooseBtn    |                                  Show select btn                                  |      Boolean       |   No    |       true        |
 |     lockScroll     |                          Lock scroll when modal is show                           |      Boolean       |   No    |       true        |
@@ -141,6 +144,8 @@ ForIE9:function(){
 |       index        |                                Return with result                                 |        Any         |   No    |       null        |
 |    previewMode     |   Return results at any time,in case of performance problems, set this to false   |      Boolean       |   No    |       true        |
 |      fileType      |                       Return file type ( png / jpeg / webp)                       |       String       |   No    |        png        |
+|      quality       |                                   image quality                                   |       Number       |   No    |         1         |
+|       accept       |                                 accept file type                                  |       String       |   No    |         'image/gif, image/jpeg ,image/png'         |
 
 ### Hook function：
 
@@ -192,13 +197,43 @@ ForIE9:function(){
 
 ### Update log：
 
+#### 3.0.4
+
+-   New prop(accept)：accept file type[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
+
+#### 3.0.3
+
+-   bugfix：[#固定裁剪框位置时图片拖动优化建议 #74](https://github.com/acccccccb/vue-img-cutter/issues/74)
+
+#### 3.0.2
+
+-   bugfix：[#note_11139264](https://gitee.com/GLUESTICK/vue-img-cutter#note_11139264)
+
+-   bugfix：[#64](https://github.com/acccccccb/vue-img-cutter/issues/64)
+
+-   New prop( quality ) : A Number between 0 and 1 indicating the image quality
+
+#### 3.0.1
+
+-   bugfix：[#I4SDOE](https://gitee.com/GLUESTICK/vue-img-cutter/issues/I4SDOE)
+
+-   bugfix: dialog-footer default height 40px
+
+-   bugfix: width height x and y convert to int
+
+#### 3.0.0
+
+-   chore：Build tool changed to vue3
+
 ---
 
-[#### 2.2.6
+#### 2.2.7
 
--   bugfix：[#固定裁剪框位置时图片拖动优化建议 #74](https://github.com/acccccccb/vue-img-cutter/issues/74)]()
+-   New prop(accept)：accept file type[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
 
----
+#### 2.2.6
+
+-   Bugfix：固定裁剪框位置时图片拖动优化建议 #74
 
 #### 2.2.5
 
