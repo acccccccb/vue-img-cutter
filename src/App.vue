@@ -213,6 +213,7 @@
                             :smallToUpload="params.smallToUpload"
                             :saveCutPosition="params.saveCutPosition"
                             :scaleAble="params.scaleAble"
+                            :accept="params.accept"
                             :DoNotDisplayCopyright="false"
                             toolBgc="params.toolBgc"
                             @onChooseImg="onChooseImg"
@@ -669,6 +670,18 @@
                                         />
                                     </div>
                                 </div>
+                                <div class="col">
+                                    <div class="form-group custom-control">
+                                        <label for="accept">{{ $t('config.accept') }}（accept）：</label>
+                                        <input
+                                            @input="setData($event)"
+                                            name="accept"
+                                            type="text"
+                                            class="form-control"
+                                            v-model="params.accept"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -806,6 +819,7 @@
                     smallToUpload: true,
                     previewMode: true,
                     index: '',
+                    accept: 'image/gif, image/jpeg ,image/png',
                 },
                 code1: '',
                 code2:
@@ -954,6 +968,9 @@
                     '"\n' +
                     '   :quality="' +
                     this.params.quality +
+                    '"\n' +
+                    '   :accept="' +
+                    this.params.accept +
                     '"\n' +
                     '   :toolBoxOverflow="' +
                     this.params.toolBoxOverflow +

@@ -65,4 +65,5 @@ export default {
     'config.WatermarkTextX': '水印x轴位置',
     'config.WatermarkTextY': '水印y轴位置',
     'config.quality': '图片质量',
+    'config.accept': '可选文件类型',
 };

@@ -64,4 +64,5 @@ export default {
     'config.WatermarkTextX': 'Watermark position x',
     'config.WatermarkTextY': 'Watermark position Y',
     'config.quality': 'Quality',
+    'config.accept': 'accept file type',
 };

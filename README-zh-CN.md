@@ -145,6 +145,7 @@ forIe9:function(){
 |    previewMode     | 裁剪过程中是否返回裁剪结果，如果裁剪出现卡顿时将此项设置为 false |      Boolean       |  否  |       true        |
 |      fileType      |               返回的文件类型 ( png / jpeg / webp)                |       String       |  否  |        png        |
 |      quality       |                             图像质量                             |       Number       |  No  |         1         |
+|       accept       |                             图片类型                                  |       String       |   No    |         'image/gif, image/jpeg ,image/png'         |
 
 > 支持 slot，在组件内部使用带有 slot="open"属性的元素即可自定义打开组件的按钮
 
@@ -199,6 +200,10 @@ forIe9:function(){
 
 ---
 
+#### 3.0.4
+
+-   新增属性：accept[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
+
 #### 3.0.3
 
 -   bugfix：[#固定裁剪框位置时图片拖动优化建议 #74](https://github.com/acccccccb/vue-img-cutter/issues/74)
@@ -226,6 +231,10 @@ forIe9:function(){
 #### 3.0.0
 
 -   chore：构建工具改为 vue3
+
+#### 2.2.6
+
+-   新增属性：accept[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
 
 #### 2.2.5
 

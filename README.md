@@ -114,7 +114,7 @@ ForIE9:function(){
 ---
 
 |     Attribute      |                                      Effect                                       |        Type        | Require |      Default      |
-| :----------------: | :-------------------------------------------------------------------------------: | :----------------: | :-----: | :---------------: |
+|:------------------:|:---------------------------------------------------------------------------------:|:------------------:| :-----: | :---------------: |
 |      isModal       |                                     Is modal                                      |      Boolean       |   No    |       true        |
 |   showChooseBtn    |                                  Show select btn                                  |      Boolean       |   No    |       true        |
 |     lockScroll     |                          Lock scroll when modal is show                           |      Boolean       |   No    |       true        |
@@ -145,6 +145,7 @@ ForIE9:function(){
 |    previewMode     |   Return results at any time,in case of performance problems, set this to false   |      Boolean       |   No    |       true        |
 |      fileType      |                       Return file type ( png / jpeg / webp)                       |       String       |   No    |        png        |
 |      quality       |                                   image quality                                   |       Number       |   No    |         1         |
+|       accept       |                                 accept file type                                  |       String       |   No    |         'image/gif, image/jpeg ,image/png'         |
 
 ### Hook function：
 
@@ -196,6 +197,10 @@ ForIE9:function(){
 
 ### Update log：
 
+#### 3.0.4
+
+-   New prop(accept)：accept file type[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
+
 #### 3.0.3
 
 -   bugfix：[#固定裁剪框位置时图片拖动优化建议 #74](https://github.com/acccccccb/vue-img-cutter/issues/74)
@@ -221,6 +226,10 @@ ForIE9:function(){
 -   chore：Build tool changed to vue3
 
 ---
+
+#### 2.2.6
+
+-   New prop(accept)：accept file type[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
 
 #### 2.2.5
 
