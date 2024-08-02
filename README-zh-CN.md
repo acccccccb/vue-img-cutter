@@ -158,6 +158,9 @@ forIe9:function(){
 | onChooseImg |       选择图片后       | Function |  否  |    Object    |
 | onPrintImg  |    在画布上绘制图片    | Function |  否  |    Object    |
 | onClearAll  |        清空画布        | Function |  否  |     null     |
+| onImageLoadComplete  |      图片加载完成       | Function |   否    |     Object     |
+| onImageLoadError  |       图片加载失败       | Function |   否    |     Object     |
+
 
 ### 插槽(slot)：
 
@@ -199,6 +202,13 @@ forIe9:function(){
 ### 更新日志：
 
 ---
+
+#### 3.0.5
+
+- 新增属性：(onImageLoadComplete)：onImageLoadComplete 加载图片完成事件 [#使用远程图片方法 有没有办法还没加载出来之前 有个loading #85](https://github.com/acccccccb/vue-img-cutter/issues/85)
+- 新增属性：(onImageLoadError)：onImageLoadError 加载图片失败事件
+- 修复bug：[# fix(other): 修复canvas.toBlob方法第二、第三个参数位置错误的情况 #84](https://github.com/acccccccb/vue-img-cutter/pull/84) 感谢[nowo](https://github.com/nowo)
+- 更新LICENSE
 
 #### 3.0.4
 
