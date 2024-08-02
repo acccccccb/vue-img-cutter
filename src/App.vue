@@ -612,17 +612,33 @@
                                             v-model="params.WatermarkTextY"
                                         />
                                     </div>
-                                    <div class="form-group custom-control">
-                                        <label for="accept">accept：</label>
-                                        <input
-                                            @input="setData($event)"
-                                            name="accept"
-                                            type="text"
-                                            class="form-control"
-                                            v-model="params.accept"
-                                        />
-                                    </div>
                                 </div>
+                            </div>
+                            <div class='row'>
+                              <div class="col">
+                                <div class="form-group custom-control">
+                                  <label for="accept">accept：</label>
+                                  <input
+                                    @input="setData($event)"
+                                    name="accept"
+                                    type="text"
+                                    class="form-control"
+                                    v-model="params.accept"
+                                  />
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group custom-control">
+                                  <label for="accept">quality：</label>
+                                  <input
+                                    @input="setData($event, 'quality')"
+                                    name="quality"
+                                    type="text"
+                                    class="form-control"
+                                    v-model="params.quality"
+                                  />
+                                </div>
+                              </div>
                             </div>
                         </form>
                     </div>
@@ -762,6 +778,7 @@ export default {
                 previewMode: true,
                 index: '',
                 accept: 'image/gif, image/jpeg ,image/png',
+                quality: 1,
             },
             code1: '',
             code2:
@@ -915,13 +932,16 @@ export default {
                 '   :accept="' +
                 this.params.accept +
                 '"\n' +
+                '   :quality="' +
+                this.params.quality +
+                '"\n' +
                 '   @cutDown="cutDown">\n' +
                 '       <div class="btn btn-primary" slot="open">' +
                 this.params.label +
                 '</div>\n' +
                 '</ImgCutter>';
         },
-        setData: function($event) {
+        setData: function($event, field) {
             function isNumber(val) {
                 let regPos = /^\d+(\.\d+)?$/; //非负浮点数
                 let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
@@ -940,7 +960,11 @@ export default {
                 value = false;
             }
             if (isNumber(value) === true) {
-                value = parseInt(value);
+                if(field !== 'quality') {
+                    value = parseInt(value);
+                } else {
+                    value = Number(value);
+                }
             }
             this.params[$event.target.name] = value;
             this.doRefresh();
