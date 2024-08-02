@@ -1649,9 +1649,7 @@
                                 });
                             }
                         }
-                    }),
-                        `image/${_this.fileType}`,
-                        _this.quality;
+                    }, `image/${_this.fileType}`, _this.quality);
                 } else {
                     if (!doNotReset) {
                         console.warn('No picture selected');
