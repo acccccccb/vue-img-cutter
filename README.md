@@ -156,6 +156,8 @@ ForIE9:function(){
 | onChooseImg |       ChooseImg       | Function |   No    |    Object    |
 | onPrintImg  | Print image to canvas | Function |   No    |    Object    |
 | onClearAll  |       Clear all       | Function |   No    |     null     |
+| onImageLoadComplete  |       Image loading completed       | Function |   No    |     Object     |
+| onImageLoadError  |       Image loading failed       | Function |   No    |     Object     |
 
 ### Slot（You can use slot="slot name" to custom button）：
 
@@ -197,6 +199,12 @@ ForIE9:function(){
 
 ### Update log：
 
+#### 3.0.5
+
+- New prop(onImageLoadComplete)：New Event: onImageLoadComplete [#使用远程图片方法 有没有办法还没加载出来之前 有个loading #85](https://github.com/acccccccb/vue-img-cutter/issues/85)
+- New prop(onImageLoadError)：New Event: onImageLoadError
+- BugFix：[# fix(other): 修复canvas.toBlob方法第二、第三个参数位置错误的情况 #84](https://github.com/acccccccb/vue-img-cutter/pull/84) Thanks [nowo](https://github.com/nowo)
+- Update LICENSE
 #### 3.0.4
 
 -   New prop(accept)：accept file type[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)

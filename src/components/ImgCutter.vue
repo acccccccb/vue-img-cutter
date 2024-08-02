@@ -603,8 +603,13 @@
                             });
                             this.clearCutImageObj();
                         };
+                        $image.onerror = (err) => {
+                            this.$emit('onImageLoadError', err);
+                            throw new Error('图片加载失败');
+                        }
                         $image.onload = () => {
                             if ($image.complete === true) {
+                                this.$emit('onImageLoadComplete', $image);
                                 this.visible = true;
                                 this.$nextTick(() => {
                                     init(() => {
