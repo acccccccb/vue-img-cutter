@@ -58,10 +58,10 @@ npm install vue-img-cutter --save-dev # vue3
 ```javascript
 import ImgCutter from 'vue-img-cutter'
 export default {
-        components:{
-            ImgCutter
-        },
-...
+  components:{
+    ImgCutter
+  },
+  ...
 }
 ```
 
@@ -75,9 +75,9 @@ export default {
 
 ```html
 <ImgCutter v-on:cutDown="cutDown">
-    <template #open>
-        <button>选择图片</button>
-    </template>
+  <template #open>
+    <button>选择图片</button>
+  </template>
 </ImgCutter>
 ```
 
@@ -92,20 +92,20 @@ export default {
 ```javascript
 // 传入的obj必须包含这四个属性
 let obj = {
-    name: '1.jpg', //远程图片名称
-    src: 'http://url/1.jpg', //远程图片url
-    //width:200,//远程图片的原始宽度 2.1.9版本后不需要
-    //height:200,//远程图片的原始高度  2.1.9版本后不需要
+  name: '1.jpg', //远程图片名称
+  src: 'http://url/1.jpg', //远程图片url
+  //width:200,//远程图片的原始宽度 2.1.9版本后不需要
+  //height:200,//远程图片的原始高度  2.1.9版本后不需要
 };
 ```
 
 ```javascript
 forIe9:function(){
-	// 传入name，src name中必须包含后缀名
-	this.$refs.imgCutterModal.handleOpen({
-        name:"image.jpg",
-        src:"http://imageServ.com/image.jpg",
-    });
+  // 传入name，src name中必须包含后缀名
+  this.$refs.imgCutterModal.handleOpen({
+    name:"image.jpg",
+    src:"http://imageServ.com/image.jpg",
+  });
 }
 ```
 
@@ -158,6 +158,9 @@ forIe9:function(){
 | onChooseImg |       选择图片后       | Function |  否  |    Object    |
 | onPrintImg  |    在画布上绘制图片    | Function |  否  |    Object    |
 | onClearAll  |        清空画布        | Function |  否  |     null     |
+| onImageLoadComplete  |      图片加载完成       | Function |   否    |     Object     |
+| onImageLoadError  |       图片加载失败       | Function |   否    |     Object     |
+
 
 ### 插槽(slot)：
 
@@ -200,6 +203,13 @@ forIe9:function(){
 
 ---
 
+#### 3.0.5
+
+- 新增属性：(onImageLoadComplete)：onImageLoadComplete 加载图片完成事件 [#使用远程图片方法 有没有办法还没加载出来之前 有个loading #85](https://github.com/acccccccb/vue-img-cutter/issues/85)
+- 新增属性：(onImageLoadError)：onImageLoadError 加载图片失败事件
+- 修复bug：[# fix(other): 修复canvas.toBlob方法第二、第三个参数位置错误的情况 #84](https://github.com/acccccccb/vue-img-cutter/pull/84) 感谢[nowo](https://github.com/nowo)
+- 更新LICENSE
+
 #### 3.0.4
 
 -   新增属性：accept[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
@@ -232,13 +242,17 @@ forIe9:function(){
 
 -   chore：构建工具改为 vue3
 
-#### 2.2.7
+#### 2.2.8
 
--   新增属性：accept[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
+- 新增属性：(onImageLoadComplete)：onImageLoadComplete 加载图片完成事件 [#使用远程图片方法 有没有办法还没加载出来之前 有个loading #85](https://github.com/acccccccb/vue-img-cutter/issues/85)
+- 新增属性：(onImageLoadError)：onImageLoadError 加载图片失败事件
+- 修复bug：[# fix(other): 修复canvas.toBlob方法第二、第三个参数位置错误的情况 #84](https://github.com/acccccccb/vue-img-cutter/pull/84) 感谢[nowo](https://github.com/nowo)
+- 更新LICENSE
+
 
 #### 2.2.6
 
--   Bugfix：固定裁剪框位置时图片拖动优化建议 #74
+-   新增属性：accept[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
 
 #### 2.2.5
 

@@ -450,6 +450,12 @@
                 default: false,
                 required: false,
             },
+          // 裁剪后的图片质量
+            quality: {
+              type: Number,
+              default: 1,
+              required: false,
+            },
             accept: {
                 type: String,
                 default: 'image/gif, image/jpeg ,image/png',
@@ -607,8 +613,13 @@
                             });
                             this.clearCutImageObj();
                         };
+                        $image.onerror = (err) => {
+                          this.$emit('onImageLoadError', err);
+                          throw new Error('图片加载失败');
+                        };
                         $image.onload = () => {
                             if ($image.complete === true) {
+                                this.$emit('onImageLoadComplete', $image);
                                 this.visible = true;
                                 this.$nextTick(() => {
                                     init(() => {
@@ -1388,7 +1399,7 @@
                     if (this.crossOrigin === true) {
                         tempImg.crossOrigin = this.crossOriginHeader;
                     }
-                    tempImg.src = canvas.toDataURL(`image/${this.fileType}`);
+                    tempImg.src = canvas.toDataURL(`image/${this.fileType}`, _this.quality);
 
                     if (!HTMLCanvasElement.prototype.toBlob) {
                         Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -1617,8 +1628,7 @@
                                 });
                             }
                         }
-                    }),
-                        `image/${_this.fileType}`;
+                    }, `image/${_this.fileType}`, _this.quality);
                 } else {
                     if (!doNotReset) {
                         console.warn('No picture selected');

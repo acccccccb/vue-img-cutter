@@ -58,10 +58,10 @@ npm install vue-img-cutter@3 --save-dev # for vue3
 ```javascript
 import ImgCutter from 'vue-img-cutter'
 export default {
-        components:{
-            ImgCutter
-        },
-...
+  components:{
+    ImgCutter
+  },
+  ...
 }
 ```
 
@@ -75,37 +75,37 @@ export default {
 
 ```html
 <ImgCutter v-on:cutDown="cutDown">
-    <template #open>
-        <button>Choose image</button>
-    </template>
+  <template #open>
+    <button>Choose image</button>
+  </template>
 </ImgCutter>
 ```
 
 5. This method to be compatible with IE9,it can also be used to crop cross domain images
 
 > -   Create an object(name,src,~~width and height~~ are
->     required).
+      >     required).
 
 > -   this.\$refs.imgCutterModal.handleOpen(The Object).
 
 ```javascript
 // The object like this.
 let obj = {
-    name: '1.jpg', //Image name
-    src: 'http://url/1.jpg', // Image url
-    //width:200,//Image width  remove in 2.1.9+
-    //height:200,//Image height remove in 2.1.9+
+  name: '1.jpg', //Image name
+  src: 'http://url/1.jpg', // Image url
+  //width:200,//Image width  remove in 2.1.9+
+  //height:200,//Image height remove in 2.1.9+
 };
 ```
 
 ```javascript
 ForIE9:function(){
-	// First you need create object have name,src.
-	// Then trigger handleOpen(obj) and deliver the obj.
-	this.$refs.imgCutterModal.handleOpen({
-        name:"image.jpg",
-        src:"http://imageServ.com/image.jpg",
-    });
+  // First you need create object have name,src.
+  // Then trigger handleOpen(obj) and deliver the obj.
+  this.$refs.imgCutterModal.handleOpen({
+    name:"image.jpg",
+    src:"http://imageServ.com/image.jpg",
+  });
 }
 ```
 
@@ -156,6 +156,8 @@ ForIE9:function(){
 | onChooseImg |       ChooseImg       | Function |   No    |    Object    |
 | onPrintImg  | Print image to canvas | Function |   No    |    Object    |
 | onClearAll  |       Clear all       | Function |   No    |     null     |
+| onImageLoadComplete  |       Image loading completed       | Function |   No    |     Object     |
+| onImageLoadError  |       Image loading failed       | Function |   No    |     Object     |
 
 ### Slot（You can use slot="slot name" to custom button）：
 
@@ -197,6 +199,12 @@ ForIE9:function(){
 
 ### Update log：
 
+#### 3.0.5
+
+- New prop(onImageLoadComplete)：New Event: onImageLoadComplete [#使用远程图片方法 有没有办法还没加载出来之前 有个loading #85](https://github.com/acccccccb/vue-img-cutter/issues/85)
+- New prop(onImageLoadError)：New Event: onImageLoadError
+- BugFix：[# fix(other): 修复canvas.toBlob方法第二、第三个参数位置错误的情况 #84](https://github.com/acccccccb/vue-img-cutter/pull/84) Thanks [nowo](https://github.com/nowo)
+- Update LICENSE
 #### 3.0.4
 
 -   New prop(accept)：accept file type[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
@@ -227,13 +235,16 @@ ForIE9:function(){
 
 ---
 
-#### 2.2.7
+#### 2.2.8
 
--   New prop(accept)：accept file type[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
+- New prop(onImageLoadComplete)：New Event: onImageLoadComplete [#使用远程图片方法 有没有办法还没加载出来之前 有个loading #85](https://github.com/acccccccb/vue-img-cutter/issues/85)
+- New prop(onImageLoadError)：New Event: onImageLoadError
+- BugFix：[# fix(other): 修复canvas.toBlob方法第二、第三个参数位置错误的情况 #84](https://github.com/acccccccb/vue-img-cutter/pull/84) Thanks [nowo](https://github.com/nowo)
+- Update LICENSE
 
 #### 2.2.6
 
--   Bugfix：固定裁剪框位置时图片拖动优化建议 #74
+-   New prop(accept)：accept file type[#可不可以在文件上传的accept 中加上webp #80](https://github.com/acccccccb/vue-img-cutter/issues/80)
 
 #### 2.2.5
 
