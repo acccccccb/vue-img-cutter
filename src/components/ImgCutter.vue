@@ -864,11 +864,11 @@
                             this.drawImg.y = (this.boxHeight - this.drawImg.height) / 2;
                         }
                         // 检查图片坐标是否超出
-                        console.log(
-                            'this.drawImg.y > this.toolBox.y',
-                            this.drawImg.y + this.drawImg.height,
-                            this.toolBox.y + this.toolBox.height
-                        );
+                        // console.log(
+                        //     'this.drawImg.y > this.toolBox.y',
+                        //     this.drawImg.y + this.drawImg.height,
+                        //     this.toolBox.y + this.toolBox.height
+                        // );
                         // 判断左右边界
                         if (this.drawImg.x > this.toolBox.x) {
                             this.drawImg.x = this.toolBox.x;
