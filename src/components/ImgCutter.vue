@@ -456,6 +456,12 @@
                 default: 'image/gif, image/jpeg ,image/png',
                 required: false,
             },
+            // 选择图片后 绘制到画布前触发
+            afterChooseImg: {
+                type: Function,
+                default: null,
+                required: false,
+            },
         },
         model: ['label', 'boxWidth', 'boxHeight', 'rate', 'tool', 'DoNotDisplayCopyright'],
         data() {
@@ -599,17 +605,14 @@
                         $image.style.position = 'fixed';
                         $image.style.top = -5000 + 'px';
                         $image.style.opacity = 0;
-                        $image.onerror = (e) => {
-                            console.error('图片加载失败');
-                            this.$emit('error', {
-                                index: this.index,
-                                event: e,
-                                msg: '图片加载失败',
-                            });
-                            this.clearCutImageObj();
-                        };
+
                         $image.onerror = (err) => {
                             this.$emit('onImageLoadError', err);
+                            this.$emit('error', {
+                                type: 3,
+                                index: this.index,
+                                msg: '图片加载失败',
+                            });
                             throw new Error('图片加载失败');
                         };
                         $image.onload = () => {
@@ -622,7 +625,14 @@
                                     });
                                 });
                             } else {
+                                this.$emit('onImageLoadError', new Error('图片加载失败'));
+                                this.$emit('error', {
+                                    type: 3,
+                                    index: this.index,
+                                    msg: '图片加载失败',
+                                });
                                 throw new Error('图片加载失败');
+
                                 // this.handleClose();
                             }
                         };
@@ -697,7 +707,17 @@
                 this.putToolBox();
             },
             // 将选择的图片绘制到画布
-            putImgToCanv(e) {
+            async putImgToCanv(e) {
+                let pass = false;
+
+                if (typeof this.afterChooseImg === 'function') {
+                    pass = await this.afterChooseImg();
+                } else {
+                    pass = true;
+                }
+                if (!pass) {
+                    return;
+                }
                 let file;
 
                 if (e.target.files) {
@@ -709,10 +729,31 @@
                     return false;
                 }
                 if (file) {
+                    // 文件类型检查
+                    if (this.accept.indexOf(file.type) === -1) {
+                        this.$emit('error', {
+                            type: 1,
+                            index: this.index,
+                            event: e,
+                            msg: '文件类型错误',
+                        });
+                        return false;
+                    }
+
                     this.fileName = file.name;
                     let reader = new FileReader();
 
                     reader.readAsDataURL(file);
+                    reader.onerror = (err) => {
+                        console.error(err);
+                        this.$emit('error', {
+                            type: 2,
+                            index: this.index,
+                            event: e,
+                            msg: err?.toString() || '文件读取错误',
+                        });
+                        return;
+                    };
                     reader.onload = (result) => {
                         // 图片base64化
                         let newUrl = result.target.result;
@@ -1123,17 +1164,30 @@
                     );
                     ctx.translate(this.drawImg.x, this.drawImg.y);
                     ctx.scale(this.isFlipHorizontal ? -1 : 1, this.isFlipVertically ? -1 : 1);
-                    ctx.drawImage(
-                        this.drawImg.img,
-                        this.drawImg.sx,
-                        this.drawImg.sy,
-                        this.drawImg.swidth,
-                        this.drawImg.sheight,
-                        this.isFlipHorizontal ? -this.drawImg.width : 0,
-                        this.isFlipVertically ? -this.drawImg.height : 0,
-                        this.drawImg.width,
-                        this.drawImg.height
-                    );
+                    try {
+                        ctx.drawImage(
+                            this.drawImg.img,
+                            this.drawImg.sx,
+                            this.drawImg.sy,
+                            this.drawImg.swidth,
+                            this.drawImg.sheight,
+                            this.isFlipHorizontal ? -this.drawImg.width : 0,
+                            this.isFlipVertically ? -this.drawImg.height : 0,
+                            this.drawImg.width,
+                            this.drawImg.height
+                        );
+                    } catch (err) {
+                        console.error(err);
+                        if (this.onPrintImgTimmer) {
+                            clearTimeout(this.onPrintImgTimmer);
+                        }
+                        this.$emit('error', {
+                            type: 3,
+                            index: this.index,
+                            msg: err.toString() || '图片加载失败',
+                        });
+                        return;
+                    }
                     ctx.translate(-this.drawImg.x, this.drawImg.y);
 
                     ctx.restore();
@@ -1676,6 +1730,7 @@
                     if (!doNotReset) {
                         console.warn('No picture selected');
                         _this.$emit('error', {
+                            type: 4,
                             err: 1,
                             msg: 'No picture selected',
                         });

@@ -215,6 +215,7 @@
                             :saveCutPosition="params.saveCutPosition"
                             :scaleAble="params.scaleAble"
                             :accept="params.accept"
+                            :afterChooseImg="afterChooseImg"
                             :DoNotDisplayCopyright="false"
                             toolBgc="params.toolBgc"
                             @onChooseImg="onChooseImg"
@@ -862,6 +863,12 @@
             //    this.forIe9();
         },
         methods: {
+            afterChooseImg() {
+                return new Promise((resolve) => {
+                    // 阻止选择图片
+                    resolve(true);
+                });
+            },
             cutDown: function (res) {
                 console.log('cutDown');
                 console.log(res);
@@ -996,6 +1003,7 @@
                     this.params.index +
                     '"\n' +
                     '   @cutDown="cutDown">\n' +
+                    '   @error="catError">\n' +
                     '       <div class="btn btn-primary" #open>' +
                     this.params.label +
                     '</div>\n' +

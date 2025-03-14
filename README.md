@@ -113,40 +113,41 @@ ForIE9:function(){
 
 ---
 
-|     Attribute      |                                      Effect                                       |        Type        | Require |              Default               |
-| :----------------: | :-------------------------------------------------------------------------------: | :----------------: | :-----: | :--------------------------------: |
-|      isModal       |                                     Is modal                                      |      Boolean       |   No    |                true                |
-|   showChooseBtn    |                                  Show select btn                                  |      Boolean       |   No    |                true                |
-|     lockScroll     |                          Lock scroll when modal is show                           |      Boolean       |   No    |                true                |
-|     modalTitle     |                                 Modal title text                                  |       String       |   No    |              图片裁剪              |
-|       label        |                                    Button text                                    |       String       |   No    |              选择图片              |
-|      boxWidth      |                                    Tool width                                     |       Number       |   No    |                800                 |
-|     boxHeight      |                                    Tool height                                    |       Number       |   No    |                400                 |
-|      cutWidth      |                                Selection box width                                |       Number       |   No    |                200                 |
-|     cutHeight      |                               Selection box height                                |       Number       |   No    |                200                 |
-|        tool        |                                   Show toolbar                                    |      Boolean       |   No    |                true                |
-|      toolBgc       |                             Toolbar background color                              | String(eg: "#fff") |   No    |                #fff                |
-|     sizeChange     |                                 Allow change size                                 |      Boolean       |   No    |                true                |
-|      moveAble      |                               Allow change position                               |      Boolean       |   No    |                true                |
-|   originalGraph    |                                Crop original image                                |      Boolean       |   No    |               false                |
-|    crossOrigin     |                               Is cross origin image                               |      Boolean       |   No    |               false                |
-| crossOriginHeader  |                              Set cross origin header                              |       String       |   No    |                 ''                 |
-|        rate        |                                   Aspect ratio                                    | String(eg: "4:3")  |   No    |                 -                  |
-|   WatermarkText    |                                  Watermark Text                                   |       String       |   No    |                 ''                 |
-| WatermarkTextFont  |                                Watermark font size                                |       String       |   No    |         '12px Sans-serif'          |
-| WatermarkTextColor |                               Watermark font color                                |       String       |   No    |               '#fff'               |
-|   WatermarkTextX   |                               Watermark position x                                |       Number       |   No    |                0.95                |
-|   WatermarkTextY   |                               Watermark position y                                |       Number       |   No    |                0.95                |
-|   smallToUpload    | If choose image size less then defined Size,return file. sizeChange must be false |      Boolean       |   No    |               false                |
-|  saveCutPosition   |                          Save last cut position and size                          |      Boolean       |   No    |               false                |
-|     scaleAble      |                                 Allow scale image                                 |      Boolean       |   No    |                true                |
-|      imgMove       |                                 Allow move image                                  |      Boolean       |   No    |                true                |
-|  toolBoxOverflow   |                        Allow tool box out of picture range                        |      Boolean       |   No    |                true                |
-|       index        |                                Return with result                                 |        Any         |   No    |                null                |
-|    previewMode     |   Return results at any time,in case of performance problems, set this to false   |      Boolean       |   No    |                true                |
-|      fileType      |                       Return file type ( png / jpeg / webp)                       |       String       |   No    |                png                 |
-|      quality       |                                   image quality                                   |       Number       |   No    |                 1                  |
-|       accept       |                                 accept file type                                  |       String       |   No    | 'image/gif, image/jpeg ,image/png' |
+|     Attribute      |                                      Effect                                       |              Type              | Require |              Default               |
+| :----------------: | :-------------------------------------------------------------------------------: | :----------------------------: | :-----: | :--------------------------------: |
+|      isModal       |                                     Is modal                                      |            Boolean             |   No    |                true                |
+|   showChooseBtn    |                                  Show select btn                                  |            Boolean             |   No    |                true                |
+|     lockScroll     |                          Lock scroll when modal is show                           |            Boolean             |   No    |                true                |
+|     modalTitle     |                                 Modal title text                                  |             String             |   No    |              图片裁剪              |
+|       label        |                                    Button text                                    |             String             |   No    |              选择图片              |
+|      boxWidth      |                                    Tool width                                     |             Number             |   No    |                800                 |
+|     boxHeight      |                                    Tool height                                    |             Number             |   No    |                400                 |
+|      cutWidth      |                                Selection box width                                |             Number             |   No    |                200                 |
+|     cutHeight      |                               Selection box height                                |             Number             |   No    |                200                 |
+|        tool        |                                   Show toolbar                                    |            Boolean             |   No    |                true                |
+|      toolBgc       |                             Toolbar background color                              |       String(eg: "#fff")       |   No    |                #fff                |
+|     sizeChange     |                                 Allow change size                                 |            Boolean             |   No    |                true                |
+|      moveAble      |                               Allow change position                               |            Boolean             |   No    |                true                |
+|   originalGraph    |                                Crop original image                                |            Boolean             |   No    |               false                |
+|    crossOrigin     |                               Is cross origin image                               |            Boolean             |   No    |               false                |
+| crossOriginHeader  |                              Set cross origin header                              |             String             |   No    |                 ''                 |
+|        rate        |                                   Aspect ratio                                    |       String(eg: "4:3")        |   No    |                 -                  |
+|   WatermarkText    |                                  Watermark Text                                   |             String             |   No    |                 ''                 |
+| WatermarkTextFont  |                                Watermark font size                                |             String             |   No    |         '12px Sans-serif'          |
+| WatermarkTextColor |                               Watermark font color                                |             String             |   No    |               '#fff'               |
+|   WatermarkTextX   |                               Watermark position x                                |             Number             |   No    |                0.95                |
+|   WatermarkTextY   |                               Watermark position y                                |             Number             |   No    |                0.95                |
+|   smallToUpload    | If choose image size less then defined Size,return file. sizeChange must be false |            Boolean             |   No    |               false                |
+|  saveCutPosition   |                          Save last cut position and size                          |            Boolean             |   No    |               false                |
+|     scaleAble      |                                 Allow scale image                                 |            Boolean             |   No    |                true                |
+|      imgMove       |                                 Allow move image                                  |            Boolean             |   No    |                true                |
+|  toolBoxOverflow   |                        Allow tool box out of picture range                        |            Boolean             |   No    |                true                |
+|       index        |                                Return with result                                 |              Any               |   No    |                null                |
+|    previewMode     |   Return results at any time,in case of performance problems, set this to false   |            Boolean             |   No    |                true                |
+|      fileType      |                       Return file type ( png / jpeg / webp)                       |             String             |   No    |                png                 |
+|      quality       |                                   image quality                                   |             Number             |   No    |                 1                  |
+|       accept       |                                 accept file type                                  |             String             |   No    | 'image/gif, image/jpeg ,image/png' |
+|   afterChooseImg   |                                Before choose image                                | () => Promise.resolve(Boolean) |   No    |                 -                  |
 
 ### Hook function：
 
@@ -203,7 +204,11 @@ ForIE9:function(){
 #### 3.0.6
 
 -   New prop：(modalTitle)：Modal title text [#插件弹窗的标题 #86](https://github.com/acccccccb/vue-img-cutter/issues/86)
+-   New prop：(afterChooseImg)：Callback after selecting an image, must return a Promise. [#可以在上传图片之前回调一个 beforeUpload 函数自行对图片做限制吗？ #86](https://gitee.com/GLUESTICK/vue-img-cutter/issues/I8L4D3)
 -   BugFix: [#Rotation operation optimization](https://gitee.com/GLUESTICK/vue-img-cutter/issues/IAYZNF)
+-   Optimization: Adjusted @error return value; it now returns the error type.
+-   Optimization: Now checks whether the file type is an image.
+-   Notice：onImageLoadError will be removed in future versions, please use @error instead.
 -   New dev dependency：prettier@2
 
 #### 3.0.5

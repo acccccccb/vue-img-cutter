@@ -113,39 +113,40 @@ forIe9:function(){
 
 ---
 
-|       属性名       |                               作用                               |        类型        | 必填 |               默认值               |
-| :----------------: | :--------------------------------------------------------------: | :----------------: | :--: | :--------------------------------: |
-|      isModal       |                          是否为弹窗模式                          |      Boolean       |  否  |                true                |
-|   showChooseBtn    |                       是否显示选择图片按钮                       |      Boolean       |  否  |                true                |
-|     lockScroll     |               是否在 Dialog 出现时将 body 滚动锁定               |      Boolean       |  否  |                true                |
-|     modalTitle     |                           弹窗标题文字                           |       String       |  否  |              图片裁剪              |
-|      boxWidth      |                           裁剪工具宽度                           |       Number       |  否  |                800                 |
-|     boxHeight      |                           裁剪工具高度                           |       Number       |  否  |                400                 |
-|      cutWidth      |                           默认裁剪宽度                           |       Number       |  否  |                200                 |
-|     cutHeight      |                           默认裁剪高度                           |       Number       |  否  |                200                 |
-|        tool        |                          是否显示工具栏                          |      Boolean       |  否  |                true                |
-|      toolBgc       |                           工具栏背景色                           | String(例: "#fff") |  否  |                #fff                |
-|     sizeChange     |                      是否能够调整裁剪框大小                      |      Boolean       |  否  |                true                |
-|      moveAble      |                       能否调整裁剪区域位置                       |      Boolean       |  否  |                true                |
-|      imgMove       |                           能否拖动图片                           |      Boolean       |  否  |                true                |
-|   originalGraph    |                         是否直接裁剪原图                         |      Boolean       |  否  |               false                |
-|    crossOrigin     |                是否设置跨域，需要服务器做相应更改                |      Boolean       |  否  |               false                |
-| crossOriginHeader  |            设置跨域信息 crossOrigin 为 true 时才生效             |       String       |  否  |                 ''                 |
-|        rate        |                             图片比例                             | String(例: "4:3")  |  否  |                 -                  |
-|   WatermarkText    |                             水印文字                             |       String       |  否  |                 ''                 |
-| WatermarkTextFont  |                           水印文字字体                           |       String       |  否  |         '12px Sans-serif'          |
-| WatermarkTextColor |                           水印文字颜色                           |       String       |  否  |               '#fff'               |
-|   WatermarkTextX   |                         水印文字水平位置                         |       Number       |  否  |                0.95                |
-|   WatermarkTextY   |                         水印文字垂直位置                         |       Number       |  否  |                0.95                |
-|   smallToUpload    |    如果裁剪尺寸固定且图片尺寸小于裁剪尺寸则不裁剪直接返回文件    |      Boolean       |  否  |               false                |
-|  saveCutPosition   |                   是否保存上一次裁剪位置及大小                   |      Boolean       |  否  |               false                |
-|     scaleAble      |                       是否允许滚轮缩放图片                       |      Boolean       |  否  |                true                |
-|  toolBoxOverflow   |                    是否允许裁剪框超出图片范围                    |      Boolean       |  否  |                true                |
-|       index        |                  自定义参数，将会同结果一起返回                  |        Any         |  否  |                null                |
-|    previewMode     | 裁剪过程中是否返回裁剪结果，如果裁剪出现卡顿时将此项设置为 false |      Boolean       |  否  |                true                |
-|      fileType      |               返回的文件类型 ( png / jpeg / webp)                |       String       |  否  |                png                 |
-|      quality       |                             图像质量                             |       Number       |  No  |                 1                  |
-|       accept       |                             图片类型                             |       String       |  No  | 'image/gif, image/jpeg ,image/png' |
+|       属性名       |                               作用                               |              类型              | 必填 |               默认值               |
+| :----------------: | :--------------------------------------------------------------: | :----------------------------: | :--: | :--------------------------------: |
+|      isModal       |                          是否为弹窗模式                          |            Boolean             |  否  |                true                |
+|   showChooseBtn    |                       是否显示选择图片按钮                       |            Boolean             |  否  |                true                |
+|     lockScroll     |               是否在 Dialog 出现时将 body 滚动锁定               |            Boolean             |  否  |                true                |
+|     modalTitle     |                           弹窗标题文字                           |             String             |  否  |              图片裁剪              |
+|      boxWidth      |                           裁剪工具宽度                           |             Number             |  否  |                800                 |
+|     boxHeight      |                           裁剪工具高度                           |             Number             |  否  |                400                 |
+|      cutWidth      |                           默认裁剪宽度                           |             Number             |  否  |                200                 |
+|     cutHeight      |                           默认裁剪高度                           |             Number             |  否  |                200                 |
+|        tool        |                          是否显示工具栏                          |            Boolean             |  否  |                true                |
+|      toolBgc       |                           工具栏背景色                           |       String(例: "#fff")       |  否  |                #fff                |
+|     sizeChange     |                      是否能够调整裁剪框大小                      |            Boolean             |  否  |                true                |
+|      moveAble      |                       能否调整裁剪区域位置                       |            Boolean             |  否  |                true                |
+|      imgMove       |                           能否拖动图片                           |            Boolean             |  否  |                true                |
+|   originalGraph    |                         是否直接裁剪原图                         |            Boolean             |  否  |               false                |
+|    crossOrigin     |                是否设置跨域，需要服务器做相应更改                |            Boolean             |  否  |               false                |
+| crossOriginHeader  |            设置跨域信息 crossOrigin 为 true 时才生效             |             String             |  否  |                 ''                 |
+|        rate        |                             图片比例                             |       String(例: "4:3")        |  否  |                 -                  |
+|   WatermarkText    |                             水印文字                             |             String             |  否  |                 ''                 |
+| WatermarkTextFont  |                           水印文字字体                           |             String             |  否  |         '12px Sans-serif'          |
+| WatermarkTextColor |                           水印文字颜色                           |             String             |  否  |               '#fff'               |
+|   WatermarkTextX   |                         水印文字水平位置                         |             Number             |  否  |                0.95                |
+|   WatermarkTextY   |                         水印文字垂直位置                         |             Number             |  否  |                0.95                |
+|   smallToUpload    |    如果裁剪尺寸固定且图片尺寸小于裁剪尺寸则不裁剪直接返回文件    |            Boolean             |  否  |               false                |
+|  saveCutPosition   |                   是否保存上一次裁剪位置及大小                   |            Boolean             |  否  |               false                |
+|     scaleAble      |                       是否允许滚轮缩放图片                       |            Boolean             |  否  |                true                |
+|  toolBoxOverflow   |                    是否允许裁剪框超出图片范围                    |            Boolean             |  否  |                true                |
+|       index        |                  自定义参数，将会同结果一起返回                  |              Any               |  否  |                null                |
+|    previewMode     | 裁剪过程中是否返回裁剪结果，如果裁剪出现卡顿时将此项设置为 false |            Boolean             |  否  |                true                |
+|      fileType      |               返回的文件类型 ( png / jpeg / webp)                |             String             |  否  |                png                 |
+|      quality       |                             图像质量                             |             Number             |  No  |                 1                  |
+|       accept       |                             图片类型                             |             String             |  No  | 'image/gif, image/jpeg ,image/png' |
+|   afterChooseImg   |                        选择图片前钩子函数                        | () => Promise.resolve(Boolean) |  No  |                 -                  |
 
 > 支持 slot，在组件内部使用带有 slot="open"属性的元素即可自定义打开组件的按钮
 
@@ -205,7 +206,11 @@ forIe9:function(){
 #### 3.0.6
 
 -   新增属性：(modalTitle)：弹窗标题文字 [#插件弹窗的标题 #86](https://github.com/acccccccb/vue-img-cutter/issues/86)
+-   新增属性：(afterChooseImg)：选择图片后回调，需要返回一个 Promise [#可以在上传图片之前回调一个 beforeUpload 函数自行对图片做限制吗？ #86](https://gitee.com/GLUESTICK/vue-img-cutter/issues/I8L4D3)
 -   修复 bug: [#旋转操作优化](https://gitee.com/GLUESTICK/vue-img-cutter/issues/IAYZNF)
+-   优化：调整@error 返回值，现在将返回错误类型
+-   优化：现在将检查文件类型是否为图片
+-   注意：onImageLoadError 将在之后的版本移除，请使用 @error
 -   新增开发依赖：prettier@2
 
 ---
