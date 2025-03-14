@@ -29,6 +29,7 @@ export default {
     'block3.title7': '下载图片',
     'block3.title8': '预览区域',
     'block3.title9': '选择本地图片',
+    'block3.title10': '图片裁剪',
     // 捐赠
     'donation.title1': '捐赠',
     'donation.title2': '捐赠以支持作者',
@@ -66,4 +67,5 @@ export default {
     'config.WatermarkTextY': '水印y轴位置',
     'config.quality': '图片质量',
     'config.accept': '可选文件类型',
+    'config.modalTitle': '弹窗标题',
 };

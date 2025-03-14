@@ -188,6 +188,7 @@
                             ref="imgCutterModal"
                             :crossOrigin="params.crossOrigin"
                             :label="params.label"
+                            :modalTitle="params.modalTitle"
                             :rate="params.rate"
                             :index="params.index"
                             :isModal="params.isModal"
@@ -682,6 +683,18 @@
                                         />
                                     </div>
                                 </div>
+                                <div class="col">
+                                    <div class="form-group custom-control">
+                                        <label for="modalTitle">{{ $t('config.modalTitle') }}（modalTitle）：</label>
+                                        <input
+                                            @input="setData($event)"
+                                            name="modalTitle"
+                                            type="text"
+                                            class="form-control"
+                                            v-model="params.modalTitle"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -789,6 +802,7 @@
                 loadImg: false,
                 onPrintImgTimmer: null,
                 params: {
+                    modalTitle: this.$t('block3.title10'),
                     label: this.$t('block3.title9'),
                     fileType: 'jpeg',
                     crossOrigin: true,
@@ -888,6 +902,9 @@
                     '\n' +
                     '<ImgCutter\n' +
                     '   ref="imgCutterModal"\n' +
+                    '   modalTitle="' +
+                    this.params.modalTitle +
+                    '"\n' +
                     '   label="' +
                     this.params.label +
                     '"\n' +

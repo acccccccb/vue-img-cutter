@@ -29,7 +29,7 @@
                         >
                             <div class="toolMain">
                                 <div class="tool-title" v-if="isModal === true">
-                                    图片裁剪
+                                    {{ modalTitle }}
                                     <span class="closeIcon" @click="handleClose">×</span>
                                 </div>
                                 <div
@@ -256,6 +256,12 @@
     export default {
         name: 'ImgCutter',
         props: {
+            modalTitle: {
+                // 弹窗标题文字
+                type: String,
+                default: '图片裁剪',
+                required: false,
+            },
             crossOrigin: {
                 // 是否设置图片跨域
                 type: Boolean,
@@ -606,7 +612,7 @@
                         $image.onerror = (err) => {
                             this.$emit('onImageLoadError', err);
                             throw new Error('图片加载失败');
-                        }
+                        };
                         $image.onload = () => {
                             if ($image.complete === true) {
                                 this.$emit('onImageLoadComplete', $image);
@@ -1466,118 +1472,104 @@
                             },
                         });
                     }
-                    canvas.toBlob((blob) => {
-                        if (blob) {
-                            let reader = new FileReader();
+                    canvas.toBlob(
+                        (blob) => {
+                            if (blob) {
+                                let reader = new FileReader();
 
-                            reader.readAsDataURL(blob);
-                            reader.onload = () => {
-                                let timmer = setInterval(() => {
-                                    if (reader.readyState == 2) {
-                                        clearInterval(timmer);
-                                        let newCanv = document.createElement('canvas');
+                                reader.readAsDataURL(blob);
+                                reader.onload = () => {
+                                    let timmer = setInterval(() => {
+                                        if (reader.readyState == 2) {
+                                            clearInterval(timmer);
+                                            let newCanv = document.createElement('canvas');
 
-                                        let ctx = newCanv.getContext('2d');
+                                            let ctx = newCanv.getContext('2d');
 
-                                        // 原图裁剪 originalGraph
-                                        if (_this.originalGraph == true) {
-                                            let scale = _this.drawImg.width / _this.drawImg.swidth;
+                                            // 原图裁剪 originalGraph
+                                            if (_this.originalGraph == true) {
+                                                let scale = _this.drawImg.width / _this.drawImg.swidth;
 
-                                            // 计算实际图像大小
-                                            let transWidth = _this.toolBox.width / scale;
+                                                // 计算实际图像大小
+                                                let transWidth = _this.toolBox.width / scale;
 
-                                            let transHeight = _this.toolBox.height / scale;
+                                                let transHeight = _this.toolBox.height / scale;
 
-                                            newCanv.width = transWidth;
-                                            newCanv.height = transHeight;
-                                            // 重新计算裁剪坐标
-                                            let sx = (_this.toolBox.x - _this.drawImg.x) / scale;
+                                                newCanv.width = transWidth;
+                                                newCanv.height = transHeight;
+                                                // 重新计算裁剪坐标
+                                                let sx = (_this.toolBox.x - _this.drawImg.x) / scale;
 
-                                            let sy = (_this.toolBox.y - _this.drawImg.y) / scale;
+                                                let sy = (_this.toolBox.y - _this.drawImg.y) / scale;
 
-                                            let swidth = _this.drawImg.swidth;
+                                                let swidth = _this.drawImg.swidth;
 
-                                            let sheight = _this.drawImg.sheight;
+                                                let sheight = _this.drawImg.sheight;
 
-                                            // TODO 使原图裁剪支持旋转后的图像
-                                            // ctx.translate(sx + transWidth/2, sy + transHeight/2);
-                                            // ctx.rotate((_this.rotateImg.angle) * Math.PI / 180);
-                                            // ctx.translate(-(sx + transWidth/2), -(sy + transHeight/2));
-                                            ctx.translate(-sx, -sy);
-                                            ctx.drawImage(_this.drawImg.img, 0, 0, swidth, sheight);
-                                        } else {
-                                            newCanv.width = _this.toolBox.width;
-                                            newCanv.height = _this.toolBox.height;
-                                            let params = _this.toolBox;
+                                                // TODO 使原图裁剪支持旋转后的图像
+                                                // ctx.translate(sx + transWidth/2, sy + transHeight/2);
+                                                // ctx.rotate((_this.rotateImg.angle) * Math.PI / 180);
+                                                // ctx.translate(-(sx + transWidth/2), -(sy + transHeight/2));
+                                                ctx.translate(-sx, -sy);
+                                                ctx.drawImage(_this.drawImg.img, 0, 0, swidth, sheight);
+                                            } else {
+                                                newCanv.width = _this.toolBox.width;
+                                                newCanv.height = _this.toolBox.height;
+                                                let params = _this.toolBox;
 
-                                            if (_this.rate) {
-                                                let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
+                                                if (_this.rate) {
+                                                    let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
 
-                                                let m = _this.rate.split(':')[0];
+                                                    let m = _this.rate.split(':')[0];
 
-                                                let n = _this.rate.split(':')[1];
+                                                    let n = _this.rate.split(':')[1];
 
-                                                if (m >= n) {
-                                                    ctx.drawImage(
-                                                        tempImg,
-                                                        params.x,
-                                                        params.y,
-                                                        params.width,
-                                                        params.width * p,
-                                                        0,
-                                                        0,
-                                                        params.width,
-                                                        params.width * p
-                                                    );
+                                                    if (m >= n) {
+                                                        ctx.drawImage(
+                                                            tempImg,
+                                                            params.x,
+                                                            params.y,
+                                                            params.width,
+                                                            params.width * p,
+                                                            0,
+                                                            0,
+                                                            params.width,
+                                                            params.width * p
+                                                        );
+                                                    } else {
+                                                        ctx.drawImage(
+                                                            tempImg,
+                                                            params.x,
+                                                            params.y,
+                                                            params.width,
+                                                            params.width / p,
+                                                            0,
+                                                            0,
+                                                            params.width,
+                                                            params.width / p
+                                                        );
+                                                    }
                                                 } else {
                                                     ctx.drawImage(
                                                         tempImg,
                                                         params.x,
                                                         params.y,
                                                         params.width,
-                                                        params.width / p,
+                                                        params.height,
                                                         0,
                                                         0,
                                                         params.width,
-                                                        params.width / p
+                                                        params.height
                                                     );
                                                 }
-                                            } else {
-                                                ctx.drawImage(
-                                                    tempImg,
-                                                    params.x,
-                                                    params.y,
-                                                    params.width,
-                                                    params.height,
-                                                    0,
-                                                    0,
-                                                    params.width,
-                                                    params.height
-                                                );
                                             }
-                                        }
-                                        newCanv.toBlob(
-                                            (newBlob) => {
-                                                let fileName = _this.changeFileName(_this.fileName, _this.fileType);
+                                            newCanv.toBlob(
+                                                (newBlob) => {
+                                                    let fileName = _this.changeFileName(_this.fileName, _this.fileType);
 
-                                                if (!doNotReset) {
-                                                    _this.handleClose();
-                                                    _this.$emit('cutDown', {
-                                                        index: _this.index,
-                                                        fileName,
-                                                        blob: newBlob,
-                                                        file: _this.dataURLtoFile(
-                                                            newCanv.toDataURL(`image/${_this.fileType}`, _this.quality),
-                                                            fileName
-                                                        ),
-                                                        dataURL: newCanv.toDataURL(
-                                                            `image/${_this.fileType}`,
-                                                            _this.quality
-                                                        ),
-                                                    });
-                                                } else {
-                                                    if (_this.previewMode) {
-                                                        _this.$emit('onPrintImg', {
+                                                    if (!doNotReset) {
+                                                        _this.handleClose();
+                                                        _this.$emit('cutDown', {
                                                             index: _this.index,
                                                             fileName,
                                                             blob: newBlob,
@@ -1593,68 +1585,89 @@
                                                                 _this.quality
                                                             ),
                                                         });
+                                                    } else {
+                                                        if (_this.previewMode) {
+                                                            _this.$emit('onPrintImg', {
+                                                                index: _this.index,
+                                                                fileName,
+                                                                blob: newBlob,
+                                                                file: _this.dataURLtoFile(
+                                                                    newCanv.toDataURL(
+                                                                        `image/${_this.fileType}`,
+                                                                        _this.quality
+                                                                    ),
+                                                                    fileName
+                                                                ),
+                                                                dataURL: newCanv.toDataURL(
+                                                                    `image/${_this.fileType}`,
+                                                                    _this.quality
+                                                                ),
+                                                            });
+                                                        }
                                                     }
-                                                }
-                                            },
-                                            `image/${_this.fileType}`,
-                                            _this.quality
-                                        );
-                                    }
-                                }, 200);
-                            };
-                        } else {
-                            // IE9及以下
-                            let newCanv = document.createElement('canvas');
-
-                            newCanv.width = _this.toolBox.width;
-                            newCanv.height = _this.toolBox.height;
-                            let ctx = newCanv.getContext('2d');
-
-                            let params = _this.toolBox;
-
-                            if (_this.rate) {
-                                let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
-
-                                ctx.drawImage(
-                                    tempImg,
-                                    params.x,
-                                    params.y,
-                                    params.width,
-                                    params.width * p,
-                                    0,
-                                    0,
-                                    params.width,
-                                    params.width * p
-                                );
+                                                },
+                                                `image/${_this.fileType}`,
+                                                _this.quality
+                                            );
+                                        }
+                                    }, 200);
+                                };
                             } else {
-                                ctx.drawImage(
-                                    tempImg,
-                                    params.x,
-                                    params.y,
-                                    params.width,
-                                    params.height,
-                                    0,
-                                    0,
-                                    params.width,
-                                    params.height
-                                );
-                            }
-                            let fileName = _this.changeFileName(_this.fileName, _this.fileType);
+                                // IE9及以下
+                                let newCanv = document.createElement('canvas');
 
-                            if (!doNotReset) {
-                                _this.handleClose();
-                                _this.$emit('cutDown', {
-                                    fileName,
-                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`, _this.quality),
-                                });
-                            } else {
-                                _this.$emit('onPrintImg', {
-                                    fileName,
-                                    dataURL: newCanv.toDataURL(`image/${_this.fileType}`, _this.quality),
-                                });
+                                newCanv.width = _this.toolBox.width;
+                                newCanv.height = _this.toolBox.height;
+                                let ctx = newCanv.getContext('2d');
+
+                                let params = _this.toolBox;
+
+                                if (_this.rate) {
+                                    let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
+
+                                    ctx.drawImage(
+                                        tempImg,
+                                        params.x,
+                                        params.y,
+                                        params.width,
+                                        params.width * p,
+                                        0,
+                                        0,
+                                        params.width,
+                                        params.width * p
+                                    );
+                                } else {
+                                    ctx.drawImage(
+                                        tempImg,
+                                        params.x,
+                                        params.y,
+                                        params.width,
+                                        params.height,
+                                        0,
+                                        0,
+                                        params.width,
+                                        params.height
+                                    );
+                                }
+                                let fileName = _this.changeFileName(_this.fileName, _this.fileType);
+
+                                if (!doNotReset) {
+                                    _this.handleClose();
+                                    _this.$emit('cutDown', {
+                                        fileName,
+                                        dataURL: newCanv.toDataURL(`image/${_this.fileType}`, _this.quality),
+                                    });
+                                } else {
+                                    _this.$emit('onPrintImg', {
+                                        fileName,
+                                        dataURL: newCanv.toDataURL(`image/${_this.fileType}`, _this.quality),
+                                    });
+                                }
                             }
-                        }
-                    }, `image/${_this.fileType}`, _this.quality);
+                        },
+                        `image/${_this.fileType}`,
+                        _this.quality
+                    );
                 } else {
                     if (!doNotReset) {
                         console.warn('No picture selected');
