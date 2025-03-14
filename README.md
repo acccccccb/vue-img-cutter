@@ -203,6 +203,7 @@ ForIE9:function(){
 #### 3.0.6
 
 -   New prop：(modalTitle)：Modal title text [#插件弹窗的标题 #86](https://github.com/acccccccb/vue-img-cutter/issues/86)
+-   BugFix: [#Rotation operation optimization](https://gitee.com/GLUESTICK/vue-img-cutter/issues/IAYZNF)
 -   New dev dependency：prettier@2
 
 #### 3.0.5

@@ -81,7 +81,6 @@
                                                 ref="dockBtnScrollControl"
                                                 @mousemove="scrollBarControlMove"
                                                 @mousedown="scrollBarControlOn"
-                                                @mouseleave="scrollBarControlOff"
                                                 @mouseup="scrollBarControlOff"
                                                 :style="'left:' + rotateControl.position + 'px'"
                                                 class="scrollBarControl"
@@ -1291,6 +1290,7 @@
                 this.dropImgOff();
                 this.resetToolBox();
                 this.toolBoxMouseUp();
+                this.scrollBarControlOff();
                 e.stopPropagation();
             },
 
@@ -1387,6 +1387,10 @@
                         this.toolBox.height = this.controlBox.start.height;
                     }
                     this.drawControlBox(this.toolBox.width, this.toolBox.height, x, y);
+                }
+                // 旋转
+                if (this.rotateControl.active) {
+                    this.scrollBarControlMove(e);
                 }
                 e.stopPropagation();
             },

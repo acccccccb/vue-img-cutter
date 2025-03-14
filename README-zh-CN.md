@@ -205,6 +205,7 @@ forIe9:function(){
 #### 3.0.6
 
 -   新增属性：(modalTitle)：弹窗标题文字 [#插件弹窗的标题 #86](https://github.com/acccccccb/vue-img-cutter/issues/86)
+-   修复 bug: [#旋转操作优化](https://gitee.com/GLUESTICK/vue-img-cutter/issues/IAYZNF)
 -   新增开发依赖：prettier@2
 
 ---
