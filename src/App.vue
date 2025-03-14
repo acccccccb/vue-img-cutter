@@ -188,6 +188,7 @@
                             ref="imgCutterModal"
                             :crossOrigin="params.crossOrigin"
                             :label="params.label"
+                            :modalTitle="params.modalTitle"
                             :rate="params.rate"
                             :index="params.index"
                             :isModal="params.isModal"
@@ -214,6 +215,7 @@
                             :saveCutPosition="params.saveCutPosition"
                             :scaleAble="params.scaleAble"
                             :accept="params.accept"
+                            :afterChooseImg="afterChooseImg"
                             :DoNotDisplayCopyright="false"
                             toolBgc="params.toolBgc"
                             @onChooseImg="onChooseImg"
@@ -682,6 +684,18 @@
                                         />
                                     </div>
                                 </div>
+                                <div class="col">
+                                    <div class="form-group custom-control">
+                                        <label for="modalTitle">{{ $t('config.modalTitle') }}（modalTitle）：</label>
+                                        <input
+                                            @input="setData($event)"
+                                            name="modalTitle"
+                                            type="text"
+                                            class="form-control"
+                                            v-model="params.modalTitle"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -789,6 +803,7 @@
                 loadImg: false,
                 onPrintImgTimmer: null,
                 params: {
+                    modalTitle: this.$t('block3.title10'),
                     label: this.$t('block3.title9'),
                     fileType: 'jpeg',
                     crossOrigin: true,
@@ -848,6 +863,12 @@
             //    this.forIe9();
         },
         methods: {
+            afterChooseImg() {
+                return new Promise((resolve) => {
+                    // 阻止选择图片
+                    resolve(true);
+                });
+            },
             cutDown: function (res) {
                 console.log('cutDown');
                 console.log(res);
@@ -888,6 +909,9 @@
                     '\n' +
                     '<ImgCutter\n' +
                     '   ref="imgCutterModal"\n' +
+                    '   modalTitle="' +
+                    this.params.modalTitle +
+                    '"\n' +
                     '   label="' +
                     this.params.label +
                     '"\n' +
@@ -979,6 +1003,7 @@
                     this.params.index +
                     '"\n' +
                     '   @cutDown="cutDown">\n' +
+                    '   @error="catError">\n' +
                     '       <div class="btn btn-primary" #open>' +
                     this.params.label +
                     '</div>\n' +

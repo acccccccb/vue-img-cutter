@@ -28,6 +28,7 @@ export default {
     'block3.title7': 'Download picture',
     'block3.title8': 'Cut it out and show it here',
     'block3.title9': 'Choose picture',
+    'block3.title10': 'Image Crop Tool',
     // 捐赠
     'donation.title1': 'Donation',
     'donation.title2': 'Donate in support of the author',
@@ -64,5 +65,6 @@ export default {
     'config.WatermarkTextX': 'Watermark position x',
     'config.WatermarkTextY': 'Watermark position Y',
     'config.quality': 'Quality',
-    'config.accept': 'accept file type',
+    'config.accept': 'Accept file type',
+    'config.modalTitle': 'Modal title',
 };
