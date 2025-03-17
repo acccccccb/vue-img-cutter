@@ -863,7 +863,8 @@
             //    this.forIe9();
         },
         methods: {
-            afterChooseImg() {
+            afterChooseImg(res) {
+                console.log('afterChooseImg', res);
                 return new Promise((resolve) => {
                     // 阻止选择图片
                     resolve(true);

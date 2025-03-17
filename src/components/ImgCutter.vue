@@ -711,7 +711,7 @@
                 let pass = false;
 
                 if (typeof this.afterChooseImg === 'function') {
-                    pass = await this.afterChooseImg();
+                    pass = await this.afterChooseImg(e);
                 } else {
                     pass = true;
                 }

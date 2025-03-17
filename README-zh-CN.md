@@ -203,6 +203,11 @@ forIe9:function(){
 
 ---
 
+#### 3.0.7
+- 修复 bug：afterChooseImg 没有返回文件信息 [#afterChooseImg钩子函数](https://gitee.com/GLUESTICK/vue-img-cutter/issues/IBTM5M)
+
+---
+
 #### 3.0.6
 
 -   新增属性：(modalTitle)：弹窗标题文字 [#插件弹窗的标题 #86](https://github.com/acccccccb/vue-img-cutter/issues/86)
