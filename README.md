@@ -201,6 +201,10 @@ ForIE9:function(){
 
 ### Update log：
 
+#### 3.0.7
+
+-   BugFix：No file information returned by afterChooseImg. [#afterChooseImg 钩子函数](https://gitee.com/GLUESTICK/vue-img-cutter/issues/IBTM5M)
+
 #### 3.0.6
 
 -   New prop：(modalTitle)：Modal title text [#插件弹窗的标题 #86](https://github.com/acccccccb/vue-img-cutter/issues/86)
