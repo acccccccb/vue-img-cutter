@@ -208,6 +208,9 @@ ForIE9:function(){
 
 - Refactored to Vue 3 + Vite + TypeScript 
 
+> Need new import ：import 'vue-img-cutter/vue-img-cutter.css'
+
+
 #### 3.0.7
 
 -   BugFix：No file information returned by afterChooseImg. [#afterChooseImg 钩子函数](https://gitee.com/GLUESTICK/vue-img-cutter/issues/IBTM5M)

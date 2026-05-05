@@ -208,6 +208,8 @@ forIe9:function(){
 
 - 项目重构为 vue3 + vite + typescript
 
+> 需要新增引入：import 'vue-img-cutter/vue-img-cutter.css'
+
 ---
 
 #### 3.0.7
