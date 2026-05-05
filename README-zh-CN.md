@@ -57,6 +57,7 @@ npm install vue-img-cutter@3 --save-dev # vue3 + vite + typescript
 
 ```javascript
 import ImgCutter from 'vue-img-cutter'
+import 'vue-img-cutter/vue-img-cutter.css'
 export default {
         components:{
             ImgCutter
