@@ -74,14 +74,14 @@
                 <a
                   class="dropdown-item"
                   href="#"
-                  @click="i18n.global.locale = 'zh-CN'"
+                  @click="i18n.global.locale.value = 'zh-CN'"
                 >中文</a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
                   href="#"
-                  @click="i18n.global.locale = 'en-US'"
+                  @click="i18n.global.locale.value = 'en-US'"
                 >English</a>
               </li>
             </ul>
@@ -225,12 +225,15 @@
           <code class="language-html">
             <pre>
 1.{{ $t('block1.title4') }}:
-    npm i vue-img-cutter@2 -S # For vue2
-    npm i vue-img-cutter@3 -S # For vue3
-                        </pre>
+  npm i vue-img-cutter@2 -S # For vue2
+  npm i vue-img-cutter@3 -S # For vue3
+            </pre>
           </code>
           <code class="language-html">
-            <pre>2.{{ $t('block1.title5') }}: import ImgCutter from 'vue-img-cutter';</pre>
+            <pre>2.{{ $t('block1.title5') }}: 
+  import ImgCutter from 'vue-img-cutter';
+  import 'vue-img-cutter/vue-img-cutter.css';
+            </pre>
           </code>
           <code class="language-html">
             <pre>3.{{ $t('block1.title6') }} components: components: { ImgCutter }</pre>
@@ -1086,6 +1089,7 @@
 </template>
 
 <script lang="ts">
+    import { i18n } from '@/i18n';
     import { defineComponent } from 'vue';
     import config from '../package.json';
     import ImgCutter from './components/ImgCutter.vue';
@@ -1213,6 +1217,7 @@
             //    this.forIe9();
         },
         methods: {
+          i18n,
             afterChooseImg(res: any) {
                 console.log('afterChooseImg', res);
                 return new Promise<boolean>((resolve) => {

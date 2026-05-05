@@ -29,7 +29,9 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Build
-        run: npm run build:page
+        run: npm run build:page --mode=page
+        env:
+          NODE_ENV: production
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
