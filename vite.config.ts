@@ -8,6 +8,7 @@ export default defineConfig(({ command, mode }) => {
   const isPage = mode === 'page';
 
   return {
+    base: './',
     plugins: [
       vue(),
       ...(isPage ? [] : [dts({
@@ -29,12 +30,6 @@ export default defineConfig(({ command, mode }) => {
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, 'index.html'), // 网页必须用 index.html
-        },
-        output: {
-          globals: {
-            vue: 'Vue',
-            'vue-i18n': 'VueI18n',
-          },
         },
       },
       outDir: 'dist-page'
