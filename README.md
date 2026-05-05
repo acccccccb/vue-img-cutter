@@ -50,7 +50,7 @@ Github：[https://github.com/acccccccb/vue-img-cutter](https://github.com/accccc
 
 ```shell
 npm install vue-img-cutter@2 --save-dev # for vue2
-npm install vue-img-cutter@3 --save-dev # for vue3
+npm install vue-img-cutter@3 --save-dev # for vue3 + vite + typescript
 ```
 
 2. Import ImgCutter.vue：
@@ -200,6 +200,12 @@ ForIE9:function(){
 ![支付宝](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
 
 ### Update log：
+
+---
+
+#### 3.1.0
+
+- Refactored to Vue 3 + Vite + TypeScript 
 
 #### 3.0.7
 

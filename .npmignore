@@ -1,5 +1,5 @@
 /*
 /**/*
 !/src/components/*.vue
-!/src/index.js
+!/src/index.ts
 !/package.json

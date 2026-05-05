@@ -249,193 +249,204 @@
         </transition>
     </div>
 </template>
-<script>
+<script lang="ts">
+    import { defineComponent, PropType } from 'vue';
     import config from '../../package.json';
 
-    export default {
+    interface DrawImg {
+        img: HTMLImageElement | null;
+        sx: number;
+        sy: number;
+        swidth: number;
+        sheight: number;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    }
+
+    interface ToolBox {
+        disable: boolean;
+        width: number;
+        height: number;
+        x: number;
+        y: number;
+        boxMove: {
+            start: { x: number; y: number };
+            moveTo: { x: number; y: number };
+        };
+    }
+
+    interface DropImg {
+        active: boolean;
+        pageX: number;
+        pageY: number;
+        params: Partial<DrawImg>;
+    }
+
+    interface RotateControl {
+        active: boolean;
+        start: {
+            x: number;
+            y: number;
+            position: number;
+        };
+        position: number;
+    }
+
+    export default defineComponent({
         name: 'ImgCutter',
         props: {
             modalTitle: {
-                // 弹窗标题文字
                 type: String,
                 default: '图片裁剪',
                 required: false,
             },
             crossOrigin: {
-                // 是否设置图片跨域
                 type: Boolean,
                 default: false,
                 required: false,
             },
             crossOriginHeader: {
-                // 是否设置图片跨域
                 type: String,
                 default: '*',
                 required: false,
             },
             label: {
-                // 按钮文字
                 type: String,
                 default: '选择图片',
                 required: false,
             },
             isModal: {
-                // 是否已弹窗形式展示
                 type: Boolean,
                 default: true,
                 required: false,
             },
             lockScroll: {
-                // 是否在弹窗出现时锁定body
                 type: Boolean,
                 default: true,
                 required: false,
             },
             showChooseBtn: {
-                // 是否显示选择图片按钮 如果需要兼容IE9 则将此参数改为false
                 type: Boolean,
                 default: true,
                 required: false,
             },
             boxWidth: {
-                // 裁剪窗口高度
                 type: Number,
                 default: 800,
                 required: false,
             },
             boxHeight: {
-                // 裁剪窗口高度
                 type: Number,
                 default: 400,
                 required: false,
             },
             cutWidth: {
-                // 默认裁剪宽度
                 type: Number,
                 default: 200,
                 required: false,
             },
             cutHeight: {
-                // 默认裁剪高度
                 type: Number,
                 default: 200,
                 required: false,
             },
             rate: {
-                // 按比例裁剪
-                type: String,
+                type: String as PropType<string | null>,
                 default: null,
                 required: false,
             },
             tool: {
-                // 是否显示工具栏
                 type: Boolean,
                 default: true,
                 required: false,
             },
             toolBgc: {
-                // 工具栏背景色
                 type: String,
                 default: '#fff',
                 required: false,
             },
             imgMove: {
-                // 能否拖动图片
                 type: Boolean,
                 default: true,
                 required: false,
             },
             sizeChange: {
-                // 能否调整裁剪尺寸
                 type: Boolean,
                 default: true,
                 required: false,
             },
             originalGraph: {
-                // 是否为原图裁剪
                 type: Boolean,
                 default: false,
                 required: false,
             },
             moveAble: {
-                // 能否调整裁剪区域位置
                 type: Boolean,
                 default: true,
                 required: false,
             },
             previewMode: {
-                // 裁剪过程中是否返回裁剪结果 裁剪原图卡顿时将此项设置为false
                 type: Boolean,
                 default: true,
                 required: false,
             },
             CuttingOriginal: {
-                // 是否裁剪原图
                 type: Boolean,
                 default: false,
                 required: false,
             },
             WatermarkText: {
-                // 水印文字
                 type: String,
                 default: '',
                 required: false,
             },
             WatermarkTextFont: {
-                // 水印文字样式
                 type: String,
                 default: '12px Sans-serif',
                 required: false,
             },
             WatermarkTextColor: {
-                // 水印文字颜色
                 type: String,
                 default: '#fff',
                 required: false,
             },
             WatermarkTextX: {
-                // 水印横向位置
                 type: Number,
                 default: 0.95,
                 required: false,
             },
             WatermarkTextY: {
-                // 水印纵向位置
                 type: Number,
                 default: 0.95,
                 required: false,
             },
             smallToUpload: {
-                // 选择的图片宽高均小于裁剪宽高度时候直接上传原图
                 type: Boolean,
                 default: false,
                 required: false,
             },
             saveCutPosition: {
-                // 是否保存上一次裁剪位置
                 type: Boolean,
                 default: false,
                 required: false,
             },
             scaleAble: {
-                // 是否允许缩放图片
                 type: Boolean,
                 default: true,
                 required: false,
             },
             index: {
-                // 自定义参数 返回结果时会带入此值
                 default: null,
                 required: false,
             },
             fileType: {
-                // 文件类型
                 default: 'png',
                 required: false,
                 type: String,
             },
             toolBoxOverflow: {
-                // 是否允许裁剪框超出图片
                 type: Boolean,
                 default: true,
                 required: false,
@@ -445,7 +456,6 @@
                 default: false,
                 required: false,
             },
-            // 裁剪后的图片质量
             quality: {
                 type: Number,
                 default: 1,
@@ -456,14 +466,21 @@
                 default: 'image/gif, image/jpeg ,image/png',
                 required: false,
             },
-            // 选择图片后 绘制到画布前触发
             afterChooseImg: {
-                type: Function,
+                type: Function as PropType<(e: Event) => Promise<boolean> | boolean>,
                 default: null,
                 required: false,
             },
         },
-        model: ['label', 'boxWidth', 'boxHeight', 'rate', 'tool', 'DoNotDisplayCopyright'],
+        emits: [
+            'onImageLoadError',
+            'error',
+            'onImageLoadComplete',
+            'onChooseImg',
+            'onClearAll',
+            'cutDown',
+            'onPrintImg'
+        ],
         data() {
             let toolBoxWidth, toolBoxHeight;
 
@@ -473,23 +490,23 @@
                 version: '',
                 visible: false,
                 fileName: '',
-                cutImageObj: null,
-                onPrintImgTimmer: null,
+                cutImageObj: null as HTMLImageElement | null,
+                onPrintImgTimmer: null as any,
                 toolBoxPosition: {
                     x: 0,
                     y: 0,
                 },
                 drawImg: {
-                    img: null, //规定要使用的图像、画布或视频
-                    sx: 0, //开始剪切的 x 坐标位置
-                    sy: 0, //开始剪切的 y 坐标位置
-                    swidth: 0, //被剪切图像的宽度
-                    sheight: 0, //被剪切图像的高度
-                    x: 0, //在画布上放置图像的 x 坐标位置
-                    y: 0, //在画布上放置图像的 y 坐标位置
-                    width: 0, //要使用的图像的宽度
-                    height: 0, //要使用的图像的高度
-                },
+                    img: null,
+                    sx: 0,
+                    sy: 0,
+                    swidth: 0,
+                    sheight: 0,
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 0,
+                } as DrawImg,
                 toolBox: {
                     disable: true,
                     width: toolBoxWidth,
@@ -506,14 +523,13 @@
                             y: 0,
                         },
                     },
-                },
+                } as ToolBox,
                 dropImg: {
                     active: false,
                     pageX: 0,
                     pageY: 0,
                     params: {},
-                },
-                // 旋转
+                } as DropImg,
                 rotateImg: {
                     angle: 0,
                 },
@@ -522,10 +538,10 @@
                     start: {
                         x: 0,
                         y: 0,
+                        position: 0,
                     },
                     position: 100,
-                },
-                // 缩放
+                } as RotateControl,
                 scaleImg: {
                     rate: 0,
                     params: {},
@@ -542,8 +558,8 @@
                 },
                 selectBox: false,
                 selectBoxColor: 'rgba(0,0,0,0.6)',
-                isFlipHorizontal: false, //是否水平翻转
-                isFlipVertically: false, // 是否垂直翻转
+                isFlipHorizontal: false,
+                isFlipVertically: false,
             };
         },
         mounted() {
@@ -553,18 +569,18 @@
                 this.visible = true;
                 this.$nextTick(() => {
                     if (this.$refs['toolBox']) {
-                        this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
-                        this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
+                        (this.$refs['toolBox'] as any).onmousewheel = this.scaleImgWheel;
+                        (this.$refs['toolBox'] as any).addEventListener('DOMMouseScroll', this.scaleImgWheel);
                     }
                 });
             }
         },
         methods: {
-            handleOpen(img) {
-                let init = (callback) => {
+            handleOpen(img: any) {
+                let init = (callback?: () => void) => {
                     if (this.$refs['toolBox']) {
-                        this.$refs['toolBox'].onmousewheel = this.scaleImgWheel;
-                        this.$refs['toolBox'].addEventListener('DOMMouseScroll', this.scaleImgWheel);
+                        (this.$refs['toolBox'] as any).onmousewheel = this.scaleImgWheel;
+                        (this.$refs['toolBox'] as any).addEventListener('DOMMouseScroll', this.scaleImgWheel);
                     }
 
                     // 判断下窗口高度
@@ -572,11 +588,11 @@
                         if (this.lockScroll === true) {
                             document.body.style.overflowY = 'hidden';
                         }
-                        let dialogBoxHeight = this.$refs['dialogMainModalRef'].offsetHeight + 200;
+                        let dialogBoxHeight = (this.$refs['dialogMainModalRef'] as HTMLElement).offsetHeight + 200;
 
                         let windowHeight = window.innerHeight;
 
-                        let mask = this.$refs['mask'];
+                        let mask = this.$refs['mask'] as HTMLElement;
 
                         if (dialogBoxHeight > windowHeight) {
                             mask.style.overflowY = 'scroll';
@@ -604,7 +620,7 @@
                         // $image.style.height = '1px';
                         $image.style.position = 'fixed';
                         $image.style.top = -5000 + 'px';
-                        $image.style.opacity = 0;
+                        $image.style.opacity = '0';
 
                         $image.onerror = (err) => {
                             this.$emit('onImageLoadError', err);
@@ -663,9 +679,9 @@
             },
             // 选择图片 e.stopPropagation();
             chooseImg() {
-                this.$refs['inputFile'].click();
+                (this.$refs['inputFile'] as HTMLInputElement).click();
             },
-            importImgToCanv(img) {
+            importImgToCanv(img: HTMLImageElement) {
                 let imgHeight = img.height;
 
                 let imgWidth = img.width;
@@ -707,7 +723,7 @@
                 this.putToolBox();
             },
             // 将选择的图片绘制到画布
-            async putImgToCanv(e) {
+            async putImgToCanv(e: any) {
                 let pass = false;
 
                 if (typeof this.afterChooseImg === 'function') {
@@ -718,7 +734,7 @@
                 if (!pass) {
                     return;
                 }
-                let file;
+                let file: File | null = null;
 
                 if (e.target.files) {
                     file = e.target.files[0] || null;
@@ -754,7 +770,7 @@
                         });
                         return;
                     };
-                    reader.onload = (result) => {
+                    reader.onload = (result: any) => {
                         // 图片base64化
                         let newUrl = result.target.result;
 
@@ -771,9 +787,9 @@
                                     img.height <= this.cutHeight
                                 ) {
                                     this.handleClose();
-                                    file.name = this.changeFileName(file.name, this.fileType);
+                                    const fileName = this.changeFileName((file as File).name, this.fileType);
                                     this.$emit('cutDown', {
-                                        filename: this.changeFileName(file.name, this.fileType),
+                                        filename: fileName,
                                         file: file,
                                         index: this.index,
                                     });
@@ -844,7 +860,7 @@
             },
             // 判断裁剪框是否超出图片
             checkToolBoxOverflow() {
-                return new Promise((resolve) => {
+                return new Promise<void>((resolve) => {
                     if (!this.toolBoxOverflow) {
                         // 如果裁剪框不能超出图片 则先判断图片尺寸
                         // 如果图片尺寸长宽都超过裁剪框 不做处理
@@ -901,10 +917,10 @@
                 }
                 return false;
             },
-            dataURLtoFile(dataurl, filename) {
+            dataURLtoFile(dataurl: string, filename: string) {
                 //将图片转换为Base64
                 let arr = dataurl.split(','),
-                    mime = arr[0].match(/:(.*?);/)[1],
+                    mime = (arr[0].match(/:(.*?);/) as any)[1],
                     bstr = atob(arr[1]),
                     n = bstr.length,
                     u8arr = new Uint8Array(n);
@@ -923,16 +939,18 @@
             clearAll() {
                 let _this = this;
 
-                let c = _this.$refs['canvas'];
+                let c = _this.$refs['canvas'] as HTMLCanvasElement;
 
                 let ctx = c.getContext('2d');
-
-                ctx.clearRect(0, 0, c.width, c.height);
-                let c1 = _this.$refs['canvasSelectBox'];
+                if (ctx) {
+                    ctx.clearRect(0, 0, c.width, c.height);
+                }
+                let c1 = _this.$refs['canvasSelectBox'] as HTMLCanvasElement;
 
                 let ctx1 = c1.getContext('2d');
-
-                ctx1.clearRect(0, 0, c1.width, c1.height);
+                if (ctx1) {
+                    ctx1.clearRect(0, 0, c1.width, c1.height);
+                }
                 let sx = _this.drawImg.sx;
 
                 let sy = _this.drawImg.sy;
@@ -950,7 +968,7 @@
                 };
                 this.isFlipHorizontal = false;
                 this.isFlipVertically = false;
-                this.$refs['inputFile'].value = '';
+                (this.$refs['inputFile'] as HTMLInputElement).value = '';
                 this.rotateImg.angle = 0;
                 this.drawImg.img = null;
                 this.turnReset();
@@ -961,14 +979,14 @@
                 if (this.cutImageObj !== null && this.cutImageObj !== undefined) {
                     if (typeof this.cutImageObj.remove === 'function') {
                         this.cutImageObj.remove();
-                    } else {
-                        this.cutImageObj.removeNode();
+                    } else if ((this.cutImageObj as any).removeNode) {
+                        (this.cutImageObj as any).removeNode();
                     }
                 }
                 this.cutImageObj = null;
             },
             // draw control
-            drawControlBox(width, height, x, y) {
+            drawControlBox(width: number, height: number, x: number, y: number) {
                 // 裁剪框是否能够超出图片
                 if (!this.toolBoxOverflow) {
                     // 如果不允许超出图片范围 则也不允许反选
@@ -1011,11 +1029,12 @@
                 if (y < 0) {
                     y = 0;
                 }
-                let $toolBoxControl = this.$refs['toolBoxControl'];
+                let $toolBoxControl = this.$refs['toolBoxControl'] as HTMLElement;
 
-                let c = this.$refs['canvasSelectBox'];
+                let c = this.$refs['canvasSelectBox'] as HTMLCanvasElement;
 
                 let ctx = c.getContext('2d');
+                if (!ctx) return;
 
                 ctx.fillStyle = this.selectBoxColor;
                 ctx.clearRect(0, 0, c.width, c.height);
@@ -1024,7 +1043,7 @@
                 let toolBoxControlWidth, toolBoxControlHeight;
 
                 if (this.rate && this.rate !== '') {
-                    let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                    let p = Number(this.rate.split(':')[0]) / Number(this.rate.split(':')[1]);
 
                     if (p >= 1) {
                         toolBoxControlWidth = width;
@@ -1095,8 +1114,8 @@
                 this.toolBox.height = Math.abs(this.toolBox.height);
             },
             // toolBoxMouseDown
-            toolBoxMouseDown(e) {
-                let $toolBox = this.$refs['toolBoxControl'];
+            toolBoxMouseDown(e: MouseEvent) {
+                let $toolBox = this.$refs['toolBoxControl'] as HTMLElement;
 
                 this.toolBox.x = parseInt($toolBox.style.left.split('px')[0]);
 
@@ -1109,7 +1128,7 @@
                     y: e.pageY,
                 };
             },
-            toolBoxMouseMove(e) {
+            toolBoxMouseMove(e: MouseEvent) {
                 if (this.dropImg.active) {
                     this.dropImgMove(e);
                 }
@@ -1136,8 +1155,8 @@
                 this.resetToolBox();
             },
             toolBoxMouseUp() {
-                this.toolBox.x = parseInt(this.toolBoxPosition.x);
-                this.toolBox.y = parseInt(this.toolBoxPosition.y);
+                this.toolBox.x = parseInt(String(this.toolBoxPosition.x));
+                this.toolBox.y = parseInt(String(this.toolBoxPosition.y));
                 this.toolBox.disable = true;
                 this.dropImg.active = false;
                 this.resetToolBox();
@@ -1145,9 +1164,10 @@
             // 绘制图片
             printImg() {
                 if (this.drawImg.img) {
-                    let canv = this.$refs['canvas'];
+                    let canv = this.$refs['canvas'] as HTMLCanvasElement;
 
                     let ctx = canv.getContext('2d');
+                    if (!ctx) return;
 
                     // 文字水印
                     ctx.font = '18px bold 黑体';
@@ -1166,7 +1186,7 @@
                     ctx.scale(this.isFlipHorizontal ? -1 : 1, this.isFlipVertically ? -1 : 1);
                     try {
                         ctx.drawImage(
-                            this.drawImg.img,
+                            this.drawImg.img as CanvasImageSource,
                             this.drawImg.sx,
                             this.drawImg.sy,
                             this.drawImg.swidth,
@@ -1176,7 +1196,7 @@
                             this.drawImg.width,
                             this.drawImg.height
                         );
-                    } catch (err) {
+                    } catch (err: any) {
                         console.error(err);
                         if (this.onPrintImgTimmer) {
                             clearTimeout(this.onPrintImgTimmer);
@@ -1200,7 +1220,7 @@
                 }
             },
             // 拖动图片
-            dropImgOn(e) {
+            dropImgOn(e: MouseEvent) {
                 if (this.imgMove === true) {
                     this.dropImg.active = true;
                     this.dropImg.params = { ...this.drawImg };
@@ -1217,11 +1237,11 @@
                     this.cropPicture(true);
                 }, 100);
             },
-            dropImgMove(e) {
+            dropImgMove(e: MouseEvent) {
                 if (this.dropImg.active && this.drawImg.img) {
                     let drawImg = { ...this.drawImg };
-                    drawImg.x = this.dropImg.params.x - (this.dropImg.pageX - e.pageX);
-                    drawImg.y = this.dropImg.params.y - (this.dropImg.pageY - e.pageY);
+                    drawImg.x = (this.dropImg.params.x || 0) - (this.dropImg.pageX - e.pageX);
+                    drawImg.y = (this.dropImg.params.y || 0) - (this.dropImg.pageY - e.pageY);
                     // 裁剪框是否能够超出图片
                     if (!this.toolBoxOverflow) {
                         if (drawImg.x > this.toolBox.x) {
@@ -1250,12 +1270,12 @@
                 this.drawImg.height = this.drawImg.sheight;
                 this.printImg();
             },
-            scaleImgWheel(e) {
+            scaleImgWheel(e: any) {
                 if (this.drawImg.img && this.scaleAble === true) {
                     let scale;
 
                     // e是FF的事件。window.event是chrome/ie/opera的事件
-                    let ee = e || window.event;
+                    let ee = e || (window as any).event;
 
                     if (ee.wheelDelta) {
                         //IE/Opera/Chrome
@@ -1263,6 +1283,8 @@
                     } else if (ee.detail) {
                         //Firefox
                         scale = ee.detail;
+                    } else {
+                        scale = 0;
                     }
 
                     let widthLimit = 50;
@@ -1313,7 +1335,7 @@
                 }
             },
             // 旋转
-            turnImg(angle) {
+            turnImg(angle: number) {
                 let startAngle = this.rotateImg.angle;
 
                 let turnAngle = startAngle + angle;
@@ -1321,16 +1343,16 @@
                 if (turnAngle >= -180 && turnAngle <= 180) {
                     this.rotateImg.angle = turnAngle;
                     this.rotateControl.position = (turnAngle / 180) * 100 + 100;
-                    this.printImg('rotate');
+                    this.printImg();
                 }
             },
             turnReset() {
                 this.rotateImg.angle = 0;
                 this.rotateControl.position = 100;
-                this.printImg('rotate');
+                this.printImg();
             },
             // control box
-            controlBtnMouseDown(e, btnName) {
+            controlBtnMouseDown(e: MouseEvent, btnName: string) {
                 this.controlBox.disable = false;
                 this.controlBox.btnName = btnName;
                 this.controlBox.start.x = e.clientX;
@@ -1339,7 +1361,7 @@
                 this.controlBox.start.height = this.toolBox.height;
                 e.stopPropagation();
             },
-            controlBtnMouseUp(e) {
+            controlBtnMouseUp(e: MouseEvent) {
                 this.controlBox.disable = true;
                 this.dropImgOff();
                 this.resetToolBox();
@@ -1348,7 +1370,7 @@
                 e.stopPropagation();
             },
 
-            controlBtnMouseMove(e) {
+            controlBtnMouseMove(e: MouseEvent) {
                 if (this.controlBox.disable === false) {
                     let offsetX = e.clientX - this.controlBox.start.x;
 
@@ -1361,7 +1383,7 @@
                             x = this.toolBox.x + offsetX;
                             y = this.toolBox.y + offsetY;
                         } else {
-                            let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                            let p = Number(this.rate.split(':')[0]) / Number(this.rate.split(':')[1]);
 
                             if (p >= 1) {
                                 x = this.toolBox.x + offsetX;
@@ -1379,7 +1401,7 @@
                             x = this.toolBox.x;
                             y = this.toolBox.y + offsetY;
                         } else {
-                            let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                            let p = Number(this.rate.split(':')[0]) / Number(this.rate.split(':')[1]);
 
                             if (p >= 1) {
                                 x = this.toolBox.x;
@@ -1403,7 +1425,7 @@
                             x = this.toolBox.x + offsetX;
                             y = this.toolBox.y;
                         } else {
-                            let p = this.rate.split(':')[0] / this.rate.split(':')[1];
+                            let p = Number(this.rate.split(':')[0]) / Number(this.rate.split(':')[1]);
 
                             if (p >= 1) {
                                 x = this.toolBox.x + offsetX;
@@ -1440,7 +1462,9 @@
                         this.toolBox.width = this.controlBox.start.width + offsetX;
                         this.toolBox.height = this.controlBox.start.height;
                     }
-                    this.drawControlBox(this.toolBox.width, this.toolBox.height, x, y);
+                    if (x !== undefined && y !== undefined) {
+                        this.drawControlBox(this.toolBox.width, this.toolBox.height, x, y);
+                    }
                 }
                 // 旋转
                 if (this.rotateControl.active) {
@@ -1448,31 +1472,32 @@
                 }
                 e.stopPropagation();
             },
-            changeFileName(fileName, type) {
+            changeFileName(fileName: string, type: string) {
                 let index = fileName.lastIndexOf('.');
 
                 return fileName.substr(0, index + 1) + (type === 'jpeg' ? 'jpg' : type);
             },
-            cropPicture(doNotReset) {
+            cropPicture(doNotReset: boolean) {
                 let _this = this;
 
                 if (this.drawImg.img) {
                     // get img
-                    let canvas = this.$refs['canvas'];
+                    let canvas = this.$refs['canvas'] as HTMLCanvasElement;
 
                     // 文字水印
                     if (this.WatermarkText && !doNotReset) {
                         let ctx2 = canvas.getContext('2d');
-
-                        ctx2.font = this.WatermarkTextFont;
-                        ctx2.fillStyle = this.WatermarkTextColor;
-                        ctx2.textAlign = 'right';
-                        ctx2.textBaseline = 'bottom';
-                        ctx2.fillText(
-                            this.WatermarkText,
-                            this.toolBox.x + this.toolBox.width * this.WatermarkTextX,
-                            this.toolBox.y + this.toolBox.height * this.WatermarkTextY
-                        );
+                        if (ctx2) {
+                            ctx2.font = this.WatermarkTextFont;
+                            ctx2.fillStyle = this.WatermarkTextColor;
+                            ctx2.textAlign = 'right';
+                            ctx2.textBaseline = 'bottom';
+                            ctx2.fillText(
+                                this.WatermarkText,
+                                this.toolBox.x + this.toolBox.width * this.WatermarkTextX,
+                                this.toolBox.y + this.toolBox.height * this.WatermarkTextY
+                            );
+                        }
                     }
 
                     let tempImg = new Image();
@@ -1484,8 +1509,8 @@
 
                     if (!HTMLCanvasElement.prototype.toBlob) {
                         Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-                            value: (callback, type, quality) => {
-                                if (window.atob) {
+                            value: (callback: (blob: Blob | null) => void, type: string, quality: number) => {
+                                if ((window as any).atob) {
                                     setTimeout(() => {
                                         let binStr = atob(canvas.toDataURL(type, quality).split(',')[1]);
 
@@ -1501,14 +1526,14 @@
                                             NewBlob = new Blob([arr], {
                                                 type: `image/${_this.fileType}`,
                                             });
-                                        } catch (e) {
-                                            window.BlobBuilder =
-                                                window.BlobBuilder ||
-                                                window.WebKitBlobBuilder ||
-                                                window.MozBlobBuilder ||
-                                                window.MSBlobBuilder;
-                                            if (e.name == 'TypeError' && window.BlobBuilder) {
-                                                const BlobBuilder = window.BlobBuilder;
+                                        } catch (e: any) {
+                                            (window as any).BlobBuilder =
+                                                (window as any).BlobBuilder ||
+                                                (window as any).WebKitBlobBuilder ||
+                                                (window as any).MozBlobBuilder ||
+                                                (window as any).MSBlobBuilder;
+                                            if (e.name == 'TypeError' && (window as any).BlobBuilder) {
+                                                const BlobBuilder = (window as any).BlobBuilder;
 
                                                 let bb = new BlobBuilder();
 
@@ -1520,12 +1545,10 @@
                                             }
                                         }
                                         // TypeError old chrome and FF
-                                        callback(NewBlob);
+                                        callback(NewBlob as Blob);
                                     }, 200);
                                 } else {
-                                    callback(false, {
-                                        type: `image/${_this.fileType}`,
-                                    });
+                                    callback(null);
                                 }
                             },
                         });
@@ -1545,7 +1568,7 @@
                                             let ctx = newCanv.getContext('2d');
 
                                             // 原图裁剪 originalGraph
-                                            if (_this.originalGraph == true) {
+                                            if (_this.originalGraph == true && _this.drawImg.img) {
                                                 let scale = _this.drawImg.width / _this.drawImg.swidth;
 
                                                 // 计算实际图像大小
@@ -1568,19 +1591,21 @@
                                                 // ctx.translate(sx + transWidth/2, sy + transHeight/2);
                                                 // ctx.rotate((_this.rotateImg.angle) * Math.PI / 180);
                                                 // ctx.translate(-(sx + transWidth/2), -(sy + transHeight/2));
-                                                ctx.translate(-sx, -sy);
-                                                ctx.drawImage(_this.drawImg.img, 0, 0, swidth, sheight);
+                                                if (ctx) {
+                                                    ctx.translate(-sx, -sy);
+                                                    ctx.drawImage(_this.drawImg.img, 0, 0, swidth, sheight);
+                                                }
                                             } else {
                                                 newCanv.width = _this.toolBox.width;
                                                 newCanv.height = _this.toolBox.height;
                                                 let params = _this.toolBox;
 
-                                                if (_this.rate) {
-                                                    let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
+                                                if (_this.rate && ctx) {
+                                                    let p = Number(_this.rate.split(':')[0]) / Number(_this.rate.split(':')[1]);
 
-                                                    let m = _this.rate.split(':')[0];
+                                                    let m = Number(_this.rate.split(':')[0]);
 
-                                                    let n = _this.rate.split(':')[1];
+                                                    let n = Number(_this.rate.split(':')[1]);
 
                                                     if (m >= n) {
                                                         ctx.drawImage(
@@ -1607,7 +1632,7 @@
                                                             params.width / p
                                                         );
                                                     }
-                                                } else {
+                                                } else if (ctx) {
                                                     ctx.drawImage(
                                                         tempImg,
                                                         params.x,
@@ -1680,8 +1705,8 @@
 
                                 let params = _this.toolBox;
 
-                                if (_this.rate) {
-                                    let p = _this.rate.split(':')[0] / _this.rate.split(':')[1];
+                                if (_this.rate && ctx) {
+                                    let p = Number(_this.rate.split(':')[0]) / Number(_this.rate.split(':')[1]);
 
                                     ctx.drawImage(
                                         tempImg,
@@ -1694,7 +1719,7 @@
                                         params.width,
                                         params.width * p
                                     );
-                                } else {
+                                } else if (ctx) {
                                     ctx.drawImage(
                                         tempImg,
                                         params.x,
@@ -1737,7 +1762,7 @@
                     }
                 }
             },
-            scrollBarControlMove(e) {
+            scrollBarControlMove(e: MouseEvent) {
                 if (this.rotateControl.active) {
                     let offsetX = e.pageX - this.rotateControl.start.x;
 
@@ -1755,7 +1780,7 @@
                     this.printImg();
                 }
             },
-            scrollBarControlOn(e) {
+            scrollBarControlOn(e: MouseEvent) {
                 this.rotateControl.active = true;
                 this.rotateControl.start.x = e.pageX;
                 this.rotateControl.start.y = e.pageY;
@@ -1795,7 +1820,7 @@
                 return Number(result).toFixed(0);
             },
         },
-    };
+    });
 </script>
 <style scoped>
     .vue-img-cutter {

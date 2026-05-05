@@ -771,11 +771,47 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+    import { defineComponent } from 'vue';
     import config from '../package.json';
     import ImgCutter from './components/ImgCutter.vue';
 
-    export default {
+    interface Params {
+        modalTitle: string;
+        label: string;
+        fileType: string;
+        crossOrigin: boolean;
+        crossOriginHeader: string;
+        rate: string;
+        toolBgc: string;
+        isModal: boolean;
+        showChooseBtn: boolean;
+        saveCutPosition: boolean;
+        scaleAble: boolean;
+        lockScroll: boolean;
+        toolBoxOverflow: boolean;
+        quality: number;
+        boxWidth: number;
+        boxHeight: number;
+        cutWidth: number;
+        cutHeight: number;
+        sizeChange: boolean;
+        moveAble: boolean;
+        imgMove: boolean;
+        tool: boolean;
+        originalGraph: boolean;
+        WatermarkText: string;
+        WatermarkTextFont: string;
+        WatermarkTextColor: string;
+        WatermarkTextX: number;
+        WatermarkTextY: number;
+        smallToUpload: boolean;
+        previewMode: boolean;
+        index: string;
+        accept: string;
+    }
+
+    export default defineComponent({
         name: 'App',
         components: {
             ImgCutter,
@@ -796,15 +832,15 @@
                 npm: 'https://www.npmjs.com/package/vue-img-cutter',
                 cutImgWidth: 250,
                 cutImgHeight: 250,
-                imgSrc: null,
+                imgSrc: '',
                 downloadName: '',
                 refresh: true,
                 isForIe9: false,
                 loadImg: false,
-                onPrintImgTimmer: null,
+                onPrintImgTimmer: null as any,
                 params: {
-                    modalTitle: this.$t('block3.title10'),
-                    label: this.$t('block3.title9'),
+                    modalTitle: (this as any).$t('block3.title10'),
+                    label: (this as any).$t('block3.title9'),
                     fileType: 'jpeg',
                     crossOrigin: true,
                     crossOriginHeader: '*',
@@ -835,12 +871,12 @@
                     previewMode: true,
                     index: '',
                     accept: 'image/gif, image/jpeg ,image/png',
-                },
+                } as Params,
                 code1: '',
                 code2:
                     '\n' +
                     '// ' +
-                    this.$t('block3.title4') +
+                    (this as any).$t('block3.title4') +
                     '\n' +
                     'forIe9:() => {\n' +
                     '   this.$refs.imgCutterModal.handleOpen({\n' +
@@ -857,27 +893,27 @@
             this.description = config.description;
         },
         mounted() {
-            let $imgCutterBox = this.$refs.imgCutterBox;
+            let $imgCutterBox = this.$refs.imgCutterBox as HTMLElement;
             this.params.boxWidth = $imgCutterBox.offsetWidth - 30;
             this.createCode();
             //    this.forIe9();
         },
         methods: {
-            afterChooseImg(res) {
+            afterChooseImg(res: any) {
                 console.log('afterChooseImg', res);
-                return new Promise((resolve) => {
+                return new Promise<boolean>((resolve) => {
                     // 阻止选择图片
                     resolve(true);
                 });
             },
-            cutDown: function (res) {
+            cutDown: function (res: any) {
                 console.log('cutDown');
                 console.log(res);
                 this.imgSrc = res.dataURL;
                 this.downloadName = res.fileName;
             },
             forIe9: function () {
-                this.$refs.imgCutterModal.handleOpen({
+                (this.$refs.imgCutterModal as any).handleOpen({
                     name: this.cutImgSrc,
                     src: this.cutImgSrc,
                     // width: this.cutImgWidth,
@@ -895,11 +931,11 @@
                 this.loadImg = false;
                 this.imgSrc = '';
             },
-            onPrintImg: function (res) {
+            onPrintImg: function (res: any) {
                 // 预览图片
                 this.imgSrc = res.dataURL;
             },
-            onChooseImg: function (res) {
+            onChooseImg: function (res: any) {
                 // 选择图片事件
                 if (res) {
                     this.loadImg = true;
@@ -1010,8 +1046,8 @@
                     '</div>\n' +
                     '</ImgCutter>';
             },
-            setData: function ($event) {
-                function isNumber(val) {
+            setData: function ($event: any) {
+                function isNumber(val: any) {
                     let regPos = /^\d+(\.\d+)?$/; //非负浮点数
                     let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
                     if (regPos.test(val) || regNeg.test(val)) {
@@ -1031,24 +1067,24 @@
                 if (isNumber(value) === true) {
                     value = parseInt(value);
                 }
-                this.params[$event.target.name] = value;
+                (this.params as any)[$event.target.name] = value;
                 this.doRefresh();
                 this.createCode();
             },
-            catchInput(e) {
+            catchInput(e: any) {
                 let val = e.target.value;
                 let key = e.target.name;
-                this[key] = val;
+                (this as any)[key] = val;
             },
-            catchError(res) {
+            catchError(res: any) {
                 console.log(res);
                 window.alert(res.msg);
             },
-            pluginExe: function (functionName) {
-                this.$refs.imgCutterModal[functionName]();
+            pluginExe: function (functionName: string) {
+                (this.$refs.imgCutterModal as any)[functionName]();
             },
         },
-    };
+    });
 </script>
 <style scoped>
     .bg {
