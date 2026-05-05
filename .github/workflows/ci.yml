@@ -25,5 +25,7 @@ jobs:
     - name: Lint
       run: npm run lint
 
-    - name: Build
-      run: npm run build:page
+    - name: Build page
+      run: npm run build:page --mode=page
+      env:
+          NODE_ENV: production
