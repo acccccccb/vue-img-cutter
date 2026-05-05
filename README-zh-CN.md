@@ -49,8 +49,8 @@ Github：[https://github.com/acccccccb/vue-img-cutter](https://github.com/accccc
 1. 安装
 
 ```shell
-npm install vue-img-cutter --save-dev # vue2
-npm install vue-img-cutter --save-dev # vue3
+npm install vue-img-cutter@2 --save-dev # vue2
+npm install vue-img-cutter@3 --save-dev # vue3 + vite + typescript
 ```
 
 2. 将 ImgCutter.vue 文件引入项目：
@@ -200,6 +200,12 @@ forIe9:function(){
 ![支付宝](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
 
 ### 更新日志：
+
+---
+
+#### 3.1.0
+
+- 项目重构为 vue3 + vite + typescript
 
 ---
 
