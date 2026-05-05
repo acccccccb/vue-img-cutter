@@ -1,253 +1,332 @@
 <template>
-    <div>
-        <div @click="handleOpen" v-if="showChooseBtn === true && isModal === true">
-            <slot name="openImgCutter"></slot>
-            <slot name="open"></slot>
-        </div>
-        <button
-            type="button"
-            v-if="!$slots.openImgCutter && !$slots.open && isModal === true"
-            class="btn btn-primary"
-            @click="handleOpen"
-        >
-            {{ label }}
-        </button>
-        <transition name="fade">
-            <div v-if="visible" :class="isModal === true ? 'mask vue-img-cutter' : ''" ref="mask">
-                <div :class="isModal === true ? 'dialogBoxModal' : 'dialogBox'" v-if="visible">
-                    <transition
-                        name="fade"
-                        enter-class="fade-in-enter"
-                        enter-active-class="fade-in-active"
-                        leave-class="fade-out-enter"
-                        leave-active-class="fade-out-active"
-                    >
-                        <div
-                            ref="dialogMainModalRef"
-                            :class="isModal === true ? 'dialogMainModal' : 'dialogMain'"
-                            :style="'width:' + (isModal === true ? boxWidth + 32 : boxWidth) + 'px'"
-                        >
-                            <div class="toolMain">
-                                <div class="tool-title" v-if="isModal === true">
-                                    {{ modalTitle }}
-                                    <span class="closeIcon" @click="handleClose">×</span>
-                                </div>
-                                <div
-                                    ref="toolBox"
-                                    :style="'height:' + boxHeight + 'px;width:' + boxWidth + 'px'"
-                                    @mousemove="controlBtnMouseMove"
-                                    @mouseup="controlBtnMouseUp"
-                                    @mouseleave="controlBtnMouseUp"
-                                    class="toolBox"
-                                >
-                                    <!--选取图片-->
-                                    <div class="tips" v-show="!drawImg.img && showChooseBtn === true">
-                                        <div class="btn btn-warning btn-xs" @click="chooseImg">
-                                            {{ label }}
-                                        </div>
-                                    </div>
-                                    <!--工具栏-->
-                                    <div
-                                        v-if="tool == true"
-                                        v-show="
-                                            drawImg.img &&
-                                            dropImg.active !== true &&
-                                            controlBox.disable == true &&
-                                            toolBox.disable == true
-                                        "
-                                        class="dockMain"
-                                        :style="'background:' + toolBgc"
-                                        @mouseenter="dropImgOff"
-                                    >
-                                        <div class="dockBtn" v-if="rate">
-                                            <slot name="ratio"> Ratio: </slot>
-                                            {{ rate }}
-                                        </div>
-                                        <div class="dockBtn" @click="scaleReset">
-                                            <slot name="scaleReset"> Scale: </slot>
-                                            {{ drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-' }}
-                                        </div>
-                                        <div v-if="originalGraph === false" @click="turnImg(-90)" class="dockBtn">
-                                            <slot name="turnLeft"> ↳ </slot>
-                                        </div>
-                                        <div v-if="originalGraph === false" @click="turnImg(90)" class="dockBtn">
-                                            <slot name="turnRight"> ↲ </slot>
-                                        </div>
-                                        <div v-if="originalGraph === false" @click="turnReset()" class="dockBtn">
-                                            <slot name="reset"> ↻ </slot>
-                                        </div>
-                                        <div v-if="originalGraph === false" class="dockBtnScrollBar">
-                                            <div
-                                                ref="dockBtnScrollControl"
-                                                @mousemove="scrollBarControlMove"
-                                                @mousedown="scrollBarControlOn"
-                                                @mouseup="scrollBarControlOff"
-                                                :style="'left:' + rotateControl.position + 'px'"
-                                                class="scrollBarControl"
-                                            ></div>
-                                            <div
-                                                v-if="rotateControl.active == true"
-                                                class="scrollBarText"
-                                                :style="'left:' + rotateControl.position + 'px'"
-                                            >
-                                                {{ rotateImg.angle.toFixed(0) + '°' }}
-                                            </div>
-                                        </div>
-                                        <div v-if="originalGraph === false" @click="flipHorizontal" class="dockBtn">
-                                            <slot name="flipHorizontal"> ⇆ </slot>
-                                        </div>
-                                        <div v-if="originalGraph === false" @click="flipVertically" class="dockBtn">
-                                            <slot name="flipVertically"> ⇅ </slot>
-                                        </div>
-                                    </div>
-                                    <!--裁剪区域-->
-                                    <div
-                                        v-show="drawImg.img != null"
-                                        ref="toolBoxControl"
-                                        @mousedown="toolBoxMouseDown"
-                                        @mouseup="toolBoxMouseUp"
-                                        @mousemove="toolBoxMouseMove"
-                                        @mouseleave="toolBoxMouseLeave"
-                                        class="toolBoxControl"
-                                        :style="{
-                                            pointerEvents: moveAble ? 'auto' : 'none',
-                                        }"
-                                    >
-                                        <div class="toolBoxControlBox">
-                                            <div class="controlBox">
-                                                <!--蚂蚁线-->
-                                                <div class="controlBoxInnerLine controlBoxInnerLineTop"></div>
-                                                <div class="controlBoxInnerLine controlBoxInnerLineBottom"></div>
-                                                <div class="controlBoxInnerLine controlBoxInnerLineLeft"></div>
-                                                <div class="controlBoxInnerLine controlBoxInnerLineRight"></div>
-                                                <!--工具栏提示-->
-                                                <div class="selectArea">
-                                                    宽:{{ showToolBoxWidth }} 高:{{ showToolBoxHeight }} (x:{{
-                                                        showToolBoxX
-                                                    }},y:{{ showToolBoxY }})
-                                                </div>
-                                                <!--操作杆-->
-                                                <div
-                                                    data-name="leftUp"
-                                                    v-if="sizeChange === true"
-                                                    @mousedown="controlBtnMouseDown($event, 'leftUp')"
-                                                    class="leftUp controlBtn"
-                                                ></div>
-                                                <div
-                                                    data-name="leftDown"
-                                                    v-if="sizeChange === true"
-                                                    @mousedown="controlBtnMouseDown($event, 'leftDown')"
-                                                    class="leftDown controlBtn"
-                                                ></div>
-                                                <div
-                                                    data-name="rightUp"
-                                                    v-if="sizeChange === true"
-                                                    @mousedown="controlBtnMouseDown($event, 'rightUp')"
-                                                    class="rightUp controlBtn"
-                                                ></div>
-                                                <div
-                                                    data-name="rightDown"
-                                                    v-if="sizeChange === true"
-                                                    @mousedown="controlBtnMouseDown($event, 'rightDown')"
-                                                    class="rightDown controlBtn"
-                                                ></div>
-
-                                                <div
-                                                    data-name="topCenter"
-                                                    v-if="sizeChange === true && !rate && toolBox.width > 20"
-                                                    @mousedown="controlBtnMouseDown($event, 'topCenter')"
-                                                    class="topCenter controlBtn"
-                                                ></div>
-                                                <div
-                                                    data-name="downCenter"
-                                                    v-if="sizeChange === true && !rate && toolBox.width > 20"
-                                                    @mousedown="controlBtnMouseDown($event, 'downCenter')"
-                                                    class="downCenter controlBtn"
-                                                ></div>
-                                                <div
-                                                    data-name="leftCenter"
-                                                    v-if="sizeChange === true && !rate && toolBox.height > 20"
-                                                    @mousedown="controlBtnMouseDown($event, 'leftCenter')"
-                                                    class="leftCenter controlBtn"
-                                                ></div>
-                                                <div
-                                                    data-name="rightCenter"
-                                                    v-if="sizeChange === true && !rate && toolBox.height > 20"
-                                                    @mousedown="controlBtnMouseDown($event, 'rightCenter')"
-                                                    class="rightCenter controlBtn"
-                                                ></div>
-                                            </div>
-                                            <div class="toolBoxControlLine toolBoxControlLineItem-1"></div>
-                                            <div class="toolBoxControlLine toolBoxControlLineItem-2"></div>
-                                            <div class="toolBoxControlLine toolBoxControlLineItem-3"></div>
-                                            <div class="toolBoxControlLine toolBoxControlLineItem-4"></div>
-                                        </div>
-                                    </div>
-                                    <div class="copyright">
-                                        <a
-                                            v-if="!DoNotDisplayCopyright"
-                                            target="_blank"
-                                            href="https://github.com/acccccccb/vue-img-cutter"
-                                            rel="nofollow"
-                                        >
-                                            vue-img-cutter {{ version }}
-                                        </a>
-                                    </div>
-                                    <!--画布-->
-                                    <canvas
-                                        class="canvasSelectBox"
-                                        ref="canvasSelectBox"
-                                        :width="boxWidth"
-                                        @mousedown="dropImgOn"
-                                        @mouseup="dropImgOff"
-                                        @mousemove="dropImgMove"
-                                        :height="boxHeight"
-                                    ></canvas>
-                                    <canvas class="canvas" ref="canvas" :width="boxWidth" :height="boxHeight"></canvas>
-                                </div>
-                            </div>
-                            <div class="i-dialog-footer" style="height: 40px">
-                                <input
-                                    @change="putImgToCanv"
-                                    ref="inputFile"
-                                    type="file"
-                                    :accept="accept"
-                                    style="width: 1px; height: 1px; border: none; opacity: 0"
-                                />
-                                <span @click="chooseImg">
-                                    <slot name="choose">
-                                        <div class="btn btn-primary btn-primary-plain" v-if="showChooseBtn === true">
-                                            {{ label }}
-                                        </div>
-                                    </slot>
-                                </span>
-                                <div class="btn-group fr">
-                                    <span @click="handleClose">
-                                        <slot name="cancel">
-                                            <button type="button" class="btn btn-default">取消</button>
-                                        </slot>
-                                    </span>
-                                    <span @click="cropPicture(false)">
-                                        <slot name="confirm">
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary"
-                                                style="margin-left: 15px"
-                                                :disabled="!drawImg.img"
-                                            >
-                                                确定
-                                            </button>
-                                        </slot>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </transition>
-                    <div style="clear: both"></div>
-                </div>
-            </div>
-        </transition>
+  <div>
+    <div
+      v-if="showChooseBtn === true && isModal === true"
+      @click="handleOpen"
+    >
+      <slot name="openImgCutter" />
+      <slot name="open" />
     </div>
+    <button
+      v-if="!$slots.openImgCutter && !$slots.open && isModal === true"
+      type="button"
+      class="btn btn-primary"
+      @click="handleOpen"
+    >
+      {{ label }}
+    </button>
+    <transition name="fade">
+      <div
+        v-if="visible"
+        ref="mask"
+        :class="isModal === true ? 'mask vue-img-cutter' : ''"
+      >
+        <div
+          v-if="visible"
+          :class="isModal === true ? 'dialogBoxModal' : 'dialogBox'"
+        >
+          <transition
+            name="fade"
+            enter-class="fade-in-enter"
+            enter-active-class="fade-in-active"
+            leave-class="fade-out-enter"
+            leave-active-class="fade-out-active"
+          >
+            <div
+              ref="dialogMainModalRef"
+              :class="isModal === true ? 'dialogMainModal' : 'dialogMain'"
+              :style="'width:' + (isModal === true ? boxWidth + 32 : boxWidth) + 'px'"
+            >
+              <div class="toolMain">
+                <div
+                  v-if="isModal === true"
+                  class="tool-title"
+                >
+                  {{ modalTitle }}
+                  <span
+                    class="closeIcon"
+                    @click="handleClose"
+                  >×</span>
+                </div>
+                <div
+                  ref="toolBox"
+                  :style="'height:' + boxHeight + 'px;width:' + boxWidth + 'px'"
+                  class="toolBox"
+                  @mousemove="controlBtnMouseMove"
+                  @mouseup="controlBtnMouseUp"
+                  @mouseleave="controlBtnMouseUp"
+                >
+                  <!--选取图片-->
+                  <div
+                    v-show="!drawImg.img && showChooseBtn === true"
+                    class="tips"
+                  >
+                    <div
+                      class="btn btn-warning btn-xs"
+                      @click="chooseImg"
+                    >
+                      {{ label }}
+                    </div>
+                  </div>
+                  <!--工具栏-->
+                  <div
+                    v-if="tool == true"
+                    v-show="
+                      drawImg.img &&
+                        dropImg.active !== true &&
+                        controlBox.disable == true &&
+                        toolBox.disable == true
+                    "
+                    class="dockMain"
+                    :style="'background:' + toolBgc"
+                    @mouseenter="dropImgOff"
+                  >
+                    <div
+                      v-if="rate"
+                      class="dockBtn"
+                    >
+                      <slot name="ratio">
+                        Ratio:
+                      </slot>
+                      {{ rate }}
+                    </div>
+                    <div
+                      class="dockBtn"
+                      @click="scaleReset"
+                    >
+                      <slot name="scaleReset">
+                        Scale:
+                      </slot>
+                      {{ drawImg.swidth > 0 ? (drawImg.width / drawImg.swidth).toFixed(2) : '-' }}
+                    </div>
+                    <div
+                      v-if="originalGraph === false"
+                      class="dockBtn"
+                      @click="turnImg(-90)"
+                    >
+                      <slot name="turnLeft">
+                        ↳
+                      </slot>
+                    </div>
+                    <div
+                      v-if="originalGraph === false"
+                      class="dockBtn"
+                      @click="turnImg(90)"
+                    >
+                      <slot name="turnRight">
+                        ↲
+                      </slot>
+                    </div>
+                    <div
+                      v-if="originalGraph === false"
+                      class="dockBtn"
+                      @click="turnReset()"
+                    >
+                      <slot name="reset">
+                        ↻
+                      </slot>
+                    </div>
+                    <div
+                      v-if="originalGraph === false"
+                      class="dockBtnScrollBar"
+                    >
+                      <div
+                        ref="dockBtnScrollControl"
+                        :style="'left:' + rotateControl.position + 'px'"
+                        class="scrollBarControl"
+                        @mousemove="scrollBarControlMove"
+                        @mousedown="scrollBarControlOn"
+                        @mouseup="scrollBarControlOff"
+                      />
+                      <div
+                        v-if="rotateControl.active == true"
+                        class="scrollBarText"
+                        :style="'left:' + rotateControl.position + 'px'"
+                      >
+                        {{ rotateImg.angle.toFixed(0) + '°' }}
+                      </div>
+                    </div>
+                    <div
+                      v-if="originalGraph === false"
+                      class="dockBtn"
+                      @click="flipHorizontal"
+                    >
+                      <slot name="flipHorizontal">
+                        ⇆
+                      </slot>
+                    </div>
+                    <div
+                      v-if="originalGraph === false"
+                      class="dockBtn"
+                      @click="flipVertically"
+                    >
+                      <slot name="flipVertically">
+                        ⇅
+                      </slot>
+                    </div>
+                  </div>
+                  <!--裁剪区域-->
+                  <div
+                    v-show="drawImg.img != null"
+                    ref="toolBoxControl"
+                    class="toolBoxControl"
+                    :style="{
+                      pointerEvents: moveAble ? 'auto' : 'none',
+                    }"
+                    @mousedown="toolBoxMouseDown"
+                    @mouseup="toolBoxMouseUp"
+                    @mousemove="toolBoxMouseMove"
+                    @mouseleave="toolBoxMouseLeave"
+                  >
+                    <div class="toolBoxControlBox">
+                      <div class="controlBox">
+                        <!--蚂蚁线-->
+                        <div class="controlBoxInnerLine controlBoxInnerLineTop" />
+                        <div class="controlBoxInnerLine controlBoxInnerLineBottom" />
+                        <div class="controlBoxInnerLine controlBoxInnerLineLeft" />
+                        <div class="controlBoxInnerLine controlBoxInnerLineRight" />
+                        <!--工具栏提示-->
+                        <div class="selectArea">
+                          宽:{{ showToolBoxWidth }} 高:{{ showToolBoxHeight }} (x:{{
+                            showToolBoxX
+                          }},y:{{ showToolBoxY }})
+                        </div>
+                        <!--操作杆-->
+                        <div
+                          v-if="sizeChange === true"
+                          data-name="leftUp"
+                          class="leftUp controlBtn"
+                          @mousedown="controlBtnMouseDown($event, 'leftUp')"
+                        />
+                        <div
+                          v-if="sizeChange === true"
+                          data-name="leftDown"
+                          class="leftDown controlBtn"
+                          @mousedown="controlBtnMouseDown($event, 'leftDown')"
+                        />
+                        <div
+                          v-if="sizeChange === true"
+                          data-name="rightUp"
+                          class="rightUp controlBtn"
+                          @mousedown="controlBtnMouseDown($event, 'rightUp')"
+                        />
+                        <div
+                          v-if="sizeChange === true"
+                          data-name="rightDown"
+                          class="rightDown controlBtn"
+                          @mousedown="controlBtnMouseDown($event, 'rightDown')"
+                        />
+
+                        <div
+                          v-if="sizeChange === true && !rate && toolBox.width > 20"
+                          data-name="topCenter"
+                          class="topCenter controlBtn"
+                          @mousedown="controlBtnMouseDown($event, 'topCenter')"
+                        />
+                        <div
+                          v-if="sizeChange === true && !rate && toolBox.width > 20"
+                          data-name="downCenter"
+                          class="downCenter controlBtn"
+                          @mousedown="controlBtnMouseDown($event, 'downCenter')"
+                        />
+                        <div
+                          v-if="sizeChange === true && !rate && toolBox.height > 20"
+                          data-name="leftCenter"
+                          class="leftCenter controlBtn"
+                          @mousedown="controlBtnMouseDown($event, 'leftCenter')"
+                        />
+                        <div
+                          v-if="sizeChange === true && !rate && toolBox.height > 20"
+                          data-name="rightCenter"
+                          class="rightCenter controlBtn"
+                          @mousedown="controlBtnMouseDown($event, 'rightCenter')"
+                        />
+                      </div>
+                      <div class="toolBoxControlLine toolBoxControlLineItem-1" />
+                      <div class="toolBoxControlLine toolBoxControlLineItem-2" />
+                      <div class="toolBoxControlLine toolBoxControlLineItem-3" />
+                      <div class="toolBoxControlLine toolBoxControlLineItem-4" />
+                    </div>
+                  </div>
+                  <div class="copyright">
+                    <a
+                      v-if="!DoNotDisplayCopyright"
+                      target="_blank"
+                      href="https://github.com/acccccccb/vue-img-cutter"
+                      rel="nofollow"
+                    >
+                      vue-img-cutter {{ version }}
+                    </a>
+                  </div>
+                  <!--画布-->
+                  <canvas
+                    ref="canvasSelectBox"
+                    class="canvasSelectBox"
+                    :width="boxWidth"
+                    :height="boxHeight"
+                    @mousedown="dropImgOn"
+                    @mouseup="dropImgOff"
+                    @mousemove="dropImgMove"
+                  />
+                  <canvas
+                    ref="canvas"
+                    class="canvas"
+                    :width="boxWidth"
+                    :height="boxHeight"
+                  />
+                </div>
+              </div>
+              <div
+                class="i-dialog-footer"
+                style="height: 40px"
+              >
+                <input
+                  ref="inputFile"
+                  type="file"
+                  :accept="accept"
+                  style="width: 1px; height: 1px; border: none; opacity: 0"
+                  @change="putImgToCanv"
+                >
+                <span @click="chooseImg">
+                  <slot name="choose">
+                    <div
+                      v-if="showChooseBtn === true"
+                      class="btn btn-primary btn-primary-plain"
+                    >
+                      {{ label }}
+                    </div>
+                  </slot>
+                </span>
+                <div class="btn-group fr">
+                  <span @click="handleClose">
+                    <slot name="cancel">
+                      <button
+                        type="button"
+                        class="btn btn-default"
+                      >取消</button>
+                    </slot>
+                  </span>
+                  <span @click="cropPicture(false)">
+                    <slot name="confirm">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        style="margin-left: 15px"
+                        :disabled="!drawImg.img"
+                      >
+                        确定
+                      </button>
+                    </slot>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </transition>
+          <div style="clear: both" />
+        </div>
+      </div>
+    </transition>
+  </div>
 </template>
 <script lang="ts">
     import { defineComponent, PropType } from 'vue';
@@ -440,6 +519,7 @@
             index: {
                 default: null,
                 required: false,
+                type: [String, Number]
             },
             fileType: {
                 default: 'png',
@@ -561,6 +641,36 @@
                 isFlipHorizontal: false,
                 isFlipVertically: false,
             };
+        },
+        computed: {
+            showToolBoxWidth() {
+                let result;
+                if (!this.originalGraph) {
+                    result = this.toolBox.width;
+                } else {
+                    result = this.toolBox.width / (this.drawImg.width / this.drawImg.swidth);
+                }
+                return Number(result).toFixed(0);
+            },
+            showToolBoxHeight() {
+                let result;
+                if (!this.originalGraph) {
+                    result = this.toolBox.height;
+                } else {
+                    result = this.toolBox.height / (this.drawImg.width / this.drawImg.swidth);
+                }
+                return Number(result).toFixed(0);
+            },
+            showToolBoxX() {
+                let result;
+                result = this.toolBoxPosition.x;
+                return Number(result).toFixed(0);
+            },
+            showToolBoxY() {
+                let result;
+                result = this.toolBoxPosition.y;
+                return Number(result).toFixed(0);
+            },
         },
         mounted() {
             this.version = config.version;
@@ -1788,36 +1898,6 @@
             },
             scrollBarControlOff() {
                 this.rotateControl.active = false;
-            },
-        },
-        computed: {
-            showToolBoxWidth() {
-                let result;
-                if (!this.originalGraph) {
-                    result = this.toolBox.width;
-                } else {
-                    result = this.toolBox.width / (this.drawImg.width / this.drawImg.swidth);
-                }
-                return Number(result).toFixed(0);
-            },
-            showToolBoxHeight() {
-                let result;
-                if (!this.originalGraph) {
-                    result = this.toolBox.height;
-                } else {
-                    result = this.toolBox.height / (this.drawImg.width / this.drawImg.swidth);
-                }
-                return Number(result).toFixed(0);
-            },
-            showToolBoxX() {
-                let result;
-                result = this.toolBoxPosition.x;
-                return Number(result).toFixed(0);
-            },
-            showToolBoxY() {
-                let result;
-                result = this.toolBoxPosition.y;
-                return Number(result).toFixed(0);
             },
         },
     });
