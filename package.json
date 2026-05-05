@@ -1,76 +1,76 @@
 {
-  "name": "vue-img-cutter",
-  "version": "3.1.0",
-  "description": "A image crop plug-in for Vue,you can use it to rotate、zoom images and cut any size",
-  "author": "ihtmlcss.com",
-  "private": false,
+    "name": "vue-img-cutter",
+    "version": "3.1.1",
+    "description": "A image crop plug-in for Vue,you can use it to rotate、zoom images and cut any size",
+    "author": "ihtmlcss.com",
+    "private": false,
     "engines": {
         "node": ">=18.18.0"
     },
     "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build:page": "vite build --mode=page",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "core-js": "^3.49.0",
-    "vue": "^3.5.33",
-    "vue-i18n": "^11.4.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.3.5",
-    "@microsoft/api-extractor": "^7.58.7",
-    "@types/node": "^25.6.0",
-    "@typescript-eslint/parser": "^8.59.2",
-    "@vitejs/plugin-vue": "^6.0.6",
-    "@vue/eslint-config-typescript": "^14.7.0",
-    "@vue/language-core": "^3.1.8",
-    "eslint": "^9.39.4",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "eslint-plugin-vue": "^10.9.0",
-    "globals": "^17.6.0",
-    "prettier": "^3.8.3",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.10",
-    "vite-plugin-dts": "^5.0.0",
-    "vite-plugin-eslint": "^1.8.1",
-    "vue-eslint-parser": "^10.4.0"
-  },
-  "main": "./dist/vue-img-cutter.umd.js",
-  "module": "./dist/vue-img-cutter.es.js",
-  "exports": {
-    ".": {
-      "types": "./dist/vue-img-cutter.d.ts",
-      "import": "./dist/vue-img-cutter.es.js",
-      "require": "./dist/vue-img-cutter.umd.js"
+        "dev": "vite",
+        "build": "vite build",
+        "build:page": "vite build --mode=page",
+        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
+        "preview": "vite preview"
     },
-    "./vue-img-cutter.css": "./dist/vue-img-cutter.css"
-  },
-  "files": [
-    "dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/acccccccb/vue-img-cutter.git"
-  },
-  "keywords": [
-    "image",
-    "crop",
-    "cutter",
-    "vue",
-    "裁剪"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/acccccccb/vue-img-cutter/issues"
-  },
-  "homepage": "https://ihtmlcss.com/demo/dist/#/croptool",
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "dependencies": {
+        "core-js": "^3.49.0",
+        "vue": "^3.5.33",
+        "vue-i18n": "^11.4.0"
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3.3.5",
+        "@microsoft/api-extractor": "^7.58.7",
+        "@types/node": "^25.6.0",
+        "@typescript-eslint/parser": "^8.59.2",
+        "@vitejs/plugin-vue": "^6.0.6",
+        "@vue/eslint-config-typescript": "^14.7.0",
+        "@vue/language-core": "^3.1.8",
+        "eslint": "^9.39.4",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.5",
+        "eslint-plugin-vue": "^10.9.0",
+        "globals": "^17.6.0",
+        "prettier": "^3.8.3",
+        "typescript": "^6.0.3",
+        "vite": "^8.0.10",
+        "vite-plugin-dts": "^5.0.0",
+        "vite-plugin-eslint": "^1.8.1",
+        "vue-eslint-parser": "^10.4.0"
+    },
+    "main": "./dist/vue-img-cutter.umd.js",
+    "module": "./dist/vue-img-cutter.es.js",
+    "exports": {
+        ".": {
+            "types": "./dist/vue-img-cutter.d.ts",
+            "import": "./dist/vue-img-cutter.es.js",
+            "require": "./dist/vue-img-cutter.umd.js"
+        },
+        "./vue-img-cutter.css": "./dist/vue-img-cutter.css"
+    },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/acccccccb/vue-img-cutter.git"
+    },
+    "keywords": [
+        "image",
+        "crop",
+        "cutter",
+        "vue",
+        "裁剪"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/acccccccb/vue-img-cutter/issues"
+    },
+    "homepage": "https://ihtmlcss.com/demo/dist/#/croptool",
+    "browserslist": [
+        "> 1%",
+        "last 2 versions",
+        "not dead"
+    ]
 }
