@@ -1,5 +1,4 @@
 /*
 /**/*
-!/src/components/*.vue
-!/src/index.ts
+!/dist/*
 !/package.json
