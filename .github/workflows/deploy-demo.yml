@@ -2,7 +2,7 @@ name: Deploy Demo
 
 on:
   push:
-    branches: [ develop/v3 ]
+    branches: [ main, master, develop/v3 ]
 
 permissions:
   contents: read
