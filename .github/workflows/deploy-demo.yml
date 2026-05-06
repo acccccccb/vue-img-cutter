@@ -2,8 +2,10 @@ name: Deploy Demo
 
 on:
   push:
-    branches: [ main, master, develop/v3 ]
-
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+    
 permissions:
   contents: read
   pages: write
