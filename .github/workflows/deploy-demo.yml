@@ -22,16 +22,14 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
       - name: Build
-        run: npm run build:page --mode=page
-        env:
-          NODE_ENV: production
+        run: npm run build:page
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
