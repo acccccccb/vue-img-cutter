@@ -5,7 +5,7 @@
     "author": "ihtmlcss.com",
     "private": false,
     "engines": {
-        "node": ">=18.18.0"
+        "node": ">=22.22.2"
     },
     "scripts": {
         "dev": "vite",
@@ -68,9 +68,13 @@
         "url": "https://github.com/acccccccb/vue-img-cutter/issues"
     },
     "homepage": "https://ihtmlcss.com/demo/dist/#/croptool",
+    "volta": {
+        "node": "22.22.2"
+    },
     "browserslist": [
         "> 1%",
         "last 2 versions",
         "not dead"
-    ]
+    ],
+    "type": "module"
 }

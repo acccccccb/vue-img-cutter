@@ -74,14 +74,14 @@
                 <a
                   class="dropdown-item"
                   href="#"
-                  @click="i18n.global.locale.value = 'zh-CN'"
+                  @click="changeLocale('zh-CN')"
                 >中文</a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
                   href="#"
-                  @click="i18n.global.locale.value = 'en-US'"
+                  @click="changeLocale('en-US')"
                 >English</a>
               </li>
             </ul>
@@ -232,7 +232,7 @@
           <code class="language-html">
             <pre>2.{{ $t('block1.title5') }}: 
   import ImgCutter from 'vue-img-cutter';
-  import 'vue-img-cutter/vue-img-cutter.css';
+  import 'vue-img-cutter/vue-img-cutter.css'; // v3
             </pre>
           </code>
           <code class="language-html">
@@ -327,7 +327,7 @@
               :accept="params.accept"
               :after-choose-img="afterChooseImg"
               :DoNotDisplayCopyright="false"
-              tool-bgc="params.toolBgc"
+              :tool-bgc="params.toolBgc"
               @on-choose-img="onChooseImg"
               @on-clear-all="onClearAll"
               @on-print-img="onPrintImg"
@@ -1088,322 +1088,313 @@
   </div>
 </template>
 
-<script lang="ts">
-    import { i18n } from '@/i18n';
-    import { defineComponent } from 'vue';
-    import config from '../package.json';
-    import ImgCutter from './components/ImgCutter.vue';
+<script setup lang="ts">
+import { ref, reactive, onMounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
+import config from '../package.json';
+import ImgCutter from './components/ImgCutter.vue';
 
-    interface Params {
-        modalTitle: string;
-        label: string;
-        fileType: string;
-        crossOrigin: boolean;
-        crossOriginHeader: string;
-        rate: string;
-        toolBgc: string;
-        isModal: boolean;
-        showChooseBtn: boolean;
-        saveCutPosition: boolean;
-        scaleAble: boolean;
-        lockScroll: boolean;
-        toolBoxOverflow: boolean;
-        quality: number;
-        boxWidth: number;
-        boxHeight: number;
-        cutWidth: number;
-        cutHeight: number;
-        sizeChange: boolean;
-        moveAble: boolean;
-        imgMove: boolean;
-        tool: boolean;
-        originalGraph: boolean;
-        WatermarkText: string;
-        WatermarkTextFont: string;
-        WatermarkTextColor: string;
-        WatermarkTextX: number;
-        WatermarkTextY: number;
-        smallToUpload: boolean;
-        previewMode: boolean;
-        index: string;
-        accept: string;
+const { t, locale } = useI18n();
+
+interface Params {
+    modalTitle: string;
+    label: string;
+    fileType: string;
+    crossOrigin: boolean;
+    crossOriginHeader: string;
+    rate: string;
+    toolBgc: string;
+    isModal: boolean;
+    showChooseBtn: boolean;
+    saveCutPosition: boolean;
+    scaleAble: boolean;
+    lockScroll: boolean;
+    toolBoxOverflow: boolean;
+    quality: number;
+    boxWidth: number;
+    boxHeight: number;
+    cutWidth: number;
+    cutHeight: number;
+    sizeChange: boolean;
+    moveAble: boolean;
+    imgMove: boolean;
+    tool: boolean;
+    originalGraph: boolean;
+    WatermarkText: string;
+    WatermarkTextFont: string;
+    WatermarkTextColor: string;
+    WatermarkTextX: number;
+    WatermarkTextY: number;
+    smallToUpload: boolean;
+    previewMode: boolean;
+    index: string;
+    accept: string;
+}
+
+// Refs for template
+const imgCutterBox = ref<HTMLElement | null>(null);
+const imgCutterModal = ref<any>(null);
+
+// Reactive state
+const name = ref(config.name);
+const version = ref(config.version);
+const author = ref(config.author);
+const description = ref(config.description);
+const banner = ref('https://i.picsum.photos/id/743/1920/500.jpg');
+const github = ref('https://github.com/acccccccb/vue-img-cutter');
+const gitee = ref('https://gitee.com/GLUESTICK/vue-img-cutter');
+const download = ref('https://github.com/acccccccb/vue-img-cutter/archive/master.zip');
+const cutImgSrc = ref('https://phpcrm-oss.oss-cn-chengdu.aliyuncs.com/weixinpay.png');
+const homepage = ref('https://www.ihtmlcss.com');
+const docs = ref('https://github.com/acccccccb/vue-img-cutter/blob/master/README.md');
+const npm = ref('https://www.npmjs.com/package/vue-img-cutter');
+const imgSrc = ref('');
+const downloadName = ref('');
+const refresh = ref(true);
+const loadImg = ref(false);
+const code1 = ref('');
+
+const params = reactive<Params>({
+    modalTitle: t('block3.title10'),
+    label: t('block3.title9'),
+    fileType: 'jpeg',
+    crossOrigin: true,
+    crossOriginHeader: '*',
+    rate: '',
+    toolBgc: 'none',
+    isModal: false,
+    showChooseBtn: true,
+    saveCutPosition: true,
+    scaleAble: true,
+    lockScroll: true,
+    toolBoxOverflow: true,
+    quality: 1,
+    boxWidth: 500,
+    boxHeight: 458,
+    cutWidth: 250,
+    cutHeight: 250,
+    sizeChange: true,
+    moveAble: true,
+    imgMove: true,
+    tool: true,
+    originalGraph: false,
+    WatermarkText: 'vue-img-cutter',
+    WatermarkTextFont: '12px Sans-serif',
+    WatermarkTextColor: '#00ff00',
+    WatermarkTextX: 0.95,
+    WatermarkTextY: 0.95,
+    smallToUpload: true,
+    previewMode: true,
+    index: '',
+    accept: 'image/gif, image/jpeg ,image/png',
+});
+
+const code2 = ref(
+    '\n' +
+    '// ' +
+    t('block3.title4') +
+    '\n' +
+    'forIe9:() => {\n' +
+    '   this.$refs.imgCutterModal.handleOpen({\n' +
+    '       name:1.png,\n' +
+    '       src:http://imgurl.com/1.png,\n' +
+    '   });\n' +
+    '}'
+);
+
+// Methods
+const createCode = () => {
+    code1.value =
+        '\n' +
+        '<ImgCutter\n' +
+        '   ref="imgCutterModal"\n' +
+        '   modalTitle="' +
+        params.modalTitle +
+        '"\n' +
+        '   label="' +
+        params.label +
+        '"\n' +
+        '   fileType="' +
+        params.fileType +
+        '"\n' +
+        '   :crossOrigin="' +
+        params.crossOrigin +
+        '"\n' +
+        '   crossOriginHeader="' +
+        params.crossOriginHeader +
+        '"\n' +
+        '   rate="' +
+        params.rate +
+        '"\n' +
+        '   toolBgc="' +
+        params.toolBgc +
+        '"\n' +
+        '   :isModal="' +
+        params.isModal +
+        '"\n' +
+        '   :showChooseBtn="' +
+        params.showChooseBtn +
+        '"\n' +
+        '   :lockScroll="' +
+        params.lockScroll +
+        '"\n' +
+        '   :boxWidth="' +
+        params.boxWidth +
+        '"\n' +
+        '   :boxHeight="' +
+        params.boxHeight +
+        '"\n' +
+        '   :cutWidth="' +
+        params.cutWidth +
+        '"\n' +
+        '   :cutHeight="' +
+        params.cutHeight +
+        '"\n' +
+        '   :sizeChange="' +
+        params.sizeChange +
+        '"\n' +
+        '   :moveAble="' +
+        params.moveAble +
+        '"\n' +
+        '   :imgMove="' +
+        params.imgMove +
+        '"\n' +
+        '   :originalGraph="' +
+        params.originalGraph +
+        '"\n' +
+        '   WatermarkText="' +
+        params.WatermarkText +
+        '"\n' +
+        '   WatermarkTextFont="' +
+        params.WatermarkTextFont +
+        '"\n' +
+        '   WatermarkTextColor="' +
+        params.WatermarkTextColor +
+        '"\n' +
+        '   :WatermarkTextX="' +
+        params.WatermarkTextX +
+        '"\n' +
+        '   :WatermarkTextY="' +
+        params.WatermarkTextY +
+        '"\n' +
+        '   :smallToUpload="' +
+        params.smallToUpload +
+        '"\n' +
+        '   :saveCutPosition="' +
+        params.saveCutPosition +
+        '"\n' +
+        '   :scaleAble="' +
+        params.scaleAble +
+        '"\n' +
+        '   :previewMode="' +
+        params.previewMode +
+        '"\n' +
+        '   :quality="' +
+        params.quality +
+        '"\n' +
+        '   :accept="' +
+        params.accept +
+        '"\n' +
+        '   :toolBoxOverflow="' +
+        params.toolBoxOverflow +
+        '"\n' +
+        '   :index="' +
+        params.index +
+        '"\n' +
+        '   @cutDown="cutDown">\n' +
+        '   @error="catError">\n' +
+        '       <div class="btn btn-primary" #open>' +
+        params.label +
+        '</div>\n' +
+        '</ImgCutter>';
+};
+
+const doRefresh = () => {
+    refresh.value = false;
+    nextTick(() => {
+        refresh.value = true;
+    });
+};
+
+const afterChooseImg = (res: any) => {
+    console.log('afterChooseImg', res);
+    return new Promise<boolean>((resolve) => {
+        resolve(true);
+    });
+};
+
+const cutDown = (res: any) => {
+    console.log('cutDown', res);
+    imgSrc.value = res.dataURL;
+    downloadName.value = res.fileName;
+};
+
+const forIe9 = () => {
+    imgCutterModal.value?.handleOpen({
+        name: cutImgSrc.value,
+        src: cutImgSrc.value,
+    });
+};
+
+const onClearAll = () => {
+    loadImg.value = false;
+    imgSrc.value = '';
+};
+
+const onPrintImg = (res: any) => {
+    imgSrc.value = res.dataURL;
+};
+
+const onChooseImg = (res: any) => {
+    if (res) {
+        loadImg.value = true;
+    }
+};
+
+const setData = ($event: any) => {
+    function isNumber(val: any) {
+        let regPos = /^\d+(\.\d+)?$/;
+        let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/;
+        return regPos.test(val) || regNeg.test(val);
     }
 
-    export default defineComponent({
-        name: 'App',
-        components: {
-            ImgCutter,
-        },
-        data() {
-            return {
-                name: '',
-                version: '',
-                author: '',
-                description: '',
-                banner: 'https://i.picsum.photos/id/743/1920/500.jpg',
-                github: 'https://github.com/acccccccb/vue-img-cutter',
-                gitee: 'https://gitee.com/GLUESTICK/vue-img-cutter',
-                download: 'https://github.com/acccccccb/vue-img-cutter/archive/master.zip',
-                cutImgSrc: 'https://phpcrm-oss.oss-cn-chengdu.aliyuncs.com/weixinpay.png',
-                homepage: 'https://www.ihtmlcss.com',
-                docs: 'https://github.com/acccccccb/vue-img-cutter/blob/master/README.md',
-                npm: 'https://www.npmjs.com/package/vue-img-cutter',
-                cutImgWidth: 250,
-                cutImgHeight: 250,
-                imgSrc: '',
-                downloadName: '',
-                refresh: true,
-                isForIe9: false,
-                loadImg: false,
-                onPrintImgTimmer: null as any,
-                params: {
-                    modalTitle: (this as any).$t('block3.title10'),
-                    label: (this as any).$t('block3.title9'),
-                    fileType: 'jpeg',
-                    crossOrigin: true,
-                    crossOriginHeader: '*',
-                    rate: '',
-                    toolBgc: 'none',
-                    isModal: false,
-                    showChooseBtn: true,
-                    saveCutPosition: true,
-                    scaleAble: true,
-                    lockScroll: true,
-                    toolBoxOverflow: true,
-                    quality: 1,
-                    boxWidth: 500,
-                    boxHeight: 458,
-                    cutWidth: 250,
-                    cutHeight: 250,
-                    sizeChange: true,
-                    moveAble: true,
-                    imgMove: true,
-                    tool: true,
-                    originalGraph: false,
-                    WatermarkText: 'vue-img-cutter',
-                    WatermarkTextFont: '12px Sans-serif',
-                    WatermarkTextColor: '#00ff00',
-                    WatermarkTextX: 0.95,
-                    WatermarkTextY: 0.95,
-                    smallToUpload: true,
-                    previewMode: true,
-                    index: '',
-                    accept: 'image/gif, image/jpeg ,image/png',
-                } as Params,
-                code1: '',
-                code2:
-                    '\n' +
-                    '// ' +
-                    (this as any).$t('block3.title4') +
-                    '\n' +
-                    'forIe9:() => {\n' +
-                    '   this.$refs.imgCutterModal.handleOpen({\n' +
-                    '       name:1.png,\n' +
-                    '       src:http://imgurl.com/1.png,\n' +
-                    '   });\n' +
-                    '}',
-            };
-        },
-        created() {
-            this.name = config.name;
-            this.version = config.version;
-            this.author = config.author;
-            this.description = config.description;
-        },
-        mounted() {
-            let $imgCutterBox = this.$refs.imgCutterBox as HTMLElement;
-            this.params.boxWidth = $imgCutterBox.offsetWidth - 30;
-            this.createCode();
-            //    this.forIe9();
-        },
-        methods: {
-          i18n,
-            afterChooseImg(res: any) {
-                console.log('afterChooseImg', res);
-                return new Promise<boolean>((resolve) => {
-                    // 阻止选择图片
-                    resolve(true);
-                });
-            },
-            cutDown: function (res: any) {
-                console.log('cutDown');
-                console.log(res);
-                this.imgSrc = res.dataURL;
-                this.downloadName = res.fileName;
-            },
-            forIe9: function () {
-                (this.$refs.imgCutterModal as any).handleOpen({
-                    name: this.cutImgSrc,
-                    src: this.cutImgSrc,
-                    // width: this.cutImgWidth,
-                    // height: this.cutImgHeight,
-                });
-            },
-            doRefresh: function () {
-                this.refresh = false;
-                this.$nextTick(() => {
-                    this.refresh = true;
-                });
-            },
-            onClearAll: function () {
-                // 清空事件
-                this.loadImg = false;
-                this.imgSrc = '';
-            },
-            onPrintImg: function (res: any) {
-                // 预览图片
-                this.imgSrc = res.dataURL;
-            },
-            onChooseImg: function (res: any) {
-                // 选择图片事件
-                if (res) {
-                    this.loadImg = true;
-                }
-            },
-            createCode: function () {
-                this.code1 =
-                    '\n' +
-                    '<ImgCutter\n' +
-                    '   ref="imgCutterModal"\n' +
-                    '   modalTitle="' +
-                    this.params.modalTitle +
-                    '"\n' +
-                    '   label="' +
-                    this.params.label +
-                    '"\n' +
-                    '   fileType="' +
-                    this.params.fileType +
-                    '"\n' +
-                    '   :crossOrigin="' +
-                    this.params.crossOrigin +
-                    '"\n' +
-                    '   crossOriginHeader="' +
-                    this.params.crossOriginHeader +
-                    '"\n' +
-                    '   rate="' +
-                    this.params.rate +
-                    '"\n' +
-                    '   toolBgc="' +
-                    this.params.toolBgc +
-                    '"\n' +
-                    '   :isModal="' +
-                    this.params.isModal +
-                    '"\n' +
-                    '   :showChooseBtn="' +
-                    this.params.showChooseBtn +
-                    '"\n' +
-                    '   :lockScroll="' +
-                    this.params.lockScroll +
-                    '"\n' +
-                    '   :boxWidth="' +
-                    this.params.boxWidth +
-                    '"\n' +
-                    '   :boxHeight="' +
-                    this.params.boxHeight +
-                    '"\n' +
-                    '   :cutWidth="' +
-                    this.params.cutWidth +
-                    '"\n' +
-                    '   :cutHeight="' +
-                    this.params.cutHeight +
-                    '"\n' +
-                    '   :sizeChange="' +
-                    this.params.sizeChange +
-                    '"\n' +
-                    '   :moveAble="' +
-                    this.params.moveAble +
-                    '"\n' +
-                    '   :imgMove="' +
-                    this.params.imgMove +
-                    '"\n' +
-                    '   :originalGraph="' +
-                    this.params.originalGraph +
-                    '"\n' +
-                    '   WatermarkText="' +
-                    this.params.WatermarkText +
-                    '"\n' +
-                    '   WatermarkTextFont="' +
-                    this.params.WatermarkTextFont +
-                    '"\n' +
-                    '   WatermarkTextColor="' +
-                    this.params.WatermarkTextColor +
-                    '"\n' +
-                    '   :WatermarkTextX="' +
-                    this.params.WatermarkTextX +
-                    '"\n' +
-                    '   :WatermarkTextY="' +
-                    this.params.WatermarkTextY +
-                    '"\n' +
-                    '   :smallToUpload="' +
-                    this.params.smallToUpload +
-                    '"\n' +
-                    '   :saveCutPosition="' +
-                    this.params.saveCutPosition +
-                    '"\n' +
-                    '   :scaleAble="' +
-                    this.params.scaleAble +
-                    '"\n' +
-                    '   :previewMode="' +
-                    this.params.previewMode +
-                    '"\n' +
-                    '   :quality="' +
-                    this.params.quality +
-                    '"\n' +
-                    '   :accept="' +
-                    this.params.accept +
-                    '"\n' +
-                    '   :toolBoxOverflow="' +
-                    this.params.toolBoxOverflow +
-                    '"\n' +
-                    '   :index="' +
-                    this.params.index +
-                    '"\n' +
-                    '   @cutDown="cutDown">\n' +
-                    '   @error="catError">\n' +
-                    '       <div class="btn btn-primary" #open>' +
-                    this.params.label +
-                    '</div>\n' +
-                    '</ImgCutter>';
-            },
-            setData: function ($event: any) {
-                function isNumber(val: any) {
-                    let regPos = /^\d+(\.\d+)?$/; //非负浮点数
-                    let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-                    if (regPos.test(val) || regNeg.test(val)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
+    let value = $event.target.value;
+    if (value === 'true') value = true;
+    if (value === 'false') value = false;
+    if (isNumber(value)) value = parseInt(value);
 
-                let value = $event.target.value;
-                if (value == 'true') {
-                    value = true;
-                }
-                if (value == 'false') {
-                    value = false;
-                }
-                if (isNumber(value) === true) {
-                    value = parseInt(value);
-                }
-                (this.params as any)[$event.target.name] = value;
-                this.doRefresh();
-                this.createCode();
-            },
-            catchInput(e: any) {
-                let val = e.target.value;
-                let key = e.target.name;
-                (this as any)[key] = val;
-            },
-            catchError(res: any) {
-                console.log(res);
-                window.alert(res.msg);
-            },
-            pluginExe: function (functionName: string) {
-                (this.$refs.imgCutterModal as any)[functionName]();
-            },
-        },
-    });
+    (params as any)[$event.target.name] = value;
+    doRefresh();
+    createCode();
+};
+
+const catchInput = (e: any) => {
+    let val = e.target.value;
+    let key = e.target.name;
+    if (key === 'cutImgSrc') {
+        cutImgSrc.value = val;
+    }
+};
+
+const catchError = (res: any) => {
+    console.log(res);
+    window.alert(res.msg);
+};
+
+const pluginExe = (functionName: string) => {
+    imgCutterModal.value?.[functionName]();
+};
+
+const changeLocale = (lang: 'zh-CN' | 'en-US') => {
+    locale.value = lang;
+};
+
+onMounted(() => {
+    if (imgCutterBox.value) {
+        params.boxWidth = imgCutterBox.value.offsetWidth - 30;
+    }
+    createCode();
+});
 </script>
 <style scoped>
     .bg {

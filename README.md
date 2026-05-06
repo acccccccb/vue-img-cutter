@@ -197,10 +197,19 @@ ForIE9:function(){
 
 ### Donation:
 
-![微信](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png)
-![支付宝](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
+![wechatpay](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/weixinpay.png)
+![alipay](https://ihtmlcss.oss-cn-chengdu.aliyuncs.com/2020/01/alipay.png)
 
 ### Update log：
+
+
+---
+
+#### 3.1.1
+
+- add volta config
+- nodejs version： 22.22.2
+- Update README.md
 
 ---
 
@@ -208,7 +217,7 @@ ForIE9:function(){
 
 - Refactored to Vue 3 + Vite + TypeScript 
 
-> Need new import ：import 'vue-img-cutter/vue-img-cutter.css'
+> Need new import ：import 'vue-img-cutter/vue-img-cutter.css' // v3
 
 
 #### 3.0.7
